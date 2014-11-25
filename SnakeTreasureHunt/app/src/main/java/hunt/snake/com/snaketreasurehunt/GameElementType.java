@@ -32,7 +32,7 @@ public enum GameElementType {
         }
     },
 
-    SNAKE_HEAD {
+    SNAKE_HEAD_HORIZONTAL {
         @Override
         public Paint getPaint() {
             Paint paint = new Paint();
@@ -48,6 +48,30 @@ public enum GameElementType {
         @Override
         public int getWidth() {
             return 60;
+        }
+
+        @Override
+        public GameElement getGameElement() {
+            return new OvalGameElement();
+        }
+    },
+
+    SNAKE_HEAD_VERTICAL {
+        @Override
+        public Paint getPaint() {
+            Paint paint = new Paint();
+            paint.setColor(Color.parseColor("#CC00CC"));
+            return paint;
+        }
+
+        @Override
+        public int getHeight() {
+            return 60;
+        }
+
+        @Override
+        public int getWidth() {
+            return 50;
         }
 
         @Override
@@ -95,7 +119,7 @@ public enum GameElementType {
 
         @Override
         public int getWidth() {
-            return Constants.TILE_WIDTH.getValue() / 2;
+            return Constants.TILE_WIDTH.getValue() / 2 + (getHeight() / 2);
         }
 
         @Override
@@ -115,6 +139,30 @@ public enum GameElementType {
         @Override
         public int getHeight() {
             return Constants.TILE_HEIGHT.getValue();
+        }
+
+        @Override
+        public int getWidth() {
+            return 25;
+        }
+
+        @Override
+        public GameElement getGameElement() {
+            return new RectangleGameElement();
+        }
+    },
+
+    SNAKE_BODY_VERTICAL_SHORT {
+        @Override
+        public Paint getPaint() {
+            Paint paint = new Paint();
+            paint.setColor(Color.parseColor("#CC00CC"));
+            return paint;
+        }
+
+        @Override
+        public int getHeight() {
+            return Constants.TILE_HEIGHT.getValue() / 2 + (getWidth() / 2);
         }
 
         @Override

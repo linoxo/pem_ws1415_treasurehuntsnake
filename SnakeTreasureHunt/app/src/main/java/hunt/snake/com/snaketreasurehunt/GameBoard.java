@@ -76,22 +76,21 @@ public class GameBoard extends View{
         //createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[2][4], GameElement.Orientation.EAST);
         // createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[4][4]);
 
-        Snake snake = new Snake(canvas, tiles[3][4], tiles, 4,GameElement.Orientation.EAST);
-        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][4], GameElement.Orientation.WEST);
-        createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][4], GameElement.Orientation.NORTH);
-        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][3], GameElement.Orientation.WEST);
-        createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][3], GameElement.Orientation.SOUTH);
-        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[1][3], GameElement.Orientation.NONE);
+        Snake snake = new Snake(canvas, tiles[3][4], tiles, 4,GameElement.Position.EAST);
+        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][4], GameElement.Position.WEST);
+        createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][4], GameElement.Position.NORTH);
+        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][3], GameElement.Position.WEST);
+        createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][3], GameElement.Position.SOUTH);
+        createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[1][3], GameElement.Position.NONE);
 
         createGameElement(GameElementType.COIN, tiles[3][1]);
     }
 
-    public void createGameElement(GameElementType type, Tile tile, GameElement.Orientation orientation) {
+    public void createGameElement(GameElementType type, Tile tile, GameElement.Position orientation) {
         GameElement element = type.getGameElement();
         element.setCanvas(canvas);
         element.setTile(tile);
         element.setType(type);
-        element.setOrientation(orientation);
         element.drawGameElement();
     }
 
@@ -100,7 +99,6 @@ public class GameBoard extends View{
         element.setCanvas(canvas);
         element.setTile(tile);
         element.setType(type);
-        element.setOrientation(GameElement.Orientation.NONE);
         element.drawGameElement();
     }
 

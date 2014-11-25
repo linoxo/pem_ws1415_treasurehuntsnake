@@ -1,6 +1,7 @@
 package hunt.snake.com.snaketreasurehunt;
 
 import android.graphics.Canvas;
+import android.graphics.Paint;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,7 +11,7 @@ import java.util.List;
  */
 public abstract class GameElement {
 
-    public enum Orientation {
+    public enum Position {
         NORTH,
         EAST,
         SOUTH,
@@ -21,8 +22,9 @@ public abstract class GameElement {
     private Canvas canvas;
     private Tile tile;
     private GameElementType type;
-    private Orientation orientation;
+    private Position position;
     private List<GameElement> elements;
+    private Paint paint;
 
     public GameElement(Canvas canvas) {
         this.canvas = canvas;
@@ -56,18 +58,13 @@ public abstract class GameElement {
         return type;
     }
 
-    public void setOrientation(Orientation orientation) {
-        this.orientation = orientation;
-    }
+    public void setPaint(Paint paint) { this.paint = paint; }
 
-    public Orientation getOrientation() {
-        return orientation;
-    }
+    public Paint getPaint() { return paint; }
 
-    public void addElement(GameElementType type) {
+    public void addElement(GameElement element) {
         if(elements != null)
             elements = new ArrayList<GameElement>();
-        GameElement element = type.getGameElement();
         elements.add(element);
     }
 

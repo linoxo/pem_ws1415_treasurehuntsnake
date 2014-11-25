@@ -13,22 +13,20 @@ public class Snake {
     private Tile headTile;
     private Tile[][] tiles;
     private Canvas canvas;
-    private GameElement.Orientation orientation;
+    private GameElement.Position position;
 
-    private List<GameElement.Orientation> list;
-
-    public Snake(Canvas canvas, Tile startTile, Tile[][] tiles, int length, GameElement.Orientation orientation) {
+    public Snake(Canvas canvas, Tile startTile, Tile[][] tiles, int length, GameElement.Position posiiton) {
         this.length = length;
         this.canvas = canvas;
         this.tiles = tiles;
-        this.orientation = orientation;
+        this.position = posiiton;
         headTile = startTile;
 
         init();
     }
 
     private void init() {
-        initSnake(orientation);
+        initSnake(position);
     }
 
     public void addLength(int amount) {
@@ -39,30 +37,29 @@ public class Snake {
         length++;
     }
 
-    private void initSnake(GameElement.Orientation orientation) {
-        drawHead(orientation);
-        list.add(orientation);
+    private void initSnake(GameElement.Position position) {
+        drawHead(position);
 
         int parts = 1;
         int startX = headTile.getPosX();
         int startY = headTile.getPosY();
 
         while(parts < length - 1) {
-            switch(orientation) {
+            switch(position) {
                 case NORTH:
-                    drawBodypart(tiles[startX][startY + parts], orientation);
+                    drawBodypart(tiles[startX][startY + parts], position);
                     break;
                 case EAST:
-                    drawBodypart(tiles[startX - parts][startY], orientation);
+                    drawBodypart(tiles[startX - parts][startY], position);
                     break;
                 case SOUTH:
-                    drawBodypart(tiles[startX][startY - parts], orientation);
+                    drawBodypart(tiles[startX][startY - parts], position);
                     break;
                 case WEST:
-                    drawBodypart(tiles[startX + parts][startY], orientation);
+                    drawBodypart(tiles[startX + parts][startY], position);
                     break;
                 case NONE:
-                    drawBodypart(tiles[startX - parts][startY], orientation);
+                    drawBodypart(tiles[startX - parts][startY], position);
                     break;
             }
             parts++;
@@ -70,33 +67,31 @@ public class Snake {
 
     }
 
-    private void drawBodypart(Tile tile, GameElement.Orientation orientation) {
+    private void drawBodypart(Tile tile, GameElement.Position position) {
         GameElementType type;
-        if(orientation == GameElement.Orientation.EAST || orientation == GameElement.Orientation.WEST)
+        if(position == GameElement.Position.EAST || position == GameElement.Position.WEST)
             type = GameElementType.SNAKE_BODY_HORIZONTAL;
         else
             type = GameElementType.SNAKE_BODY_VERTICAL;
 
-        GameElement body = new RectangleGameElement(canvas);
+        RectangleGameElement body = new RectangleGameElement(canvas);
         body.setType(type);
         body.setTile(tile);
-        body.setOrientation(GameElement.Orientation.NONE);
+        body.setPosition(GameElement.Position.NONE);
         body.drawGameElement();
     }
 
-    private void drawHead(GameElement.Orientation orientation) {
+    private void drawHead(GameElement.Position position) {
         //Head
         GameElement head = new OvalGameElement(canvas);
-        head.setType(GameElementType.SNAKE_HEAD);
+        head.setType(GameElementType.SNAKE_HEAD_HORIZONTAL);
         head.setTile(headTile);
-        head.setOrientation(orientation);
-        head.drawGameElement();
 
-        //"Neck"
-        head = new RectangleGameElement(canvas);
-        head.setType(GameElementType.SNAKE_BODY_HORIZONTAL);
-        head.setTile(headTile);
-        head.setOrientation(orientation);
+        RectangleGameElement neck = new RectangleGameElement();
+        neck.setType(GameElementType.SNAKE_BODY_HORIZONTAL_SHORT);
+        neck.setPosition(GameElement.Position.EAST);
+        head.addElement(neck);
+
         head.drawGameElement();
     }
 }
