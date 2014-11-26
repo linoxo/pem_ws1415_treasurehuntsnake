@@ -35,7 +35,4 @@ public class OvalGameElement extends GameElement {
         RectF rect = new RectF(left, top, width, height);
         getCanvas().drawOval(rect, paint);
     }
-
-    @Override
-    public void setOrientation(RectangleGameElement.Orientation orientation) {}
 }
