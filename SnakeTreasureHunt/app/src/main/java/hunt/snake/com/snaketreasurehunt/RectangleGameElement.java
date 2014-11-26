@@ -49,8 +49,8 @@ public class RectangleGameElement extends GameElement {
 
         int left = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + ((Constants.TILE_WIDTH.getValue() - type.getWidth()) / 2);
         int top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + ((Constants.TILE_HEIGHT.getValue() - type.getHeight()) / 2);
-        int width = getType().getWidth() + left;
-        int height = getType().getHeight() + top;
+        int width = getType().getWidth();
+        int height = getType().getHeight();
 
         /*
         switch(position) {
@@ -73,19 +73,19 @@ public class RectangleGameElement extends GameElement {
         switch(position) {
             case NORTH:
                 top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue();
-                height = getType().getHeight() + top;
+                height = getType().getHeight();
                 break;
             case EAST:
                 left = getTile().getPosX() * Constants.TILE_WIDTH.getValue();
-                width = getType().getWidth() + left;
+                width = getType().getWidth();
                 break;
             case SOUTH:
                 top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + (Constants.TILE_HEIGHT.getValue() - getType().getHeight());
-                height = getType().getHeight() + top;
+                height = getType().getHeight();
                 break;
             case WEST:
                 left = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + (Constants.TILE_WIDTH.getValue() - getType().getWidth());
-                width = getType().getWidth() + left;
+                width = getType().getWidth();
                 break;
         }
 

@@ -12,7 +12,7 @@ import hunt.snake.com.framework.impl.AndroidGame;
  */
 public class GameBoard {
 
-    private static final float TICK = 0.5f;
+    private static final float TICK = 1.0f;
 
     private int boardWidth;
     private int boardHeight;

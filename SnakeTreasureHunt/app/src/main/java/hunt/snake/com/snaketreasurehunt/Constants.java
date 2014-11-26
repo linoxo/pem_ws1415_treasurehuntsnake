@@ -43,7 +43,7 @@ public enum Constants {
 
     TEXT_SIZE_S {
         @Override
-        public int getValue() { return 20; }
+        public int getValue() { return 40; }
     },
 
     TEXT_SIZE_XXL {

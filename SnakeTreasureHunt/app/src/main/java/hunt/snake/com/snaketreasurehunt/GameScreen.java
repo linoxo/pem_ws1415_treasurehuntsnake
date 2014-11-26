@@ -141,7 +141,7 @@ public class GameScreen extends Screen {
 
     private void drawRunningUI(Graphics g) {
         // draw score
-        g.drawText(score, 50, 50, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.CENTER);
+        g.drawText("Score: " + score, 50, AndroidGame.getScreenHeight() - 25, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.LEFT);
     }
 
     private void drawPausedUI(Graphics g) {

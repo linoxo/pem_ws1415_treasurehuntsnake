@@ -89,6 +89,6 @@ public class Snake {
         neck.setPosition(GameElement.Position.EAST);
         head.addElement(neck);
 
-        head.drawGameElement(g);
+        head.draw(g);
     }
 }
