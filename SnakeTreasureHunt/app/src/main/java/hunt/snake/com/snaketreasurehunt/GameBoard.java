@@ -64,8 +64,8 @@ public class GameBoard {
             for (int i = 0; i < size; i++) {
                 GameElement element = gameElements.get(i);
                 if(element.getType() == GameElementType.COIN) {
-                    int x = random.nextInt(boardHeight);
-                    int y = random.nextInt(boardWidth);
+                    int x = random.nextInt(boardWidth);
+                    int y = random.nextInt(boardHeight);
                     element.setTile(tiles[x][y]);
                 }
             }
@@ -116,7 +116,7 @@ public class GameBoard {
     }
 
     private void createTiles() {
-        tiles = new Tile[boardHeight][boardWidth];
+        tiles = new Tile[boardWidth][boardHeight];
 
         Tile tile;
 

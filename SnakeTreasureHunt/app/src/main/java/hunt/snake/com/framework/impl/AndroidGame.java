@@ -43,11 +43,11 @@ public abstract class AndroidGame extends Activity implements Game {
         boolean isLandscape = getResources().getConfiguration().orientation == Configuration.ORIENTATION_LANDSCAPE;
         Point size = new Point();
         getWindowManager().getDefaultDisplay().getSize(size);
-        screenWidth = isLandscape ? size.x : size.y;
-        screenHeight = isLandscape ? size.y : size.x;
+        screenWidth = size.x;
+        screenHeight = size.y;
 
-        int frameBufferWidth = size.x;
-        int frameBufferHeight = size.y;
+        int frameBufferWidth = isLandscape ? size.y : size.x;
+        int frameBufferHeight = isLandscape ? size.x : size.y;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
 

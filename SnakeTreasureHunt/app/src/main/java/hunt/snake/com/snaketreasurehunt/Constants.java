@@ -28,7 +28,7 @@ public enum Constants {
 
     TEXT_COLOR {
         @Override
-        public int getValue() { return 0x0000FF; }
+        public int getValue() { return 0xFF0000FF; }
     },
 
     LAYER_COLOR {

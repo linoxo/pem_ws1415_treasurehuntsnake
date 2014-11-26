@@ -85,6 +85,7 @@ public class Snake {
 
         RectangleGameElement neck = new RectangleGameElement();
         neck.setType(GameElementType.SNAKE_BODY_HORIZONTAL_SHORT);
+        neck.setTile(headTile);
         neck.setPosition(GameElement.Position.EAST);
         head.addElement(neck);
 
