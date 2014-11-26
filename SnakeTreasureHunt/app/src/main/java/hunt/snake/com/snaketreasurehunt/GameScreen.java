@@ -20,6 +20,7 @@ public class GameScreen extends Screen {
 
     private static final String READY_TEXT = "Ready?";
     private static final String PAUSED_TEXT = "Paused";
+    private static final String SCORE_TEXT = "Score: ";
 
     GameState state;
     GameBoard gameBoard;
@@ -36,7 +37,7 @@ public class GameScreen extends Screen {
         state = GameState.READY;
         gameBoard.init();
         oldScore = 0;
-        score = "0";
+        score = SCORE_TEXT + oldScore;
     }
 
     @Override
@@ -88,7 +89,7 @@ public class GameScreen extends Screen {
         // only update score if it has changed --> avoid unnecessary String object creation
         if(oldScore != gameBoard.getScore()) {
             oldScore = gameBoard.getScore();
-            score = "" + oldScore;
+            score = SCORE_TEXT + oldScore;
         }
     }
 
@@ -141,7 +142,7 @@ public class GameScreen extends Screen {
 
     private void drawRunningUI(Graphics g) {
         // draw score
-        g.drawText("Score: " + score, 50, AndroidGame.getScreenHeight() - 25, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.LEFT);
+        g.drawText(score, 50, AndroidGame.getScreenHeight() - 25, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.LEFT);
     }
 
     private void drawPausedUI(Graphics g) {
