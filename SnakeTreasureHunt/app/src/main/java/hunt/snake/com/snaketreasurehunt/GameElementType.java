@@ -25,7 +25,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new OvalGameElement();
+            GameElement gameElement = new OvalGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -47,7 +50,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new OvalGameElement();
+            GameElement gameElement = new OvalGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -69,7 +75,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new OvalGameElement();
+            GameElement gameElement = new OvalGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -91,7 +100,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new RectangleGameElement();
+            GameElement gameElement = new RectangleGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -113,7 +125,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new RectangleGameElement();
+            GameElement gameElement = new RectangleGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -135,7 +150,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new RectangleGameElement();
+            GameElement gameElement = new RectangleGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     },
 
@@ -157,7 +175,10 @@ public enum GameElementType {
 
         @Override
         public GameElement getGameElement() {
-            return new RectangleGameElement();
+            GameElement gameElement = new RectangleGameElement();
+            gameElement.setType(this);
+            gameElement.setColor(getColor());
+            return gameElement;
         }
     };
 

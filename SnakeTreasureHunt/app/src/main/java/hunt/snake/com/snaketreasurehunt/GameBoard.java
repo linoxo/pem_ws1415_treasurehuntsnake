@@ -29,7 +29,9 @@ public class GameBoard {
     public GameBoard() {
         init();
         createTiles();
-        snake = new Snake(tiles[3][4], tiles, 4, GameElement.Position.EAST);
+        snake = new Snake(tiles[3][4], tiles, 4, Snake.Direction.EAST);
+        snake.eat(tiles[3][4]);
+
         gameElements = new ArrayList<GameElement>();
         createGameElements();
         random = new Random();
@@ -51,6 +53,7 @@ public class GameBoard {
 
         tickTime += deltaTime;
 
+
         // updates game board every TICK seconds
         while (tickTime > TICK) {
             tickTime -= TICK;
@@ -58,6 +61,8 @@ public class GameBoard {
             // ============================
             // == INSERT GAME LOGIC HERE ==
             // ============================
+
+            //snake.move(Snake.Direction.EAST);
 
             // dummy game logic: coin jumps around
             int size = gameElements.size();
@@ -75,7 +80,7 @@ public class GameBoard {
     public void draw(Graphics g) {
         drawTiles(g);
         drawGameElements(g);
-        snake.drawSnake(GameElement.Position.EAST, g);
+        snake.drawSnake(g);
     }
 
     public void createGameElements() {
@@ -84,11 +89,13 @@ public class GameBoard {
         //createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[2][4], GameElement.Position.EAST);
         // createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[4][4]);
 
+        /*
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][4], GameElement.Position.WEST));
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][4], GameElement.Position.NORTH));
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][3], GameElement.Position.WEST));
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][3], GameElement.Position.SOUTH));
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[1][3], GameElement.Position.NONE));
+        */
 
         gameElements.add(createGameElement(GameElementType.COIN, tiles[3][1]));
     }

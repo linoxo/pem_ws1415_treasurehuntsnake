@@ -10,16 +10,13 @@ import hunt.snake.com.framework.Graphics;
 public class OvalGameElement extends GameElement {
 
     public OvalGameElement() {
-
     }
 
     @Override
     public void drawGameElement(Graphics g) {
-        float circlePosX = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + Constants.TILE_WIDTH.getValue() / 2;
-        float circlePosY = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + Constants.TILE_HEIGHT.getValue() / 2;
-        float radius = getType().getWidth();
-
         GameElementType type = getType();
+
+        //System.out.println(getTile() + " " + type);
 
         float left = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + Constants.TILE_WIDTH.getValue() / 2 - type.getWidth() / 2;
         float top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + Constants.TILE_HEIGHT.getValue() / 2 - type.getHeight() / 2;
@@ -30,4 +27,7 @@ public class OvalGameElement extends GameElement {
         RectF rect = new RectF(left, top, width, height);
         g.drawOval(rect, color);
     }
+
+    @Override
+    public void setPosition(Position position) {}
 }

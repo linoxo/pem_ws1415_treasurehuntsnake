@@ -1,5 +1,7 @@
 package hunt.snake.com.snaketreasurehunt;
 
+import android.graphics.Paint;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -20,15 +22,19 @@ public abstract class GameElement {
 
     private Tile tile;
     private GameElementType type;
-    private Position position;
     private List<GameElement> elements;
+    private int color;
 
     public GameElement() {
-
     }
 
     public void setTile(Tile tile) {
         this.tile = tile;
+
+        if(elements != null && elements.size() > 0) {
+            for(GameElement element : elements)
+                element.setTile(tile);
+        }
     }
 
     public Tile getTile() {
@@ -47,17 +53,31 @@ public abstract class GameElement {
         if(elements == null) {
             elements = new ArrayList<GameElement>();
         }
+        element.setTile(tile);
         elements.add(element);
     }
 
     public void draw(Graphics g) {
         drawGameElement(g);
-        if(elements.size() > 0) {
+        if(elements != null && elements.size() > 0) {
             for(GameElement element : elements) {
                 element.drawGameElement(g);
             }
         }
     }
 
+    public void setColor(int color) {
+        this.color = color;
+    }
+
+    public int getColor() {
+        return color;
+    }
+
+    public void redraw(Graphics g) {
+        drawGameElement(g);
+    }
+
     public abstract void drawGameElement(Graphics g);
+    public abstract void setPosition(Position position);
 }
