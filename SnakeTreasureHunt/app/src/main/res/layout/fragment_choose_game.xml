@@ -1,0 +1,54 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pem_assignments.lino.workflowtestpem.GUI.ChooseGameActivity$PlaceholderFragment">
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:src="@drawable/normalscreen"
+        android:scaleType="fitXY"
+        />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="100dp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true"
+        android:id="@+id/frameLayout">
+
+        <ListView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/existingGames" />
+    </FrameLayout>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_weight="1"
+        android:text="join existing game"
+        android:layout_height="wrap_content"
+        android:id="@+id/joinGames"
+        android:layout_below="@+id/frameLayout"
+        android:layout_centerHorizontal="true" />
+
+    <FrameLayout
+        android:layout_width="fill_parent"
+        android:layout_height="50dp"
+        android:layout_centerVertical="true"
+        android:layout_centerHorizontal="true"
+        android:id="@+id/frameLayout2"></FrameLayout>
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_weight="1"
+        android:layout_height="wrap_content"
+        android:text="host new game"
+        android:id="@+id/hostGames"
+        android:layout_below="@+id/frameLayout2"
+        android:layout_centerHorizontal="true" />
+
+
+</RelativeLayout>
