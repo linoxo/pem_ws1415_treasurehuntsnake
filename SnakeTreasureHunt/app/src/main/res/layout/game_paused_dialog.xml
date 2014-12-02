@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:orientation="vertical" android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="#77487153">
+
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:text="game paused"
+        android:textColor="#FFFFFF"
+        android:id="@+id/textView"
+        android:layout_marginTop="100dp"
+        android:layout_marginBottom="100dp"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="resume"
+        android:textColor="#FFFFFF"
+        android:id="@+id/resumeButton"
+        android:layout_marginBottom="5dp"
+        android:background="@color/black_overlay"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="restart"
+        android:textColor="#FFFFFF"
+        android:layout_marginBottom="5dp"
+        android:background="@color/black_overlay"
+        android:id="@+id/restartButton"
+        android:layout_gravity="center_horizontal" />
+
+    <Button
+        android:layout_width="200dp"
+        android:layout_height="wrap_content"
+        android:text="quit game"
+        android:textColor="#FFFFFF"
+        android:background="@color/black_overlay"
+        android:id="@+id/quitButton"
+        android:layout_gravity="center_horizontal" />
+</LinearLayout>

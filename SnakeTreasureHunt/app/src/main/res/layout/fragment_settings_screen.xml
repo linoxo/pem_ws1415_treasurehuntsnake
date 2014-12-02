@@ -1,0 +1,95 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="com.pem_assignments.lino.workflowtestpem.GUI.SettingsScreenActivity$PlaceholderFragment">
+
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:id="@+id/imageView"
+        android:src="@drawable/normalscreen"
+        android:scaleType="fitXY"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentStart="true" />
+
+
+    <ToggleButton
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:text="sound"
+        android:textColor="#FFFFFF"
+        android:id="@+id/soundswitch"
+        android:checked="false"
+        android:textOn="on"
+        android:textOff="off"
+        android:layout_marginRight="59dp"
+        android:background="@color/black_overlay"
+        android:layout_alignParentTop="true"
+        android:layout_alignParentRight="true"
+        android:layout_alignParentEnd="true"
+        android:layout_marginTop="91dp" />
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="sound"
+        android:textAlignment="gravity"
+        android:id="@+id/textView2"
+        android:textColor="#FFFFFF"
+        android:layout_toStartOf="@+id/soundswitch"
+        android:layout_alignTop="@+id/soundswitch"
+        android:layout_toLeftOf="@+id/soundswitch" />
+
+    <EditText
+        android:layout_width="100dp"
+        android:layout_height="30dp"
+        android:id="@+id/playerName"
+        android:textColor="#FFFFFF"
+        android:text="enter name"
+        android:selectAllOnFocus="true"
+        android:gravity="left"
+        android:background="@color/black_overlay"
+        android:layout_below="@+id/soundswitch"
+        android:layout_alignRight="@+id/soundswitch"
+        android:layout_alignEnd="@+id/soundswitch"
+        android:layout_marginTop="10dp"/>
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="player name"
+        android:textColor="#FFFFFF"
+        android:id="@+id/textView3"
+        android:layout_alignTop="@+id/playerName"
+        android:layout_toLeftOf="@+id/playerName"
+        android:layout_toStartOf="@+id/playerName"
+        android:layout_alignLeft="@+id/textView2"
+        android:layout_alignStart="@+id/textView2" />
+
+
+
+    <TextView
+        android:layout_width="150dp"
+        android:layout_height="30dp"
+        android:text="avatar"
+        android:textColor="#FFFFFF"
+        android:id="@+id/textView4"
+        android:layout_marginTop="10dp"
+        android:layout_below="@+id/playerName"
+        android:layout_toLeftOf="@+id/playerName"
+        android:layout_toStartOf="@+id/playerName" />
+
+    <ImageView
+        android:layout_width="100dp"
+        android:layout_height="120dp"
+        android:id="@+id/avatar"
+        android:background="@color/black_overlay"
+        android:layout_alignTop="@+id/textView4"
+        android:layout_toRightOf="@+id/textView4"
+        android:layout_toEndOf="@+id/textView4" />
+
+
+</RelativeLayout>
