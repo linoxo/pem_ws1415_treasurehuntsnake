@@ -19,10 +19,14 @@ public class Tile {
     private boolean isLeftBorder;
     private boolean isBottomBorder;
     private boolean isTopBorder;
+    private boolean hasGameElement;
+    private GameElementType gameElementType;
+
 
     public Tile() {
         tileWidth = Constants.TILE_WIDTH.getValue();
         tileHeight = Constants.TILE_HEIGHT.getValue();
+        hasGameElement = false;
     }
 
     public void setPositionOnBoard(int posX, int posY) {
@@ -49,10 +53,6 @@ public class Tile {
         if(isTopBorder | isBottomBorder | isRightBorder | isLeftBorder ) {
             drawBorders(g);
         }
-    }
-
-    public void drawGameElement() {
-
     }
 
     public void drawBorders(Graphics g) {
@@ -97,6 +97,24 @@ public class Tile {
         }
     }
 
+    public void setGameElement(GameElementType type) {
+        this.gameElementType = type;
+        hasGameElement = true;
+    }
+
+    public void removeGameElement() {
+        gameElementType = null;
+        hasGameElement = false;
+    }
+
+    public boolean hasGameElement() {
+        return hasGameElement;
+    }
+
+    public GameElementType getGameElementType() {
+        return gameElementType;
+    }
+
     public void setIsTopBorder(boolean isTopBorder) {
         this.isTopBorder = isTopBorder;
     }
@@ -120,5 +138,4 @@ public class Tile {
     public int getPosY() {
         return posY;
     }
-
 }

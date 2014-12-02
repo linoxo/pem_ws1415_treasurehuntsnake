@@ -1,9 +1,6 @@
 package hunt.snake.com.snaketreasurehunt;
 
-import android.graphics.Paint;
-
-import java.util.ArrayList;
-import java.util.List;
+import java.util.LinkedList;
 
 import hunt.snake.com.framework.Graphics;
 
@@ -22,19 +19,24 @@ public abstract class GameElement {
 
     private Tile tile;
     private GameElementType type;
-    private List<GameElement> elements;
+    private LinkedList<GameElement> elements;
     private int color;
+    private int width;
+    private int height;
+    private String name;
 
     public GameElement() {
+        name = "";
     }
 
     public void setTile(Tile tile) {
         this.tile = tile;
-
         if(elements != null && elements.size() > 0) {
-            for(GameElement element : elements)
+            for(GameElement element : elements) {
                 element.setTile(tile);
+            }
         }
+        update();
     }
 
     public Tile getTile() {
@@ -43,6 +45,10 @@ public abstract class GameElement {
 
     public void setType(GameElementType type) {
         this.type = type;
+
+        setWidth(type.getWidth());
+        setHeight(type.getHeight());
+        setColor(type.getColor());
     }
 
     public GameElementType getType() {
@@ -51,33 +57,57 @@ public abstract class GameElement {
 
     public void addElement(GameElement element) {
         if(elements == null) {
-            elements = new ArrayList<GameElement>();
+            elements = new LinkedList<GameElement>();
         }
-        element.setTile(tile);
-        elements.add(element);
+
+        if(tile != null)
+            element.setTile(tile);
+
+        elements.addFirst(element);
     }
 
     public void draw(Graphics g) {
-        drawGameElement(g);
         if(elements != null && elements.size() > 0) {
             for(GameElement element : elements) {
                 element.drawGameElement(g);
             }
         }
+        drawGameElement(g);
     }
 
     public void setColor(int color) {
         this.color = color;
     }
 
+    public void setWidth(int width) {
+        this.width = width;
+    }
+
+    public int getWidth() {
+        return width;
+    }
+
+    public void setHeight(int height) {
+        this.height = height;
+    }
+
+    public int getHeight() {
+        return height;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public String getName() {
+        return name;
+    }
+
     public int getColor() {
         return color;
     }
 
-    public void redraw(Graphics g) {
-        drawGameElement(g);
-    }
-
+    public abstract void update();
     public abstract void drawGameElement(Graphics g);
     public abstract void setPosition(Position position);
 }

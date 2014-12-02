@@ -11,6 +11,7 @@ import android.graphics.BitmapFactory.Options;
 import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Paint.Style;
+import android.graphics.Path;
 import android.graphics.Rect;
 import android.graphics.RectF;
 
@@ -94,6 +95,30 @@ public class AndroidGraphics implements Graphics {
         paint.setColor(color);
         paint.setStyle(Style.FILL);
         canvas.drawRect(x, y, x + width - 1, y + height - 1, paint);
+    }
+
+    public void drawRoundRect(RectF rect, float rx, float ry, int color) {
+        paint.setColor(color);
+        paint.setStyle(Style.FILL);
+        canvas.drawRoundRect(rect, rx, ry, paint);
+    }
+
+    public void drawRoundRectStroke(RectF rect, float rx, float ry, int color) {
+        paint.setColor(color);
+        paint.setStyle(Style.STROKE);
+        canvas.drawRoundRect(rect, rx, ry, paint);
+    }
+
+    public void drawPath(Path path, int color) {
+        paint.setColor(color);
+        paint.setStyle(Style.FILL);
+        canvas.drawPath(path, paint);
+    }
+
+    public void drawPath(Path path, int color, Style style) {
+        paint.setColor(color);
+        paint.setStyle(style);
+        canvas.drawPath(path, paint);
     }
 
     public void drawOval(RectF rect, int color) {

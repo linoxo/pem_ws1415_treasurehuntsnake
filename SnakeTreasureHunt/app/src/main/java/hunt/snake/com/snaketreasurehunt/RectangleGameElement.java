@@ -11,57 +11,64 @@ public class RectangleGameElement extends GameElement {
 
     private Position position;
     private Rect rect;
+    private int left;
+    private int top;
 
-    public RectangleGameElement() {
-        rect = new Rect(0, 0, 0, 0);
-    }
+    public RectangleGameElement() {}
 
     @Override
     public void drawGameElement(Graphics g) {
+        if(rect == null)
+            update();
         int color = getColor();
         g.drawRect(rect.left, rect.top, rect.width(), rect.height(), color);
     }
 
+    /*
     public void setPosition(Position position) {
         this.position = position;
-        updateRectangle();
+        update();
     }
+    */
 
     public Position getPosition() {
         return position;
     }
 
-    private void updateRectangle() {
-        GameElementType type = getType();
+    @Override
+    public void update() {
+        System.out.println(getName() + ": " + getTile().getPosX() + ", " + getTile().getPosY());
+        left = left + getTile().getPosX() * Constants.TILE_WIDTH.getValue();
+        top = top + getTile().getPosY() * Constants.TILE_HEIGHT.getValue();
+        int right = left + getWidth();
+        int bottom = top + getHeight();
+        System.out.println(rect);
+        rect = new Rect(left, top, right, bottom);
+    }
 
-        System.out.println(type + ", " + getTile());
-
-        int left = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + ((Constants.TILE_WIDTH.getValue() - type.getWidth()) / 2);
-        int top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + ((Constants.TILE_HEIGHT.getValue() - type.getHeight()) / 2);
-        int width = getType().getWidth();
-        int height = getType().getHeight();
+    @Override
+    public void setPosition(Position position) {
+        left = (Constants.TILE_WIDTH.getValue() - getWidth()) / 2;
+        top = (Constants.TILE_HEIGHT.getValue() - getHeight()) / 2;
 
         switch(position) {
             case NORTH:
-                top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue();
-                height = getType().getHeight();
+                top = 0;
                 break;
             case WEST:
-                left = getTile().getPosX() * Constants.TILE_WIDTH.getValue();
-                width = getType().getWidth();
+                left = 0;
                 break;
             case SOUTH:
-                top = getTile().getPosY() * Constants.TILE_HEIGHT.getValue() + (Constants.TILE_HEIGHT.getValue() - getType().getHeight());
-                height = getType().getHeight();
+                top = (Constants.TILE_HEIGHT.getValue() - getHeight());
                 break;
             case EAST:
-                left = getTile().getPosX() * Constants.TILE_WIDTH.getValue() + (Constants.TILE_WIDTH.getValue() - getType().getWidth());
-                width = getType().getWidth();
+                left = (Constants.TILE_WIDTH.getValue() - getWidth());
                 break;
             default:
                 break;
         }
 
-        rect.set(left, top, left + width, top + height);
+        if(getTile() != null)
+            update();
     }
 }

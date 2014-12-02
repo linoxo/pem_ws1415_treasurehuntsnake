@@ -60,7 +60,7 @@ public class Snake {
 
         GameElement bodyPart;
 
-        while(parts < length - 1) {
+        while(parts < length) {
             switch(headDirection) {
                 case NORTH:
                     bodyPart = createBodyPart(tiles[startX][startY + parts], headDirection);
@@ -92,7 +92,8 @@ public class Snake {
 
         GameElement body = type.getGameElement();
         body.setTile(tile);
-        body.setPosition(GameElement.Position.NONE);
+
+        tile.setGameElement(type);
 
         return body;
     }
@@ -115,13 +116,15 @@ public class Snake {
         head.setTile(headTile);
         head.addElement(neck);
 
+        headTile.setGameElement(headType);
+
         neck.setPosition(getOppositePositionOfDirection(headDirection));
 
         return head;
     }
 
     //returns next tile depending on the cardinal direction the snake is moving
-    //return null if tile is out of bounds
+    //return null if tile is out of bounds or will kill
     private Tile getNextTile(Direction direction) {
         int posX = headTile.getPosX();
         int posY = headTile.getPosY();
@@ -145,6 +148,11 @@ public class Snake {
 
         if(posX < 0 || posX > tiles.length - 1 || posY < 0 || posY > tiles[posX].length - 1)
             return null;
+
+        if(tiles[posX][posY].hasGameElement()) {
+            if(tiles[posX][posY].getGameElementType() != GameElementType.COIN)
+                return null;
+        }
 
         return tiles[posX][posY];
     }
@@ -170,6 +178,8 @@ public class Snake {
 
         first.setPosition(getOppositePositionOfDirection(origin));
         second.setPosition(getPositionByDirection(destination));
+
+        tile.setGameElement(typeFirst);
 
         return first;
     }
@@ -244,6 +254,7 @@ public class Snake {
 
         if( !(hasEaten && bodyParts.getLast().getTile() == foodTile) ) {
             bodyParts.removeLast();
+            foodTile.removeGameElement();
         } else {
             hasEaten = false;
         }

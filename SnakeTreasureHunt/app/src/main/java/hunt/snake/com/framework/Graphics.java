@@ -1,6 +1,7 @@
 package hunt.snake.com.framework;
 
 import android.graphics.Paint;
+import android.graphics.Path;
 import android.graphics.RectF;
 
 public interface Graphics {
@@ -17,6 +18,14 @@ public interface Graphics {
     public void drawLine(int x, int y, int x2, int y2, int strokeWidth, int color);
 
     public void drawRect(int x, int y, int width, int height, int color);
+
+    public void drawRoundRect(RectF rect, float rx, float ry, int color);
+
+    public void drawRoundRectStroke(RectF rect, float rx, float ry, int color);
+
+    public void drawPath(Path path, int color);
+
+    public void drawPath(Path path, int color, Paint.Style style);
 
     public void drawOval(RectF rect, int color);
 

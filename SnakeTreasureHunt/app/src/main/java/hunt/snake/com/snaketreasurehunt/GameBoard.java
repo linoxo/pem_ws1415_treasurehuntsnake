@@ -29,8 +29,8 @@ public class GameBoard {
     public GameBoard() {
         init();
         createTiles();
-        snake = new Snake(tiles[3][4], tiles, 4, Snake.Direction.EAST);
-        snake.eat(tiles[3][4]);
+        snake = new Snake(tiles[3][7], tiles, 3, Snake.Direction.EAST);
+        //snake.eat(tiles[3][4]);
 
         gameElements = new ArrayList<GameElement>();
         createGameElements();
@@ -98,6 +98,9 @@ public class GameBoard {
         */
 
         gameElements.add(createGameElement(GameElementType.COIN, tiles[3][1]));
+
+        //gameElements.add(new Obstacle(tiles[2][2], tiles, GameElementType.RECT_OBSTACLE, 5));
+        gameElements.add(createGameElement(GameElementType.FOOD, tiles[6][3]));
     }
 
     private GameElement createGameElement(GameElementType type, Tile tile, GameElement.Position orientation) {
@@ -109,8 +112,8 @@ public class GameBoard {
 
     private GameElement createGameElement(GameElementType type, Tile tile) {
         GameElement element = type.getGameElement();
-        element.setTile(tile);
         element.setType(type);
+        element.setTile(tile);
         return element;
     }
 
@@ -118,7 +121,7 @@ public class GameBoard {
         int size = gameElements.size();
         for (int i = 0; i < size; i++) {
             GameElement element = gameElements.get(i);
-            element.drawGameElement(g);
+            element.draw(g);
         }
     }
 
