@@ -37,12 +37,10 @@ public class RectangleGameElement extends GameElement {
 
     @Override
     public void update() {
-        System.out.println(getName() + ": " + getTile().getPosX() + ", " + getTile().getPosY());
         left = left + getTile().getPosX() * Constants.TILE_WIDTH.getValue();
         top = top + getTile().getPosY() * Constants.TILE_HEIGHT.getValue();
         int right = left + getWidth();
         int bottom = top + getHeight();
-        System.out.println(rect);
         rect = new Rect(left, top, right, bottom);
     }
 

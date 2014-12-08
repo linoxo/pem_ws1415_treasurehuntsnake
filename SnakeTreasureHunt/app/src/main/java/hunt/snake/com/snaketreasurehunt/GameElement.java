@@ -24,6 +24,7 @@ public abstract class GameElement {
     private int width;
     private int height;
     private String name;
+    private boolean hidden;
 
     public GameElement() {
         name = "";
@@ -36,6 +37,7 @@ public abstract class GameElement {
                 element.setTile(tile);
             }
         }
+        tile.setGameElement(this);
         update();
     }
 
@@ -67,16 +69,28 @@ public abstract class GameElement {
     }
 
     public void draw(Graphics g) {
-        if(elements != null && elements.size() > 0) {
-            for(GameElement element : elements) {
-                element.drawGameElement(g);
+        if(!isHidden()) {
+            if (elements != null && elements.size() > 0) {
+                for (GameElement element : elements) {
+                    element.drawGameElement(g);
+                }
             }
+            drawGameElement(g);
         }
-        drawGameElement(g);
     }
 
     public void setColor(int color) {
         this.color = color;
+    }
+
+    public void changeColor(int color) {
+        this.color = color;
+
+        if(elements != null) {
+            for(GameElement element : elements) {
+                element.setColor(color);
+            }
+        }
     }
 
     public void setWidth(int width) {
@@ -101,6 +115,19 @@ public abstract class GameElement {
 
     public String getName() {
         return name;
+    }
+
+    public void hidden(boolean hidden) {
+        this.hidden = hidden;
+
+        if(elements != null) {
+            for(GameElement element : elements)
+                element.hidden(hidden);
+        }
+    }
+
+    public boolean isHidden() {
+        return hidden;
     }
 
     public int getColor() {

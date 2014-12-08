@@ -21,6 +21,7 @@ public class Tile {
     private boolean isTopBorder;
     private boolean hasGameElement;
     private GameElementType gameElementType;
+    private GameElement gameElement;
 
 
     public Tile() {
@@ -97,13 +98,15 @@ public class Tile {
         }
     }
 
-    public void setGameElement(GameElementType type) {
-        this.gameElementType = type;
+    public void setGameElement(GameElement gameElement) {
+        this.gameElement = gameElement;
+        setGameElementType(gameElement.getType());
         hasGameElement = true;
     }
 
     public void removeGameElement() {
-        gameElementType = null;
+        gameElement = null;
+        setGameElementType(null);
         hasGameElement = false;
     }
 
@@ -111,9 +114,13 @@ public class Tile {
         return hasGameElement;
     }
 
+    public GameElement getGameElement() { return gameElement; }
+
     public GameElementType getGameElementType() {
         return gameElementType;
     }
+
+    public void setGameElementType(GameElementType gameElementType) { this.gameElementType = gameElementType; }
 
     public void setIsTopBorder(boolean isTopBorder) {
         this.isTopBorder = isTopBorder;

@@ -24,6 +24,7 @@ public class Snake {
     private Direction headDirection;
     //list of all body parts of the snake (head + neck is only one part, as well as an edge part)
     private LinkedList<GameElement> bodyParts;
+    private GameElement food;
 
     private boolean hasEaten;
     //tile where food was picked up
@@ -93,8 +94,6 @@ public class Snake {
         GameElement body = type.getGameElement();
         body.setTile(tile);
 
-        tile.setGameElement(type);
-
         return body;
     }
 
@@ -115,8 +114,6 @@ public class Snake {
         GameElement neck = neckType.getGameElement();
         head.setTile(headTile);
         head.addElement(neck);
-
-        headTile.setGameElement(headType);
 
         neck.setPosition(getOppositePositionOfDirection(headDirection));
 
@@ -149,9 +146,15 @@ public class Snake {
         if(posX < 0 || posX > tiles.length - 1 || posY < 0 || posY > tiles[posX].length - 1)
             return null;
 
-        if(tiles[posX][posY].hasGameElement()) {
-            if(tiles[posX][posY].getGameElementType() != GameElementType.COIN)
+        Tile nextTile = tiles[posX][posY];
+
+        if(nextTile.hasGameElement()) {
+            if(nextTile.getGameElementType() == GameElementType.FOOD) {
+                System.out.println("Next: " + nextTile.getPosX() + ", " + nextTile.getPosY());
+                eat(nextTile);
+            } else {
                 return null;
+            }
         }
 
         return tiles[posX][posY];
@@ -178,8 +181,6 @@ public class Snake {
 
         first.setPosition(getOppositePositionOfDirection(origin));
         second.setPosition(getPositionByDirection(destination));
-
-        tile.setGameElement(typeFirst);
 
         return first;
     }
@@ -246,18 +247,34 @@ public class Snake {
 
         bodyParts.set(0, newBodyPart);
 
-        headTile = getNextTile(direction);
+        headTile = nextTile;
         headDirection = direction;
 
         GameElement head = createHead();
         bodyParts.addFirst(head);
 
+        if(hasEaten) {
+            if(bodyParts.getLast().getTile() == foodTile) {
+                food.hidden(true);
+                hasEaten = false;
+            } else {
+                if(bodyParts.get(1).getTile() == foodTile) {
+                    food.hidden(false);
+                }
+                bodyParts.removeLast();
+            }
+        } else {
+            bodyParts.removeLast();
+        }
+
+        /*
         if( !(hasEaten && bodyParts.getLast().getTile() == foodTile) ) {
             bodyParts.removeLast();
             foodTile.removeGameElement();
         } else {
             hasEaten = false;
         }
+        */
 
         return true;
     }
@@ -265,5 +282,10 @@ public class Snake {
     public void eat(Tile tile) {
         hasEaten = true;
         foodTile = tile;
+        food = tile.getGameElement();
+        food.changeColor(GameElementType.SNAKE_HEAD_HORIZONTAL.getColor());
+        food.hidden(true);
+
+        //System.out.println("eat: " + foodTile.getPosX() + ", " + foodTile.getPosY() + ": " + foodTile.getGameElement().getType());
     }
 }

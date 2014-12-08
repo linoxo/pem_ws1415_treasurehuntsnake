@@ -29,7 +29,7 @@ public class GameBoard {
     public GameBoard() {
         init();
         createTiles();
-        snake = new Snake(tiles[3][7], tiles, 3, Snake.Direction.EAST);
+        snake = new Snake(tiles[2][3], tiles, 3, Snake.Direction.WEST);
         //snake.eat(tiles[3][4]);
 
         gameElements = new ArrayList<GameElement>();
@@ -53,7 +53,6 @@ public class GameBoard {
 
         tickTime += deltaTime;
 
-
         // updates game board every TICK seconds
         while (tickTime > TICK) {
             tickTime -= TICK;
@@ -61,8 +60,6 @@ public class GameBoard {
             // ============================
             // == INSERT GAME LOGIC HERE ==
             // ============================
-
-            //snake.move(Snake.Direction.EAST);
 
             // dummy game logic: coin jumps around
             int size = gameElements.size();
@@ -97,10 +94,10 @@ public class GameBoard {
         gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[1][3], GameElement.Position.NONE));
         */
 
-        gameElements.add(createGameElement(GameElementType.COIN, tiles[3][1]));
+        //gameElements.add(createGameElement(GameElementType.COIN, tiles[3][1]));
 
-        //gameElements.add(new Obstacle(tiles[2][2], tiles, GameElementType.RECT_OBSTACLE, 5));
-        gameElements.add(createGameElement(GameElementType.FOOD, tiles[6][3]));
+        gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
+        gameElements.add(createGameElement(GameElementType.FOOD, tiles[2][6]));
     }
 
     private GameElement createGameElement(GameElementType type, Tile tile, GameElement.Position orientation) {

@@ -28,7 +28,6 @@ public class Obstacle extends BigGameElement {
         gameElement = type.getGameElement();
         gameElement.setTile(startTile);
         gameElement.setPosition(Position.NONE);
-        startTile.setGameElement(type);
         setInitialGameElement(gameElement);
 
         randomizeObstacle();
@@ -44,11 +43,9 @@ public class Obstacle extends BigGameElement {
             }
 
             GameElement obstacle = type.getGameElement();
-            System.out.println(obstacle);
 
             obstacle.setTile(newTile);
             obstacle.setPosition(Position.NONE);
-            newTile.setGameElement(type);
 
             addAdditionalGameElement(obstacle);
 
@@ -71,9 +68,9 @@ public class Obstacle extends BigGameElement {
         int bottom = 1;
 
         if(posX == 0) left = 0;
-        if(posX == tiles.length) right = 0;
+        if(posX == tiles.length - 1) right = 0;
         if(posY == 0) top = 0;
-        if(posY == tiles[posX].length) bottom = 0;
+        if(posY == tiles[posX].length - 1) bottom = 0;
 
         for(int x = left; x <= right; x++) {
             for(int y = top; y <= bottom; y++) {
