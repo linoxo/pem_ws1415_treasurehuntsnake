@@ -7,9 +7,6 @@ import java.util.ArrayList;
 
 import hunt.snake.com.framework.Graphics;
 
-/**
- * Created by Tom on 11/29/14.
- */
 public class ComplexGameElement extends GameElement{
 
     private ArrayList<Point> points;

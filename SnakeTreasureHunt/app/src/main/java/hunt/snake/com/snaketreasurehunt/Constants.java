@@ -1,8 +1,5 @@
 package hunt.snake.com.snaketreasurehunt;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public enum Constants {
 
     TILE_WIDTH {
@@ -49,6 +46,11 @@ public enum Constants {
     TEXT_SIZE_XXL {
         @Override
         public int getValue() { return 100; }
+    },
+
+    SCORE_INCREMENT {
+        @Override
+        public int getValue() { return 10; }
     };
 
     public abstract int getValue();

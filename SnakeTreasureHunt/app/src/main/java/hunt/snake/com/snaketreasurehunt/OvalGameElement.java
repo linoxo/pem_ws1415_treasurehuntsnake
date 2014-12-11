@@ -4,9 +4,6 @@ import android.graphics.RectF;
 
 import hunt.snake.com.framework.Graphics;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public class OvalGameElement extends GameElement {
 
     private RectF rect;

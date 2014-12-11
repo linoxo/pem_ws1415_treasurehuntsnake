@@ -5,9 +5,6 @@ import java.util.ArrayList;
 
 import hunt.snake.com.framework.Graphics;
 
-/**
- * Created by Tom on 11/30/14.
- */
 public class BigGameElement extends GameElement {
 
     private ArrayList<GameElement> elements;

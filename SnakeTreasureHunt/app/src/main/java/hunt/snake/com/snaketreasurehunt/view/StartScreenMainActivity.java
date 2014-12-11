@@ -39,7 +39,6 @@ public class StartScreenMainActivity extends Activity {
                 Intent intent = new Intent();
                 intent.setClassName(getPackageName(),getPackageName() + ".view.SettingsScreenActivity");
                 startActivity(intent);
-
             }
         });
     }

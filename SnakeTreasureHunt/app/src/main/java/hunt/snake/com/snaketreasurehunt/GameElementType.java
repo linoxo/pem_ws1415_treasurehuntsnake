@@ -2,9 +2,6 @@ package hunt.snake.com.snaketreasurehunt;
 
 import android.graphics.Color;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public enum GameElementType {
 
     FOOD {

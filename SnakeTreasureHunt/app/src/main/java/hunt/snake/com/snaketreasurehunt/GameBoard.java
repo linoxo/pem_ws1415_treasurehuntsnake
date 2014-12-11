@@ -7,9 +7,6 @@ import java.util.Random;
 import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.impl.AndroidGame;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public class GameBoard {
 
     private static final float TICK = 1.0f;
@@ -18,7 +15,9 @@ public class GameBoard {
     private int boardHeight;
 
     private Tile[][] tiles;
-    private Snake snake;
+    Snake snake;
+    Snake.Direction nextSnakeDirection;
+    private boolean snakeCanTurn;
     private List<GameElement> gameElements;
     private boolean gameOver;
     private int score;
@@ -27,14 +26,10 @@ public class GameBoard {
     private float tickTime = 0;
 
     public GameBoard() {
-        init();
-        createTiles();
-        snake = new Snake(tiles[2][3], tiles, 3, Snake.Direction.WEST);
-        //snake.eat(tiles[3][4]);
-
+        snake = new Snake();
         gameElements = new ArrayList<GameElement>();
-        createGameElements();
         random = new Random();
+        init();
     }
 
     public void init(){
@@ -42,8 +37,15 @@ public class GameBoard {
         boardWidth = AndroidGame.getScreenWidth() / Constants.TILE_WIDTH.getValue();
         boardHeight = AndroidGame.getScreenHeight() / Constants.TILE_HEIGHT.getValue();
 
+        createTiles();
+        Snake.Direction startDirection = Snake.Direction.WEST;
+        snake.init(tiles[2][3], tiles, 3, startDirection);
+        nextSnakeDirection = startDirection;
+        snakeCanTurn = true;
+        gameElements.clear();
         gameOver = false;
         score = 0;
+        createGameElements();
     }
 
     public void update(float deltaTime) {
@@ -61,8 +63,23 @@ public class GameBoard {
             // == INSERT GAME LOGIC HERE ==
             // ============================
 
+            // move snake in the direction of its head
+            if(!snake.move(nextSnakeDirection)) {
+                gameOver = true;
+                return;
+            }
+
+            // after moving, the snake can be turned again
+            snakeCanTurn = true;
+
+            // check whether snake has eaten something
+            // if(snake has eaten something) {
+            //      score += Constants.SCORE_INCREMENT.getValue();
+            //      spawn new food at random position
+            // }
+
             // dummy game logic: coin jumps around
-            int size = gameElements.size();
+            /* int size = gameElements.size();
             for (int i = 0; i < size; i++) {
                 GameElement element = gameElements.get(i);
                 if(element.getType() == GameElementType.COIN) {
@@ -70,7 +87,7 @@ public class GameBoard {
                     int y = random.nextInt(boardHeight);
                     element.setTile(tiles[x][y]);
                 }
-            }
+            }*/
         }
     }
 
@@ -81,30 +98,10 @@ public class GameBoard {
     }
 
     public void createGameElements() {
-        //createGameElement(GameElementType.COIN, tiles[3][1], GameElement.Position.NONE);
-        //createGameElement(GameElementType.SNAKE_HEAD, tiles[2][4], GameElement.Position.EAST);
-        //createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[2][4], GameElement.Position.EAST);
-        // createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[4][4]);
-
-        /*
-        gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][4], GameElement.Position.WEST));
-        gameElements.add(createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][4], GameElement.Position.NORTH));
-        gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[0][3], GameElement.Position.WEST));
-        gameElements.add(createGameElement(GameElementType.SNAKE_BODY_VERTICAL, tiles[0][3], GameElement.Position.SOUTH));
-        gameElements.add(createGameElement(GameElementType.SNAKE_BODY_HORIZONTAL, tiles[1][3], GameElement.Position.NONE));
-        */
-
-        //gameElements.add(createGameElement(GameElementType.COIN, tiles[3][1]));
-
         gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
-        gameElements.add(createGameElement(GameElementType.FOOD, tiles[2][6]));
-    }
-
-    private GameElement createGameElement(GameElementType type, Tile tile, GameElement.Position orientation) {
-        GameElement element = type.getGameElement();
-        element.setTile(tile);
-        element.setType(type);
-        return element;
+        int x = random.nextInt(boardWidth);
+        int y = random.nextInt(boardHeight);
+        gameElements.add(createGameElement(GameElementType.FOOD, tiles[x][y]));
     }
 
     private GameElement createGameElement(GameElementType type, Tile tile) {
@@ -173,5 +170,12 @@ public class GameBoard {
 
     int getScore() {
         return score;
+    }
+
+    public void setNextSnakeDirection(Snake.Direction nextSnakeDirection) {
+        if(snakeCanTurn) {
+            snakeCanTurn = false;
+            this.nextSnakeDirection = nextSnakeDirection;
+        }
     }
 }

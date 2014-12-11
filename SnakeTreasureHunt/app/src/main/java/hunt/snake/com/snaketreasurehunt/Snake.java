@@ -4,9 +4,6 @@ import java.util.LinkedList;
 
 import hunt.snake.com.framework.Graphics;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public class Snake {
 
     enum Direction {
@@ -30,18 +27,18 @@ public class Snake {
     //tile where food was picked up
     private Tile foodTile;
 
-    public Snake(Tile startTile, Tile[][] tiles, int length, Direction headDirection) {
+    public Snake() {
+        bodyParts = new LinkedList<GameElement>();
+    }
+
+    public void init(Tile startTile, Tile[][] tiles, int length, Direction headDirection) {
         this.length = length;
         this.tiles = tiles;
         this.headDirection = headDirection;
         this.headTile = startTile;
 
-        init();
-    }
-
-    private void init() {
         hasEaten = false;
-        bodyParts = new LinkedList<GameElement>();
+        bodyParts.clear();
         createSnake();
     }
 

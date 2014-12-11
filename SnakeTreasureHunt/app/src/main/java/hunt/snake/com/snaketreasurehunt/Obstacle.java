@@ -3,9 +3,6 @@ package hunt.snake.com.snaketreasurehunt;
 import java.util.ArrayList;
 import java.util.Random;
 
-/**
- * Created by Tom on 11/30/14.
- */
 public class Obstacle extends BigGameElement {
 
     private GameElement gameElement;

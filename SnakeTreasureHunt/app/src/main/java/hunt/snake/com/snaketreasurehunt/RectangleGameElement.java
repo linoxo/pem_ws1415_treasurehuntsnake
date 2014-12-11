@@ -4,9 +4,6 @@ import android.graphics.Rect;
 
 import hunt.snake.com.framework.Graphics;
 
-/**
- * Created by Tom on 11/23/14.
- */
 public class RectangleGameElement extends GameElement {
 
     private Position position;

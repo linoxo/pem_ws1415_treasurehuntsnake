@@ -20,12 +20,16 @@ public class GameScreen extends Screen {
 
     private static final String READY_TEXT = "Ready?";
     private static final String PAUSED_TEXT = "Paused";
+    private static final String GAME_OVER_TEXT = "Game Over";
     private static final String SCORE_TEXT = "Score: ";
+    private static final float COUNT_DOWN_TIME = 3.0f;
 
     GameState state;
     GameBoard gameBoard;
     int oldScore;
     String score;
+    boolean isCountingDown;
+    float countDownTimer;
 
     public GameScreen(Game game) {
         super(game);
@@ -38,6 +42,8 @@ public class GameScreen extends Screen {
         gameBoard.init();
         oldScore = 0;
         score = SCORE_TEXT + oldScore;
+        isCountingDown = false;
+        countDownTimer = COUNT_DOWN_TIME;
     }
 
     @Override
@@ -46,7 +52,7 @@ public class GameScreen extends Screen {
         game.getInput().getKeyEvents();
 
         if(state == GameState.READY) {
-            updateReady(touchEvents);
+            updateReady(touchEvents, deltaTime);
             return;
         }
         if(state == GameState.RUNNING) {
@@ -62,10 +68,17 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void updateReady(List<TouchEvent> touchEvents) {
-        if(touchEvents.size() > 0) {
-            // change from "ready" to "running" if screen was touched
-            state = GameState.RUNNING;
+    private void updateReady(List<TouchEvent> touchEvents, float deltaTime) {
+        if(isCountingDown) {
+            countDownTimer -= deltaTime;
+            if(countDownTimer <= 0.0f) {
+                // change from "ready" to "running" if screen was touched
+                state = GameState.RUNNING;
+            }
+        } else {
+            if (touchEvents.size() > 0) {
+                isCountingDown = true;
+            }
         }
     }
 
@@ -74,9 +87,27 @@ public class GameScreen extends Screen {
         for(int i = 0; i < size; i++) {
             TouchEvent event = touchEvents.get(i);
             if(event.type == TouchEvent.TOUCH_UP) {
+                System.out.println("Touch at x=" + event.x + "/" + AndroidGame.getScreenWidth() + "and y=" + event.y + "/" + AndroidGame.getScreenHeight());
+                if(gameBoard.nextSnakeDirection == Snake.Direction.NORTH || gameBoard.nextSnakeDirection == Snake.Direction.SOUTH) {
+                    if(event.x > AndroidGame.getScreenWidth() / 2) {
+                        gameBoard.setNextSnakeDirection(Snake.Direction.EAST);
+                        System.out.println("Going EAST");
+                    } else {
+                        gameBoard.setNextSnakeDirection(Snake.Direction.WEST);
+                        System.out.println("Going WEST");
+                    }
+                } else {
+                    if(event.y > AndroidGame.getScreenHeight() / 2) {
+                        gameBoard.setNextSnakeDirection(Snake.Direction.SOUTH);
+                        System.out.println("Going SOUTH");
+                    } else {
+                        gameBoard.setNextSnakeDirection(Snake.Direction.NORTH);
+                        System.out.println("Going NORTH");
+                    }
+                }
                 // change from "running" to "paused" if screen was touched
-                state = GameState.PAUSED;
-                return;
+                // state = GameState.PAUSED;
+                // return;
             }
         }
 
@@ -106,6 +137,16 @@ public class GameScreen extends Screen {
     }
 
     private void updateGameOver(List<TouchEvent> touchEvents) {
+        int size = touchEvents.size();
+        for(int i = 0; i < size; i++) {
+            TouchEvent event = touchEvents.get(i);
+            if(event.type == TouchEvent.TOUCH_UP) {
+                // change from "game over" to "ready" if screen was touched
+                gameBoard.init();
+                init();
+                return;
+            }
+        }
     }
 
     @Override
@@ -136,8 +177,14 @@ public class GameScreen extends Screen {
         // darken screen with transparent layer
         g.drawRect(0, 0, AndroidGame.getScreenWidth(), AndroidGame.getScreenHeight(), Constants.LAYER_COLOR.getValue());
 
-        // draw ready text
-        g.drawText(READY_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        if(isCountingDown) {
+            // draw countdown
+            String countDownText = String.valueOf((int)countDownTimer + 1);
+            g.drawText(countDownText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        } else {
+            // draw ready text
+            g.drawText(READY_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        }
     }
 
     private void drawRunningUI(Graphics g) {
@@ -154,6 +201,11 @@ public class GameScreen extends Screen {
     }
 
     private void drawGameOverUI(Graphics g) {
+        // darken screen with transparent layer
+        g.drawRect(0, 0, AndroidGame.getScreenWidth(), AndroidGame.getScreenHeight(), Constants.LAYER_COLOR.getValue());
+
+        // draw game over text
+        g.drawText(GAME_OVER_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
     }
 
     @Override
