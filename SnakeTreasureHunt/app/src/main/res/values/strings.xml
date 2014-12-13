@@ -3,5 +3,6 @@
 
     <string name="app_name">Treasure Hunt Snake</string>
     <string name="action_settings">Settings</string>
+    <string name="empty_message">No devices found.</string>
 
 </resources>

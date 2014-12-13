@@ -12,43 +12,39 @@
         android:scaleType="fitXY"
         />
 
-    <FrameLayout
+    <RelativeLayout
         android:layout_width="fill_parent"
-        android:layout_height="100dp"
+        android:layout_height="200dp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentStart="true"
         android:id="@+id/frameLayout">
 
         <ListView
+            android:id="@id/android:list"
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/existingGames" />
-    </FrameLayout>
+            android:layout_height="159dp"/>
+
+    </RelativeLayout>
 
     <Button
         android:layout_width="200dp"
         android:layout_weight="1"
-        android:text="join existing game"
+        android:text="Search People"
         android:layout_height="wrap_content"
-        android:id="@+id/joinGames"
-        android:layout_below="@+id/frameLayout"
+        android:id="@+id/btnSearch"
+        android:layout_above="@+id/btnStart"
         android:layout_centerHorizontal="true" />
-
-    <FrameLayout
-        android:layout_width="fill_parent"
-        android:layout_height="50dp"
-        android:layout_centerVertical="true"
-        android:layout_centerHorizontal="true"
-        android:id="@+id/frameLayout2"></FrameLayout>
 
     <Button
         android:layout_width="200dp"
         android:layout_weight="1"
         android:layout_height="wrap_content"
-        android:text="host new game"
-        android:id="@+id/hostGames"
-        android:layout_below="@+id/frameLayout2"
-        android:layout_centerHorizontal="true" />
+        android:text="Start"
+        android:id="@+id/btnStart"
+        android:layout_alignParentBottom="true"
+        android:layout_alignLeft="@+id/btnSearch"
+        android:layout_alignStart="@+id/btnSearch"
+        android:clickable="false"/>
 
 
 </RelativeLayout>

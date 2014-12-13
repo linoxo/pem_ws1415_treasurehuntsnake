@@ -1,30 +1,25 @@
 package hunt.snake.com.snaketreasurehunt.view;
 
-import android.annotation.TargetApi;
 import android.app.Activity;
-import android.app.Fragment;
-import android.os.Build;
 import android.os.Bundle;
-import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuItem;
-import android.view.View;
-import android.view.ViewGroup;
-import android.widget.Button;
 
 import hunt.snake.com.snaketreasurehunt.R;
-import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
+import hunt.snake.com.snaketreasurehunt.wifi.DeviceListFragment;
 
 public class ChooseGameActivity extends Activity {
+
+    private DeviceListFragment fragment;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_choose_game);
+        System.out.println("Started");
         if (savedInstanceState == null) {
-            getFragmentManager().beginTransaction()
-                    .add(R.id.container, new PlaceholderFragment())
-                    .commit();
+            fragment = new DeviceListFragment();
+            getFragmentManager().beginTransaction().add(R.id.container, fragment).commit();
         }
     }
 
@@ -48,39 +43,16 @@ public class ChooseGameActivity extends Activity {
         return super.onOptionsItemSelected(item);
     }
 
-    /**
-     * A placeholder fragment containing a simple view.
-     */
-    public static class PlaceholderFragment extends Fragment {
-
-        public PlaceholderFragment() {
-        }
-
-        @Override
-        public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                Bundle savedInstanceState) {
-            View rootView = inflater.inflate(R.layout.fragment_choose_game, container, false);
-
-            Button choose = (Button) rootView.findViewById(R.id.joinGames);
-            choose.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-
-                }
-            });
-
-            Button host = (Button) rootView.findViewById(R.id.hostGames);
-            host.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    CreateDialogs dialogs = new CreateDialogs(getActivity());
-                    dialogs.createPauseScreen();
-                }
-            });
-
-
-
-            return rootView;
-        }
+    /* register the broadcast receiver with the intent values to be matched */
+    @Override
+    protected void onResume() {
+        super.onResume();
+        registerReceiver(fragment.getWifiReceiver(), fragment.getIntentFilter());
+    }
+    /* unregister the broadcast receiver */
+    @Override
+    protected void onPause() {
+        super.onPause();
+        unregisterReceiver(fragment.getWifiReceiver());
     }
 }
