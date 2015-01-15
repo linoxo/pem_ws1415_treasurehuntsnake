@@ -9,7 +9,7 @@ public enum Constants {
         }
     },
 
-    TILE_HEIGHT {
+    TILE_HEIGHT { // TODO: device independent pixel !!!
         @Override
         public int getValue() {
             return 100;

@@ -15,6 +15,7 @@ public class GameBoard {
     private int boardHeight;
 
     private Tile[][] tiles;
+    Tile topLeft;       // defines which part of the game board shall be shown
     Snake snake;
     Snake.Direction nextSnakeDirection;
     private boolean snakeCanTurn;
@@ -26,6 +27,7 @@ public class GameBoard {
     private float tickTime = 0;
 
     public GameBoard() {
+        topLeft = new Tile();
         snake = new Snake();
         gameElements = new ArrayList<GameElement>();
         random = new Random();
@@ -37,6 +39,8 @@ public class GameBoard {
         boardWidth = AndroidGame.getScreenWidth() / Constants.TILE_WIDTH.getValue();
         boardHeight = AndroidGame.getScreenHeight() / Constants.TILE_HEIGHT.getValue();
 
+        // set top left tile
+        topLeft.setPositionOnBoard(0, 0);
         createTiles();
         Snake.Direction startDirection = Snake.Direction.WEST;
         snake.init(tiles[2][3], tiles, 3, startDirection);
@@ -59,10 +63,6 @@ public class GameBoard {
         while (tickTime > TICK) {
             tickTime -= TICK;
 
-            // ============================
-            // == INSERT GAME LOGIC HERE ==
-            // ============================
-
             // move snake in the direction of its head
             if(!snake.move(nextSnakeDirection)) {
                 gameOver = true;
@@ -77,17 +77,6 @@ public class GameBoard {
             //      score += Constants.SCORE_INCREMENT.getValue();
             //      spawn new food at random position
             // }
-
-            // dummy game logic: coin jumps around
-            /* int size = gameElements.size();
-            for (int i = 0; i < size; i++) {
-                GameElement element = gameElements.get(i);
-                if(element.getType() == GameElementType.COIN) {
-                    int x = random.nextInt(boardWidth);
-                    int y = random.nextInt(boardHeight);
-                    element.setTile(tiles[x][y]);
-                }
-            }*/
         }
     }
 

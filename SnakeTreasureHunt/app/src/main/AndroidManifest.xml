@@ -48,8 +48,8 @@
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value=".view.StartScreenMainActivity"/>
-        </activity>
--->
+        </activity> -->
+
         <activity
             android:name=".SnakeTreasureHuntGame"
             android:label="@string/app_name"
