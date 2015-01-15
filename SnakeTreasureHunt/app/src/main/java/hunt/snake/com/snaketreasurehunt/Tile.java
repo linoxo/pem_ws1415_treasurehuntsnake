@@ -21,9 +21,14 @@ public class Tile {
 
 
     public Tile() {
+        this(0, 0);
+    }
+
+    public Tile(int posX, int posY) {
         tileWidth = Constants.TILE_WIDTH.getValue();
         tileHeight = Constants.TILE_HEIGHT.getValue();
         hasGameElement = false;
+        setPositionOnBoard(posX, posY);
     }
 
     public void setPositionOnBoard(int posX, int posY) {
@@ -31,9 +36,17 @@ public class Tile {
         this.posY = posY;
     }
 
+    public void move(int deltaX, int deltaY) {
+        setPositionOnBoard(posX + deltaX, posY + deltaY);
+    }
+
     public void drawTile(Graphics g) {
-        int left = posX * tileWidth;
-        int top = posY * tileHeight;
+        drawTile(g, 0, 0);
+    }
+
+    public void drawTile(Graphics g, int deltaX, int deltaY) {
+        int left = (posX + deltaX) * tileWidth;
+        int top = (posY + deltaY) * tileHeight;
         int width = left + tileWidth;
         int height = top + tileHeight;
 

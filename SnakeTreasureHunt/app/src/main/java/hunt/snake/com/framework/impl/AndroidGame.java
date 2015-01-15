@@ -48,6 +48,7 @@ public abstract class AndroidGame extends Activity implements Game {
         screenHeight = size.y;
 
         int screenDensity = getResources().getDisplayMetrics().densityDpi;
+        System.out.println("Density: " + screenDensity);
         int frameBufferWidth = isLandscape ? size.y : size.x;
         int frameBufferHeight = isLandscape ? size.x : size.y;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,

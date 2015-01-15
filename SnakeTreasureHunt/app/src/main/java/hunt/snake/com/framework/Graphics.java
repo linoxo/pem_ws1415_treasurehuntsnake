@@ -29,6 +29,8 @@ public interface Graphics {
 
     public void drawOval(RectF rect, int color);
 
+    public void drawHalo(int centerX, int centerY, int radius, int width, int color);
+
     public void drawText(String text, int x, int y, int color, int size, Paint.Align align);
 
     public void drawPixmap(Pixmap pixmap, int x, int y, int srcX, int srcY,

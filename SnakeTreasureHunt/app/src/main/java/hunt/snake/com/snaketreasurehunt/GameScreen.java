@@ -1,5 +1,6 @@
 package hunt.snake.com.snaketreasurehunt;
 
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.os.Looper;
 
@@ -24,7 +25,7 @@ public class GameScreen extends Screen {
     private static final String PAUSED_TEXT = "Paused";
     private static final String GAME_OVER_TEXT = "Game Over";
     private static final String SCORE_TEXT = "Score: ";
-    private static final float COUNT_DOWN_TIME = 3.0f;
+    private static final float COUNT_DOWN_TIME = 2.99f;
     private static final float ACCEL_TIME = 0.5f;
     private static final float ACCEL_THRESHOLD = 1.0f;
 
@@ -83,23 +84,29 @@ public class GameScreen extends Screen {
 
     private void updateReady(List<TouchEvent> touchEvents, float deltaTime) {
         if(isCountingDown) {
-            if(!isPhonePlacedOnGround(deltaTime)) {
+            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+            // COMMENT THE FOLLOWING IF CLAUSE OUT
+            /*if(!isPhonePlacedOnGround(deltaTime)) {
                 timer = COUNT_DOWN_TIME;
                 isCountingDown = false;
                 return;
-            }
+            }*/
             timer -= deltaTime;
             if(timer <= 0.0f) {
                 // change from "ready" to "running" if screen was touched
                 state = GameState.RUNNING;
             }
         } else {
-            if(isPhonePlacedOnGround(deltaTime)) {
-                isCountingDown = true;
-            }
-            /*if (touchEvents.size() > 0) {
+            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+            // COMMENT THE FOLLOWING IF CLAUSE OUT AND UNCOMMENT THE ONE BELOW
+            // start countdown when phone is placed on ground
+            /*if(isPhonePlacedOnGround(deltaTime)) {
                 isCountingDown = true;
             }*/
+            // start countdown when screen is touched
+            if (touchEvents.size() > 0) {
+                isCountingDown = true;
+            }
         }
     }
 
@@ -148,14 +155,13 @@ public class GameScreen extends Screen {
             }
         }
 
+        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+        // COMMENT THE FOLLOWING IF CLAUSE OUT
         // change from "running" to "paused" if phone was lifted
-        if(!isPhonePlacedOnGround(deltaTime)) {
+        /*if(!isPhonePlacedOnGround(deltaTime)) {
             state = GameState.PAUSED;
-            /*Looper.prepare();
-            CreateDialogs dialogs = new CreateDialogs(game.getContext());
-            dialogs.createPauseScreen();*/
             return;
-        }
+        }*/
 
         // update the game board and check whether the game is over
         gameBoard.update(deltaTime);
@@ -181,10 +187,12 @@ public class GameScreen extends Screen {
             }
         }
 
+        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+        // COMMENT THE FOLLOWING IF CLAUSE OUT
         // change from "paused" to "running" if phone is placed on ground
-        if(isPhonePlacedOnGround(deltaTime)) {
+        /*if(isPhonePlacedOnGround(deltaTime)) {
             state = GameState.RUNNING;
-        }
+        }*/
     }
 
     private void updateGameOver(List<TouchEvent> touchEvents) {
@@ -204,6 +212,10 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
 
+        // clear the background
+        g.clear(Color.BLACK);
+
+        // draw the game board
         drawGameBoard(g);
 
         if(state == GameState.READY) {

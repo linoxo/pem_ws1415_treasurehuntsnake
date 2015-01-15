@@ -66,13 +66,17 @@ public abstract class GameElement {
     }
 
     public void draw(Graphics g) {
+        draw(g, 0, 0);
+    }
+
+    public void draw(Graphics g, int deltaX, int deltaY) {
         if(!isHidden()) {
             if (elements != null && elements.size() > 0) {
                 for (GameElement element : elements) {
-                    element.drawGameElement(g);
+                    element.drawGameElement(g, deltaX, deltaY);
                 }
             }
-            drawGameElement(g);
+            drawGameElement(g, deltaX, deltaY);
         }
     }
 
@@ -133,5 +137,6 @@ public abstract class GameElement {
 
     public abstract void update();
     public abstract void drawGameElement(Graphics g);
+    public abstract void drawGameElement(Graphics g, int deltaX, int deltaY);
     public abstract void setPosition(Position position);
 }

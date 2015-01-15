@@ -126,10 +126,18 @@ public class AndroidGraphics implements Graphics {
         canvas.drawOval(rect, paint);
     }
 
+    public void drawHalo(int centerX, int centerY, int radius, int width, int color) {
+        paint.setColor(color);
+        paint.setStyle(Style.STROKE);
+        //paint.setStrokeWidth(width);
+        canvas.drawCircle(centerX, centerY, radius, paint);
+    }
+
     public void drawText(String text, int x, int y, int color, int size, Paint.Align align) {
         paint.setColor(color);
         paint.setTextSize(size);
         paint.setTextAlign(align);
+        paint.setStyle(Style.FILL);
         canvas.drawText(text, x, y, paint);
     }
 

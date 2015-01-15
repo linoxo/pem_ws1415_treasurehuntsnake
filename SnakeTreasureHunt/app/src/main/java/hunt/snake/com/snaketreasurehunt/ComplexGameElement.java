@@ -36,8 +36,15 @@ public class ComplexGameElement extends GameElement{
 
     @Override
     public void drawGameElement(Graphics g) {
+        drawGameElement(g, 0, 0);
+    }
+
+    @Override
+    public void drawGameElement(Graphics g, int deltaX, int deltaY) {
         int color = getColor();
-        g.drawPath(path, color);
+        Path drawPath = new Path();
+        drawPath.addPath(path, deltaX * Constants.TILE_WIDTH.getValue(), deltaY * Constants.TILE_HEIGHT.getValue());
+        g.drawPath(drawPath, color);
     }
 
     public void addPoint(Point point) {

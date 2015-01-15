@@ -15,10 +15,19 @@ public class OvalGameElement extends GameElement {
 
     @Override
     public void drawGameElement(Graphics g) {
+        drawGameElement(g, 0, 0);
+    }
+
+    @Override
+    public void drawGameElement(Graphics g, int deltaX, int deltaY) {
         if(rect == null)
             update();
         int color = getColor();
-        g.drawOval(rect, color);
+
+        RectF ovalRect = new RectF();
+        ovalRect.set(rect);
+        ovalRect.offset(deltaX * Constants.TILE_WIDTH.getValue(), deltaY * Constants.TILE_HEIGHT.getValue());
+        g.drawOval(ovalRect, color);
     }
 
     @Override

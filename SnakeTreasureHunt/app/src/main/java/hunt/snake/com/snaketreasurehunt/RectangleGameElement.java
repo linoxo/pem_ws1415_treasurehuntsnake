@@ -15,10 +15,18 @@ public class RectangleGameElement extends GameElement {
 
     @Override
     public void drawGameElement(Graphics g) {
+        drawGameElement(g, 0, 0);
+    }
+
+    @Override
+    public void drawGameElement(Graphics g, int deltaX, int deltaY) {
         if(rect == null)
             update();
         int color = getColor();
-        g.drawRect(rect.left, rect.top, rect.width(), rect.height(), color);
+
+        int left = rect.left + deltaX * Constants.TILE_WIDTH.getValue();
+        int top = rect.top + deltaY * Constants.TILE_HEIGHT.getValue();
+        g.drawRect(left, top, rect.width(), rect.height(), color);
     }
 
     /*
