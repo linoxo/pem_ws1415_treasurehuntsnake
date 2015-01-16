@@ -48,6 +48,7 @@ public class GameBoard {
         // calculate how many tiles fit into the smartphone screen
         screenWidth = AndroidGame.getScreenWidth() / Constants.TILE_WIDTH.getValue();
         screenHeight = AndroidGame.getScreenHeight() / Constants.TILE_HEIGHT.getValue();
+        System.out.println("Screen width = " + screenWidth + " height = " + screenHeight);
 
         // get the size of the game board
         boardWidth = Constants.BOARD_WIDTH.getValue();
@@ -191,16 +192,24 @@ public class GameBoard {
     }
 
     private void drawTiles(Graphics g) {
-        int cols = tiles[0].length;
-        int rows = tiles.length;
-
         int topLeftX = topLeft.getPosX();
         int topLeftY = topLeft.getPosY();
 
+        // how many tiles are visible?
+        int cols = screenWidth;
+        int rows = screenHeight;
+        if(topLeftX + screenWidth > tiles.length) {
+            cols += (tiles.length - topLeftX - screenWidth);
+        }
+        if(topLeftY + screenHeight > tiles[0].length) {
+            rows += (tiles[0].length - topLeftY - screenHeight);
+        }
+
         // shift the game board that is drawn according to the position of the top left tile
-        for(int x = 0; x < rows; x++) {
-            for(int y = 0; y < cols; y++) {
-                Tile tile = tiles[x][y];
+        // only draw the visible tiles!
+        for(int x = 0; x < cols; x++) {
+            for(int y = 0; y < rows; y++) {
+                Tile tile = tiles[topLeftX + x][topLeftY + y];
                 tile.drawTile(g, -topLeftX, -topLeftY);
             }
         }

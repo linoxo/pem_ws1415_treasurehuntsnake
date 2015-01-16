@@ -47,12 +47,22 @@ public class Tile {
     public void drawTile(Graphics g, int deltaX, int deltaY) {
         int left = (posX + deltaX) * tileWidth;
         int top = (posY + deltaY) * tileHeight;
-        int width = left + tileWidth;
-        int height = top + tileHeight;
 
-        g.drawRect(left, top, width, height, Color.parseColor("#4B8A08"));
+        int color;
+        if(isOnBorder()) {
+            // tile is on border --> some color as the obstacles
+            color = Color.parseColor("#472400");
+            //color = posX % 2 == posY % 2 ? Color.parseColor("#61210B") : Color.parseColor("#8A2908");
+        } else {
+            // tile is inside the field --> chess board pattern
+            color = posX % 2 == posY % 2 ? Color.parseColor("#007900") : Color.parseColor("#008600");
+        }
 
-        g.drawText(posX + ", " + posY, left + 50, top + 50, Color.WHITE, Constants.TEXT_SIZE_XS.getValue(), Paint.Align.CENTER);
+        g.drawRect(left, top, tileWidth, tileHeight, color);
+
+        if(!isOnBorder()) {
+            g.drawText(posX + ", " + posY, left + 50, top + 50, Color.WHITE, Constants.TEXT_SIZE_XS.getValue(), Paint.Align.CENTER);
+        }
 
         drawDetails(g);
 
@@ -72,7 +82,7 @@ public class Tile {
         int stopY;
 
         int color = Color.parseColor("#2E1E10");
-        int strokeWidth = 10;
+        int strokeWidth = 25;
 
         if(isTopBorder) {
             startX = posX * tileWidth;
@@ -84,14 +94,14 @@ public class Tile {
 
         if(isBottomBorder) {
             startX = posX * tileWidth;
-            startY = posY * tileHeight + tileHeight;
+            startY = posY * tileHeight + tileHeight - strokeWidth;
             stopX = startX + tileWidth;
             stopY = startY;
             g.drawLine(startX, startY, stopX, stopY, strokeWidth, color);
         }
 
         if(isRightBorder) {
-            startX = posX * tileWidth + tileWidth;
+            startX = posX * tileWidth + tileWidth - strokeWidth;
             startY = posY * tileHeight;
             stopX = startX;
             stopY = startY + tileHeight;
@@ -145,6 +155,10 @@ public class Tile {
 
     public void setIsRightBorder(boolean isRightBorder) {
         this.isRightBorder = isRightBorder;
+    }
+
+    public boolean isOnBorder() {
+        return isBottomBorder || isLeftBorder || isRightBorder || isTopBorder;
     }
 
     public int getPosX() {

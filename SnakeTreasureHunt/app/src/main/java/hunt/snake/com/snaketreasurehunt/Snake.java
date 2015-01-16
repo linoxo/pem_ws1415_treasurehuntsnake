@@ -238,7 +238,7 @@ public class Snake {
         Tile oldTile = headTile;
         Tile nextTile = getNextTile(direction);
 
-        if(nextTile == null)
+        if(nextTile == null || nextTile.isOnBorder())
             return false;
 
         if(direction == headDirection) {
@@ -295,9 +295,9 @@ public class Snake {
         int headX = headTile.getPosX();
         int headY = headTile.getPosY();
         int screenLeft = topLeftTile.getPosX();
-        int screenRight = bottomRightTile.getPosX();
+        int screenRight = bottomRightTile.getPosX() - 1;
         int screenTop = topLeftTile.getPosY();
-        int screenBottom = bottomRightTile.getPosY();
+        int screenBottom = bottomRightTile.getPosY() - 1;
 
         if(headX > screenRight || headX < screenLeft || headY > screenBottom || headY < screenTop) {
             return headDirection;
