@@ -25,7 +25,7 @@ public class GameBoard {
     private Tile[][] tiles;
     Tile topLeft;       // defines which part of the game board shall be shown
     Tile bottomRight;   // the bottom right tile
-    Snake snake;
+    private Snake snake;
     Snake.Direction nextSnakeDirection;
     private boolean snakeCanTurn;
     private List<GameElement> gameElements;
@@ -278,9 +278,11 @@ public class GameBoard {
         return gameOver;
     }
 
-    int getScore() {
+    public int getScore() {
         return score;
     }
+
+    public void setScore(int score) { this.score = score; }
 
     public void setNextSnakeDirection(Snake.Direction nextSnakeDirection) {
         if(snakeCanTurn) {
@@ -292,4 +294,32 @@ public class GameBoard {
     private boolean isFoodVisible() {
         return foodX >= topLeft.getPosX() && foodX <= bottomRight.getPosX() && foodY >= topLeft.getPosY() && foodY <= bottomRight.getPosY();
     }
+
+    //HERE GETTER AND SETTER TO CHANGE VARIABLES DURING GAME
+    public Snake getSnake() {
+        return snake;
+    }
+
+    public void setSnake(Snake snake) { this.snake = snake; }
+
+    public List<GameElement> getGameElements() { return gameElements; }
+
+    public void setGameElements(List<GameElement> gameElements) { this.gameElements = gameElements; }
+
+    public Tile[][] getTiles() { return tiles; }
+
+    public void setTiles(Tile[][] tiles) {
+        this.tiles = tiles;
+    }
+
+    public int getFoodX() { return foodX; }
+
+    public void setFoodX(int foodX) { this.foodX = foodX; }
+
+    public int getFoodY() { return foodY; }
+
+    public void setFoodY(int foodY) { this.foodY = foodY; }
+
+
+
 }
