@@ -44,8 +44,13 @@ public class Snake {
 
     //draws the snake on the canvas
     public void drawSnake(Graphics g) {
+        drawSnake(g, 0, 0);
+    }
+
+    // draws the snake on the canvas, but with a shifted position relative to (0,0)
+    public void drawSnake(Graphics g, int deltaX, int deltaY) {
         for(GameElement bodyPart : bodyParts)
-            bodyPart.draw(g);
+            bodyPart.draw(g, deltaX, deltaY);
     }
 
     public void createSnake() {
@@ -233,7 +238,7 @@ public class Snake {
         Tile oldTile = headTile;
         Tile nextTile = getNextTile(direction);
 
-        if(nextTile == null)
+        if(nextTile == null || nextTile.isOnBorder())
             return false;
 
         if(direction == headDirection) {
@@ -284,5 +289,20 @@ public class Snake {
         food.hidden(true);
 
         //System.out.println("eat: " + foodTile.getPosX() + ", " + foodTile.getPosY() + ": " + foodTile.getGameElement().getType());
+    }
+
+    public Direction snakeOutOfScreen(Tile topLeftTile, Tile bottomRightTile) {
+        int headX = headTile.getPosX();
+        int headY = headTile.getPosY();
+        int screenLeft = topLeftTile.getPosX();
+        int screenRight = bottomRightTile.getPosX() - 1;
+        int screenTop = topLeftTile.getPosY();
+        int screenBottom = bottomRightTile.getPosY() - 1;
+
+        if(headX > screenRight || headX < screenLeft || headY > screenBottom || headY < screenTop) {
+            return headDirection;
+        }
+
+        return null;
     }
 }

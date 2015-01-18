@@ -1,6 +1,11 @@
 package hunt.snake.com.framework;
 
+import android.content.Context;
+
 public interface Game {
+
+    public Context getContext();
+
     public Input getInput();
 
     public FileIO getFileIO();

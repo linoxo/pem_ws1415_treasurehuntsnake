@@ -3,10 +3,15 @@ package hunt.snake.com.snaketreasurehunt.wifi;
 import android.os.Handler;
 
 import java.io.BufferedReader;
+import java.io.BufferedWriter;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
+import java.io.PrintWriter;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.ArrayList;
 
 /**
  * Created by Tom on 12/11/14.
@@ -19,6 +24,7 @@ public class Server {
     private Thread serverThread;
     public boolean isStarted;
     public String serverAddress;
+    private ArrayList<CommunicationThread> clients;
 
     public Server() {
         serverThread = new Thread(new ServerThread());
@@ -50,6 +56,7 @@ public class Server {
                 e.printStackTrace();
             }
 
+
             while(!Thread.currentThread().isInterrupted()) {
 
                 try {
@@ -59,6 +66,10 @@ public class Server {
 
                     CommunicationThread comThread = new CommunicationThread(socket);
                     new Thread(comThread).start();
+
+                    if(clients == null)
+                        clients = new ArrayList<CommunicationThread>();
+                    clients.add(comThread);
 
                 } catch (IOException e) {
                     e.printStackTrace();
@@ -71,12 +82,17 @@ public class Server {
     class CommunicationThread implements Runnable {
 
         private Socket clientSocket;
+        public PrintWriter out;
 
         private BufferedReader reader;
 
         public CommunicationThread(Socket clientSocket) {
             this.clientSocket = clientSocket;
-
+            try {
+                out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(this.clientSocket.getOutputStream())), true);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             initInputStream();
         }
 
@@ -94,11 +110,22 @@ public class Server {
                 try {
                     String read = reader.readLine();
 
-                    System.out.println(read);
-
-                    //DO SOMETHING!!!!
+                    if(read != null) {
+                        System.out.println("In com: " + read);
+                        broadcast();
+                    }
                 } catch (IOException e) {
                     e.printStackTrace();
+                }
+            }
+        }
+
+        private void broadcast() {
+            for(CommunicationThread comThread : clients) {
+                if(comThread.clientSocket != clientSocket) {
+                    comThread.out.println("Ping");
+                    comThread.out.flush();
+                    System.out.println("Send to: " + comThread.clientSocket);
                 }
             }
         }

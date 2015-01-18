@@ -33,12 +33,16 @@ public class BigGameElement extends GameElement {
 
     @Override
     public void drawGameElement(Graphics g) {
+        drawGameElement(g, 0, 0);
+    }
 
+    @Override
+    public void drawGameElement(Graphics g, int deltaX, int deltaY) {
         if(elements == null)
-            gameElement.draw(g);
+            gameElement.draw(g, deltaX, deltaY);
         else {
             for(GameElement element : elements)
-                element.draw(g);
+                element.draw(g, deltaX, deltaY);
         }
     }
 

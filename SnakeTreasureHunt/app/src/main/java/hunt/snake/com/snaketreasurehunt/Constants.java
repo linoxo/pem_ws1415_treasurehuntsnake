@@ -9,11 +9,21 @@ public enum Constants {
         }
     },
 
-    TILE_HEIGHT {
+    TILE_HEIGHT { // TODO: device independent pixel !!!
         @Override
         public int getValue() {
             return 100;
         }
+    },
+
+    BOARD_WIDTH { // width of the game board in tiles
+        @Override
+        public int getValue() { return 20; }
+    },
+
+    BOARD_HEIGHT { // height of the game board in tiles
+        @Override
+        public int getValue() { return 30; }
     },
 
     SNAKE_WIDTH {

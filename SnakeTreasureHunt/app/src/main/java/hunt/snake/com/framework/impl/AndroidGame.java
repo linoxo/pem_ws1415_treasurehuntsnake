@@ -24,6 +24,7 @@ public abstract class AndroidGame extends Activity implements Game {
     private static int screenWidth;
     private static int screenHeight;
 
+    Context context;
     AndroidFastRenderView renderView;
     Graphics graphics;
     Audio audio;
@@ -46,11 +47,14 @@ public abstract class AndroidGame extends Activity implements Game {
         screenWidth = size.x;
         screenHeight = size.y;
 
+        int screenDensity = getResources().getDisplayMetrics().densityDpi;
+        System.out.println("Density: " + screenDensity);
         int frameBufferWidth = isLandscape ? size.y : size.x;
         int frameBufferHeight = isLandscape ? size.x : size.y;
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
 
+        context = getApplicationContext();
         renderView = new AndroidFastRenderView(this, frameBuffer);
         graphics = new AndroidGraphics(getAssets(), frameBuffer);
         fileIO = new AndroidFileIO(this);
@@ -80,6 +84,10 @@ public abstract class AndroidGame extends Activity implements Game {
 
         if (isFinishing())
             screen.dispose();
+    }
+
+    public Context getContext() {
+        return context;
     }
 
     public Input getInput() {

@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.IntentFilter;
+import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
 import android.net.wifi.p2p.WifiP2pDeviceList;
@@ -322,6 +323,21 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
 				if (bottom != null) {
 					bottom.setText(getDeviceStatus(device.status));
 				}
+
+                int color;
+                switch (device.status) {
+                    case WifiP2pDevice.CONNECTED:
+                        color = Color.parseColor("#00CC00");
+                        break;
+                    case WifiP2pDevice.INVITED:
+                        color = Color.parseColor("#FF6600");
+                        break;
+                    default:
+                        color = Color.parseColor("#FFFFFF");
+                        break;
+                }
+                top.setTextColor(color);
+                bottom.setTextColor(color);
 			}
 
 			return v;

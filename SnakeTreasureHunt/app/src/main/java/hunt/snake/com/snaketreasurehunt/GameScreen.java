@@ -1,6 +1,8 @@
 package hunt.snake.com.snaketreasurehunt;
 
+import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Looper;
 
 import java.util.List;
 
@@ -9,6 +11,7 @@ import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.Input.TouchEvent;
 import hunt.snake.com.framework.Screen;
 import hunt.snake.com.framework.impl.AndroidGame;
+import hunt.snake.com.snaketreasurehunt.view.CreateDialogs;
 
 public class GameScreen extends Screen {
     enum GameState {
@@ -22,14 +25,23 @@ public class GameScreen extends Screen {
     private static final String PAUSED_TEXT = "Paused";
     private static final String GAME_OVER_TEXT = "Game Over";
     private static final String SCORE_TEXT = "Score: ";
-    private static final float COUNT_DOWN_TIME = 3.0f;
+    private static final float COUNT_DOWN_TIME = 2.99f;
+    private static final float ACCEL_TIME = 0.5f;
+    private static final float ACCEL_THRESHOLD = 1.0f;
 
     GameState state;
     GameBoard gameBoard;
     int oldScore;
     String score;
     boolean isCountingDown;
-    float countDownTimer;
+    float timer;
+    float accelTimer;
+    boolean isPhoneLifted;
+    String accelX = "";
+    String accelY = "";
+    String accelZ = "";
+    float accel[] = new float[3];
+    float accelDiff[] = new float[3];
 
     public GameScreen(Game game) {
         super(game);
@@ -43,7 +55,9 @@ public class GameScreen extends Screen {
         oldScore = 0;
         score = SCORE_TEXT + oldScore;
         isCountingDown = false;
-        countDownTimer = COUNT_DOWN_TIME;
+        timer = COUNT_DOWN_TIME;
+        accelTimer = ACCEL_TIME;
+        isPhoneLifted = true;
     }
 
     @Override
@@ -60,7 +74,7 @@ public class GameScreen extends Screen {
             return;
         }
         if(state == GameState.PAUSED) {
-            updatePaused(touchEvents);
+            updatePaused(touchEvents, deltaTime);
             return;
         }
         if(state == GameState.GAME_OVER) {
@@ -70,16 +84,49 @@ public class GameScreen extends Screen {
 
     private void updateReady(List<TouchEvent> touchEvents, float deltaTime) {
         if(isCountingDown) {
-            countDownTimer -= deltaTime;
-            if(countDownTimer <= 0.0f) {
+            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+            // COMMENT THE FOLLOWING IF CLAUSE OUT
+            /*if(!isPhonePlacedOnGround(deltaTime)) {
+                timer = COUNT_DOWN_TIME;
+                isCountingDown = false;
+                return;
+            }*/
+            timer -= deltaTime;
+            if(timer <= 0.0f) {
                 // change from "ready" to "running" if screen was touched
                 state = GameState.RUNNING;
             }
         } else {
+            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+            // COMMENT THE FOLLOWING IF CLAUSE OUT AND UNCOMMENT THE ONE BELOW
+            // start countdown when phone is placed on ground
+            /*if(isPhonePlacedOnGround(deltaTime)) {
+                isCountingDown = true;
+            }*/
+            // start countdown when screen is touched
             if (touchEvents.size() > 0) {
                 isCountingDown = true;
             }
         }
+    }
+
+    private boolean isPhonePlacedOnGround(float deltaTime) {
+        if(isPhoneLifted) {
+            accelTimer -= deltaTime;
+            if(Math.abs(game.getInput().getAccelX()) > ACCEL_THRESHOLD || Math.abs(game.getInput().getAccelY()) > ACCEL_THRESHOLD) {
+                accelTimer = ACCEL_TIME;
+            }
+            if(accelTimer < 0.0f) {
+                isPhoneLifted = false;
+            }
+        } else {
+            if(Math.abs(game.getInput().getAccelX()) > ACCEL_THRESHOLD || Math.abs(game.getInput().getAccelY()) > ACCEL_THRESHOLD) {
+                accelTimer = ACCEL_TIME;
+                isPhoneLifted = true;
+            }
+        }
+
+        return !isPhoneLifted;
     }
 
     private void updateRunning(List<TouchEvent> touchEvents, float deltaTime) {
@@ -105,11 +152,16 @@ public class GameScreen extends Screen {
                         System.out.println("Going NORTH");
                     }
                 }
-                // change from "running" to "paused" if screen was touched
-                // state = GameState.PAUSED;
-                // return;
             }
         }
+
+        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+        // COMMENT THE FOLLOWING IF CLAUSE OUT
+        // change from "running" to "paused" if phone was lifted
+        /*if(!isPhonePlacedOnGround(deltaTime)) {
+            state = GameState.PAUSED;
+            return;
+        }*/
 
         // update the game board and check whether the game is over
         gameBoard.update(deltaTime);
@@ -124,16 +176,23 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void updatePaused(List<TouchEvent> touchEvents) {
+    private void updatePaused(List<TouchEvent> touchEvents, float deltaTime) {
         int size = touchEvents.size();
         for(int i = 0; i < size; i++) {
             TouchEvent event = touchEvents.get(i);
             if(event.type == TouchEvent.TOUCH_UP) {
                 // change from "paused" to "running" if screen was touched
-                state = GameState.RUNNING;
-                return;
+                // state = GameState.RUNNING;
+                // return;
             }
         }
+
+        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
+        // COMMENT THE FOLLOWING IF CLAUSE OUT
+        // change from "paused" to "running" if phone is placed on ground
+        /*if(isPhonePlacedOnGround(deltaTime)) {
+            state = GameState.RUNNING;
+        }*/
     }
 
     private void updateGameOver(List<TouchEvent> touchEvents) {
@@ -153,13 +212,17 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
 
+        // clear the background
+        g.clear(Color.BLACK);
+
+        // draw the game board
         drawGameBoard(g);
 
         if(state == GameState.READY) {
             drawReadyUI(g);
         }
         if(state == GameState.RUNNING) {
-            drawRunningUI(g);
+            drawRunningUI(g, deltaTime);
         }
         if(state == GameState.PAUSED) {
             drawPausedUI(g);
@@ -179,7 +242,7 @@ public class GameScreen extends Screen {
 
         if(isCountingDown) {
             // draw countdown
-            String countDownText = String.valueOf((int)countDownTimer + 1);
+            String countDownText = String.valueOf((int)timer + 1);
             g.drawText(countDownText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
         } else {
             // draw ready text
@@ -187,9 +250,30 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void drawRunningUI(Graphics g) {
+    private void drawRunningUI(Graphics g, float deltaTime) {
         // draw score
         g.drawText(score, 50, AndroidGame.getScreenHeight() - 25, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.LEFT);
+
+        // draw accelerometer values
+        timer -= deltaTime;
+        if(timer < 0.0f) {
+            accelDiff[0] = Math.abs(accel[0] - game.getInput().getAccelX());
+            accelDiff[1] = Math.abs(accel[1] - game.getInput().getAccelY());
+            accelDiff[2] = Math.abs(accel[2] - game.getInput().getAccelZ());
+            accel[0] = game.getInput().getAccelX();
+            accel[1] = game.getInput().getAccelY();
+            accel[2] = game.getInput().getAccelZ();
+            accelX = "x = " + accel[0];
+            accelY = "y = " + accel[1];
+            accelZ = "z = " + accel[2];
+            timer = 0.5f;
+        }
+        g.drawText(accelX, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 55, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText("" + accelDiff[0], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 55, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText(accelY, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText("" + accelDiff[1], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText(accelZ, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText("" + accelDiff[2], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
     }
 
     private void drawPausedUI(Graphics g) {
