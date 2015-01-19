@@ -9,7 +9,7 @@ import hunt.snake.com.snaketreasurehunt.GameBoard;
  */
 public class STHMessageParser {
 
-    STHMessage incomingMessage;
+    private STHMessage incomingMessage;
 
     public STHMessageParser(STHMessage incomingMessage) {
 
