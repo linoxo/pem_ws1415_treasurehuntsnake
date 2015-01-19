@@ -1,41 +1,63 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
-import org.json.JSONException;
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
+import com.google.gson.JsonObject;
+import com.google.gson.reflect.TypeToken;
+
+import java.lang.reflect.Type;
+import java.util.ArrayList;
 
 import hunt.snake.com.snaketreasurehunt.GameBoard;
+import hunt.snake.com.snaketreasurehunt.GameElement;
+import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.Tile;
 
 /**
  * Created by lino on 18.01.15.
  */
 public class STHMessageParser {
 
-    STHMessage incomingMessage;
+    private GameBoard board;
 
-    public STHMessageParser(STHMessage incomingMessage) {
+    public STHMessageParser(GameBoard board) {
 
-        this.incomingMessage = incomingMessage;
+        this.board = board;
 
     }
 
-    private void deserializeSTHMessage(GameBoard board) {
-        try {
+    public void deserializeSTHMessage(JsonObject incomingMessage) {
 
-            int messageType = incomingMessage.getInt("type");
+            Gson gson = new GsonBuilder().create();
+
+            JsonObject message = gson.fromJson(incomingMessage, JsonObject.class);
+
+            System.out.println(message);
+
+            int messageType = message.get("type").getAsInt();
 
             switch (messageType) {
                 case STHMessage.GAMESTART_MESSAGE:
 
-                    GameBoard gb = (GameBoard) incomingMessage.get("board");
+                    Tile[][] tiles = gson.fromJson(message.get("tiles"), Tile[][].class);
+                    board.setTiles(tiles);
 
-                    board.setTiles(gb.getTiles());
-                    board.setGameElements(gb.getGameElements());
-                    board.setSnake(gb.getSnake());
+                    Type listType = new TypeToken<ArrayList<GameElement>>(){}.getType();
+                    ArrayList<GameElement> list = gson.fromJson(message.get("entities"), listType);
+                    board.setGameElements(list);
 
+                    Snake snake = gson.fromJson(message.get("snake"), Snake.class);
+                    board.setSnake(snake);
+
+                    int foodX = message.get("foodX").getAsInt();
+                    int foodY = message.get("foodY").getAsInt();
+                    board.setFoodX(foodX);
+                    board.setFoodY(foodY);
 
                     break;
                 case STHMessage.GAMEOVER_MESSAGE:
 
-                    int score = incomingMessage.getInt("highscore");
+                    int score = incomingMessage.get("score").getAsInt();
 
                     board.setScore(score);
 
@@ -49,17 +71,14 @@ public class STHMessageParser {
                     break;
                 case STHMessage.NEWGUTTI_MESSAGE:
 
-                    int foodX = incomingMessage.getInt("foodX");
-                    int foodY = incomingMessage.getInt("foodY");
+                    int foodx = message.get("foodX").getAsInt();
+                    int foody = message.get("foodY").getAsInt();
 
-                    board.setFoodX(foodX);
-                    board.setFoodY(foodY);
+                    board.setFoodX(foodx);
+                    board.setFoodY(foody);
 
                     break;
 
             }
-        } catch(JSONException je) {
-            je.printStackTrace();
-        }
     }
 }
