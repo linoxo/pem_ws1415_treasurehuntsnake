@@ -1,89 +1,147 @@
-package com.example.stitching;
+package hunt.snake.com.snaketreasurehunt.stitching;
 
-import android.widget.TextView;
+
+import android.util.Log;
+
+import hunt.snake.com.snaketreasurehunt.GameScreen;
+
 
 public class SnakeGestureMethods {
 
+    Stitching stitch;
+
 	//constructor
 	public SnakeGestureMethods() {
+        stitch = new Stitching();
 	}
 
+    public void swipeType(int direction){
+
+        switch (direction) {
+
+            case SnakeGestureListener.SWIPE_RIGHT:
+                swipeRight();
+                break;
+            case SnakeGestureListener.SWIPE_LEFT:
+                swipeLeft();
+                break;
+            case SnakeGestureListener.SWIPE_DOWN:
+                swipeDown();
+                break;
+            case SnakeGestureListener.SWIPE_UP:
+                swipeUp();
+                break;
+            case SnakeGestureListener.SWIPEIN_LEFT:
+               swipeInLeft();
+                if (stitch.isStitchingEnabled()) {
+                    stitch.completeStitching();
+                }
+                break;
+            case SnakeGestureListener.SWIPEIN_RIGHT:
+                swipeInRight();
+                if (stitch.isStitchingEnabled()) {
+                    stitch.completeStitching();
+                }
+                break;
+            case SnakeGestureListener.SWIPEOUT_LEFT:
+                swipeOutLeft();
+                stitch.enableStitching();
+                break;
+            case SnakeGestureListener.SWIPEIN_TOP:
+                swipeInTop();
+                if (stitch.isStitchingEnabled()) {
+                    stitch.completeStitching();
+                }
+                break;
+            case SnakeGestureListener.SWIPEOUT_TOP:
+                swipeOutTop();
+                stitch.enableStitching();
+                break;
+            case SnakeGestureListener.SWIPEOUT_BOTTOM:
+                swipeOutBottom();
+                stitch.enableStitching();
+                break;
+            case SnakeGestureListener.SWIPEIN_BOTTOM:
+                swipeInBottom();
+                if (stitch.isStitchingEnabled()) {
+                    stitch.completeStitching();
+                }
+                break;
+            case SnakeGestureListener.SWIPEOUT_RIGHT:
+                swipeOutRight();
+                stitch.enableStitching();
+                break;
+
+        }
+    }
 	
 	//customary direction gestures
-	public void swipeUp(TextView text) {
+	public void swipeUp() {
 		// up swipe
-		text.setText("Swipe Up");
 	}
 
-	public void swipeDown (TextView text) {
+	public void swipeDown ( ) {
 		// down swipe
-		text.setText("Swipe Down");
 	}
 	
-	public void swipeLeft(TextView text) {
+	public void swipeLeft() {
 		// left swipe
-		text.setText("Swipe Left");
 	}
 
-	public void swipeRight(TextView text) {
-		// right swipe
-		text.setText("Swipe Right");
+	public void swipeRight() {
+        Log.d("SWIPE", "Right Swipe");
+
+        // right swipe
 	}
 
 	
 	// stitching gestures
-	public void swipeOutTop(TextView text) {
+	public void swipeOutTop() {
 		// gesture on active device that induces stitching
 		// saves game tile of last touch position to global variable
-		text.setText("Swipe Out Top");
 	}
 
-	public void swipeOutBottom(TextView text) {
+	public void swipeOutBottom() {
 		// gesture on active device that induces stitching
 		// saves game tile of last touch position to global variable
-		text.setText("Swipe Out Bottom");
 	}
 
-	public void swipeInBottom(TextView text) {
+	public void swipeInBottom() {
 		// device gets stitched and is on the right side of the previously
 		// active
 		// one
 		// global game tile variable needs to get called
-		text.setText("Swipe In Bottom");
+
 	}
 
-	public void swipeInTop(TextView text) {
+	public void swipeInTop() {
 		// device gets stitched and is on the left side of the previously active
 		// one
 		// global game tile variable needs to get called
-		text.setText("Swipe In Top");
+
 	}
 	
-	public void swipeOutLeft(TextView text) {
+	public void swipeOutLeft() {
 		// gesture on active device that induces stitching
 		// saves game tile of last touch position to global variable
-		text.setText("Swipe Out Left");
 	}
 
-	public void swipeOutRight(TextView text) {
+	public void swipeOutRight() {
 		// gesture on active device that induces stitching
 		// saves game tile of last touch position to global variable
-		text.setText("Swipe Out Right");
 	}
 
-	public void swipeInLeft(TextView text) {
+	public void swipeInLeft() {
 		// device gets stitched and is on the right side of the previously
 		// active
 		// one
 		// global game tile variable needs to get called
-		text.setText("Swipe In Left");
 	}
 
-	public void swipeInRight(TextView text) {
+	public void swipeInRight() {
 		// device gets stitched and is on the left side of the previously active
 		// one
 		// global game tile variable needs to get called
-		text.setText("Swipe In Right");
 	}
 
 }
