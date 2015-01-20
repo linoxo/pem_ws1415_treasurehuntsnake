@@ -61,7 +61,7 @@ public class Tile {
         g.drawRect(left, top, tileWidth, tileHeight, color);
 
         if(!isOnBorder()) {
-            g.drawText(posX + ", " + posY, left + 50, top + 50, Color.WHITE, Constants.TEXT_SIZE_XS.getValue(), Paint.Align.CENTER);
+            //g.drawText(posX + ", " + posY, left + 50, top + 50, Color.WHITE, Constants.TEXT_SIZE_XS.getValue(), Paint.Align.CENTER);
         }
 
         drawDetails(g);

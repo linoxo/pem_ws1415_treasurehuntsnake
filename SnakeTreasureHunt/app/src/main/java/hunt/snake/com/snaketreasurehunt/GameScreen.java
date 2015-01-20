@@ -2,6 +2,7 @@ package hunt.snake.com.snaketreasurehunt;
 
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.RectF;
 import android.os.Looper;
 
 import java.util.List;
@@ -33,6 +34,7 @@ public class GameScreen extends Screen {
     GameBoard gameBoard;
     int oldScore;
     String score;
+    RectF scoreBoard;
     boolean isCountingDown;
     float timer;
     float accelTimer;
@@ -54,6 +56,7 @@ public class GameScreen extends Screen {
         gameBoard.init();
         oldScore = 0;
         score = SCORE_TEXT + oldScore;
+        scoreBoard = new RectF(25, 25, 290, 125);
         isCountingDown = false;
         timer = COUNT_DOWN_TIME;
         accelTimer = ACCEL_TIME;
@@ -252,10 +255,11 @@ public class GameScreen extends Screen {
 
     private void drawRunningUI(Graphics g, float deltaTime) {
         // draw score
-        g.drawText(score, 50, AndroidGame.getScreenHeight() - 25, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_S.getValue(), Paint.Align.LEFT);
+        g.drawRoundRect(scoreBoard, 25, 25, 0x99000000);
+        g.drawText(score, 50, 95, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.LEFT);
 
         // draw accelerometer values
-        timer -= deltaTime;
+        /*timer -= deltaTime;
         if(timer < 0.0f) {
             accelDiff[0] = Math.abs(accel[0] - game.getInput().getAccelX());
             accelDiff[1] = Math.abs(accel[1] - game.getInput().getAccelY());
@@ -273,7 +277,7 @@ public class GameScreen extends Screen {
         g.drawText(accelY, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
         g.drawText("" + accelDiff[1], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
         g.drawText(accelZ, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText("" + accelDiff[2], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
+        g.drawText("" + accelDiff[2], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);*/
     }
 
     private void drawPausedUI(Graphics g) {

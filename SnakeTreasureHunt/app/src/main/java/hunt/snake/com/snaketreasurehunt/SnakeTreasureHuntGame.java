@@ -13,6 +13,9 @@ import hunt.snake.com.snaketreasurehunt.stitching.SnakeGestureListener.SimpleGes
 
 public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureListener {
 
+    // is our phone the active phone (containing the snake's head)?
+    public static boolean isActivePhone = true;
+
     SnakeGestureMethods methods= new SnakeGestureMethods();
     SnakeGestureListener detector;
 

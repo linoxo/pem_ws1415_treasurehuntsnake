@@ -2,6 +2,7 @@ package hunt.snake.com.snaketreasurehunt;
 
 import java.lang.reflect.Array;
 import java.util.ArrayList;
+import java.util.List;
 
 import hunt.snake.com.framework.Graphics;
 
@@ -48,4 +49,12 @@ public class BigGameElement extends GameElement {
 
     @Override
     public void setPosition(Position position) {}
+
+    public GameElement getGameElement() {
+        return gameElement;
+    }
+
+    public List<GameElement> getGameElements() {
+        return elements;
+    }
 }

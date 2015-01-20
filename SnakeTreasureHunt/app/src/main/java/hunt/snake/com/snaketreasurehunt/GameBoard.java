@@ -9,11 +9,15 @@ import java.util.Random;
 
 import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.impl.AndroidGame;
+import hunt.snake.com.snaketreasurehunt.communication.DataTransferHandler;
+import hunt.snake.com.snaketreasurehunt.stitching.SnakeGestureListener;
 
 public class GameBoard {
 
-    // the snake moves every TICK seconds
-    private static final float TICK = 1.0f;
+    private static float TICK;                          // the snake moves every TICK seconds
+    private static final float TICK_INIT = 1.0f;        // starting value for the tick
+    private static final float TICK_DECREMENT = 0.15f;  // it gets this faster after eating
+    private static final float TICK_MIN = 0.25f;        // the minimum tick time
 
     private int boardWidth;         // width of the game board in tiles
     private int boardHeight;        // height of the game board in tiles
@@ -29,12 +33,15 @@ public class GameBoard {
     private Snake snake;
     Snake.Direction nextSnakeDirection;
     private boolean snakeCanTurn;
+    private float snakeCanTurnCounter;
+    private boolean snakeHasEatenLock;
     private List<GameElement> gameElements;
     private boolean gameOver;
     private int score;
     private Random random;
 
     private float tickTime = 0;
+    private int stitchingDirection; // side of the phone where there was a swipe out
 
     public GameBoard() {
         topLeft = new Tile();
@@ -55,23 +62,49 @@ public class GameBoard {
         boardWidth = Constants.BOARD_WIDTH.getValue();
         boardHeight = Constants.BOARD_HEIGHT.getValue();
 
+        TICK = TICK_INIT;
+        gameOver = false;
+        score = 0;
+
+        if(SnakeTreasureHuntGame.isActivePhone) {
+            generateGameBoard();
+            sendGameStartMessage();
+        }
+    }
+
+    public void generateGameBoard() {
         // set top left tile
         topLeft.setPositionOnBoard(0, 0);
         bottomRight.setPositionOnBoard(screenWidth, screenHeight);
+
+        // create tiles
         createTiles();
+
+        // create snake
         Snake.Direction startDirection = Snake.Direction.WEST;
         snake.init(tiles[2][3], tiles, 3, startDirection);
         nextSnakeDirection = startDirection;
         snakeCanTurn = true;
+        snakeCanTurnCounter = TICK;
+        snakeHasEatenLock = false;
+
+        // create obstacles and food
         gameElements.clear();
-        gameOver = false;
-        score = 0;
         createGameElements();
     }
 
     public void update(float deltaTime) {
         if (gameOver) {
             return;
+        }
+
+        // manage the snakes possibility to turn
+        if(!snakeCanTurn) {
+            snakeCanTurnCounter -= deltaTime;
+        }
+        if(snakeCanTurnCounter <= 0.0f) {
+            snakeCanTurnCounter = TICK;
+            snakeCanTurn = true;
         }
 
         tickTime += deltaTime;
@@ -83,6 +116,7 @@ public class GameBoard {
             // move snake in the direction of its head
             if(!snake.move(nextSnakeDirection)) {
                 gameOver = true;
+                sendGameOverMessage();
                 return;
             }
 
@@ -109,14 +143,20 @@ public class GameBoard {
                 }
             }
 
-            // after moving, the snake can be turned again
-            snakeCanTurn = true;
-
             // check whether snake has eaten something
-            // if(snake has eaten something) {
-            //      score += Constants.SCORE_INCREMENT.getValue();
-            //      spawn new food at random position
-            // }
+            if(snake.hasEaten() && !snakeHasEatenLock) {
+                snakeHasEatenLock = true;
+
+                // increase score, spawn new gutti, increase speed and send new gutti message
+                score += Constants.SCORE_INCREMENT.getValue();
+                spawnFood();
+                if(TICK > TICK_MIN) {
+                    TICK -= TICK_DECREMENT;
+                }
+                sendNewGuttiMessage();
+            } else if(!snake.hasEaten() && snakeHasEatenLock) {
+                snakeHasEatenLock = false;
+            }
         }
     }
 
@@ -135,9 +175,29 @@ public class GameBoard {
         // create obstacle
         gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
 
-        // spawn food at random position
-        foodX = random.nextInt(boardWidth);
-        foodY = random.nextInt(boardHeight);
+        // spawn food
+        spawnFood();
+    }
+
+    public void spawnFood() {
+        // spawn food at random position inside the game board and not at an obstacle
+        do {
+            foodX = random.nextInt(boardWidth - 2) + 1;
+            foodY = random.nextInt(boardHeight - 2) + 1;
+
+            boolean foodIsOnObstacle = false;
+            for (GameElement gameElement : gameElements) {
+                if (gameElement.getType() == GameElementType.RECT_OBSTACLE) {
+                    if (gameElement instanceof Obstacle && ((Obstacle)gameElement).isTileOccupiedByObstacle(foodX, foodY)) {
+                        foodIsOnObstacle = true;
+                    }
+                }
+            }
+            if(!foodIsOnObstacle) {
+                break;
+            }
+        } while(true);
+
         gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
     }
 
@@ -152,10 +212,10 @@ public class GameBoard {
         int topLeftX = topLeft.getPosX();
         int topLeftY = topLeft.getPosY();
 
-        int size = gameElements.size();
-        for (int i = 0; i < size; i++) {
-            GameElement element = gameElements.get(i);
-            element.draw(g, -topLeftX, -topLeftY);
+        for (GameElement element : gameElements) {
+            if(element.getType() != GameElementType.FOOD || isFoodVisible()) {
+                element.draw(g, -topLeftX, -topLeftY);
+            }
         }
     }
 
@@ -321,6 +381,37 @@ public class GameBoard {
 
     public void setFoodY(int foodY) { this.foodY = foodY; }
 
+    // Methods for sending the messages during the game
+    public void sendGameStartMessage() {
+        DataTransferHandler.setFieldWidth(boardWidth);
+        DataTransferHandler.setFieldHeight(boardHeight);
+        // TODO: store occupied tiles
+    }
 
+    public void sendStitchOutMessage() {
+        DataTransferHandler.setTickTime(tickTime);
+        DataTransferHandler.setTimestamp(System.nanoTime() / 1000000000.0f);
+        DataTransferHandler.setStitchingDirection(stitchingDirection);
 
+        int topLeftXPos = topLeft.getPosX();
+        int topLeftYPos = topLeft.getPosY();
+        switch(stitchingDirection) {
+            case SnakeGestureListener.SWIPEOUT_TOP: topLeftYPos -= screenHeight; break;
+            case SnakeGestureListener.SWIPEOUT_LEFT: topLeftXPos -= screenWidth; break;
+            case SnakeGestureListener.SWIPEOUT_RIGHT: topLeftXPos += screenWidth; break;
+            case SnakeGestureListener.SWIPEOUT_BOTTOM: topLeftYPos += screenHeight; break;
+        }
+        DataTransferHandler.setTopLeftXPos(topLeftXPos);
+        DataTransferHandler.setTopLeftYPos(topLeftYPos);
+        // TODO: store snake
+    }
+
+    public void sendNewGuttiMessage() {
+        DataTransferHandler.setFoodXPos(foodX);
+        DataTransferHandler.setFoodYPos(foodY);
+    }
+
+    public void sendGameOverMessage() {
+        DataTransferHandler.setScore(score);
+    }
 }

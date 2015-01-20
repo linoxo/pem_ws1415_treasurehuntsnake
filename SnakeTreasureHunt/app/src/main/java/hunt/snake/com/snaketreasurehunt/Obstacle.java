@@ -81,4 +81,18 @@ public class Obstacle extends BigGameElement {
 
         return freeTiles.get(new Random().nextInt(freeTiles.size()));
     }
+
+    public boolean isTileOccupiedByObstacle(int tileXPos, int tileYPos) {
+        boolean result = false;
+        if(getGameElement().getTile().getPosX() == tileXPos && getGameElement().getTile().getPosY() == tileYPos) {
+            result = true;
+        } else {
+            for (GameElement g : getGameElements()) {
+                if (g.getTile().getPosX() == tileXPos && g.getTile().getPosY() == tileYPos) {
+                    result = true;
+                }
+            }
+        }
+        return result;
+    }
 }
