@@ -26,6 +26,7 @@ public class GameScreen extends Screen {
     private static final String PAUSED_TEXT = "Paused";
     private static final String GAME_OVER_TEXT = "Game Over";
     private static final String SCORE_TEXT = "Score: ";
+    private static final String FOG_OF_WAR_TEXT = "~ Fog of War ~";
     private static final float COUNT_DOWN_TIME = 2.99f;
     private static final float ACCEL_TIME = 0.5f;
     private static final float ACCEL_THRESHOLD = 1.0f;
@@ -67,6 +68,11 @@ public class GameScreen extends Screen {
     public void update(float deltaTime) {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
+
+        // if our phone is not controlling, we have nothing to do!
+        if(!SnakeTreasureHuntGame.isControllingPhone) {
+            return;
+        }
 
         if(state == GameState.READY) {
             updateReady(touchEvents, deltaTime);
@@ -160,10 +166,20 @@ public class GameScreen extends Screen {
 
         // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
         // COMMENT THE FOLLOWING IF CLAUSE OUT
-        // change from "running" to "paused" if phone was lifted
+        // change from "running" to "paused" if phone was lifted (controlling phone)
+        // change from active to non-active (fog of war) if phone was lifted (active phone)
         /*if(!isPhonePlacedOnGround(deltaTime)) {
-            state = GameState.PAUSED;
+            SnakeTreasureHuntGame.isPhonePlacedOnGround = false;
+
+            if(SnakeTreasureHuntGame.isControllingPhone) {
+                state = GameState.PAUSED;
+                // TODO: send message that game is paused
+            } else if(SnakeTreasureHuntGame.isPhoneActive) {
+                SnakeTreasureHuntGame.isPhoneActive = false;
+            }
             return;
+        } else {
+            SnakeTreasureHuntGame.isPhonePlacedOnGround = true;
         }*/
 
         // update the game board and check whether the game is over
@@ -215,6 +231,12 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
 
+        // if our phone is not active, we just display a "fog of war"
+        if(!SnakeTreasureHuntGame.isPhoneActive) {
+            drawFogOfWar(g);
+            return;
+        }
+
         // clear the background
         g.clear(Color.BLACK);
 
@@ -233,6 +255,14 @@ public class GameScreen extends Screen {
         if(state == GameState.GAME_OVER) {
             drawGameOverUI(g);
         }
+    }
+
+    private void drawFogOfWar(Graphics g) {
+        // grey background
+        g.clear(Color.DKGRAY);
+
+        // "fog of war" text
+        g.drawText(FOG_OF_WAR_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
     }
 
     private void drawGameBoard(Graphics g) {

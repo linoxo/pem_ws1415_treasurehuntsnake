@@ -23,6 +23,8 @@ public class GameBoard {
     private int boardHeight;        // height of the game board in tiles
     private int screenWidth;        // how many tiles fit entirely into the screen's width
     private int screenHeight;       // how many tiles fit entirely into the screen's height
+    private int marginRight;        // how many pixels are left on the right (< TILE_WIDTH)
+    private int marginBottom;       // how many pixels are left at the bottom (< TILE_HEIGHT)
 
     private int foodX;              // the x position of the food in tiles
     private int foodY;              // the y position of the food in tiles
@@ -58,6 +60,10 @@ public class GameBoard {
         screenHeight = AndroidGame.getScreenHeight() / Constants.TILE_HEIGHT.getValue();
         System.out.println("Screen width = " + screenWidth + " height = " + screenHeight);
 
+        // calculate the margin (pixels at the end of the visible board that are seen on the screen)
+        marginRight = AndroidGame.getScreenWidth() - screenWidth * Constants.TILE_WIDTH.getValue();
+        marginBottom = AndroidGame.getScreenHeight() - screenHeight * Constants.TILE_HEIGHT.getValue();
+
         // get the size of the game board
         boardWidth = Constants.BOARD_WIDTH.getValue();
         boardHeight = Constants.BOARD_HEIGHT.getValue();
@@ -66,9 +72,10 @@ public class GameBoard {
         gameOver = false;
         score = 0;
 
-        if(SnakeTreasureHuntGame.isActivePhone) {
+        if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
             sendGameStartMessage();
+            // TODO: alle phones die die message empfangen werden auf "nicht aktiv" und "nicht controllierend" gesetzt
         }
     }
 
@@ -97,6 +104,9 @@ public class GameBoard {
         if (gameOver) {
             return;
         }
+
+        // check whether current phone is active
+        checkControlling();
 
         // manage the snakes possibility to turn
         if(!snakeCanTurn) {
@@ -160,6 +170,13 @@ public class GameBoard {
         }
     }
 
+    // check whether this phone is the controlling phone by locating the snake's head
+    public boolean checkControlling() {
+        boolean isSnakeHeadVisible = checkVisible(snake.getHeadTile().getPosX(), snake.getHeadTile().getPosY());
+        SnakeTreasureHuntGame.isControllingPhone = isSnakeHeadVisible;
+        return isSnakeHeadVisible;
+    }
+
     public void draw(Graphics g) {
         drawTiles(g);
         drawGameElements(g);
@@ -169,6 +186,8 @@ public class GameBoard {
         if(!isFoodVisible()) {
             drawHalo(g);
         }
+
+        drawMargin(g);
     }
 
     public void createGameElements() {
@@ -259,10 +278,10 @@ public class GameBoard {
         // how many tiles are visible?
         int cols = screenWidth;
         int rows = screenHeight;
-        if(topLeftX + screenWidth > tiles.length) {
+        if(topLeftX + cols > tiles.length) {
             cols += (tiles.length - topLeftX - screenWidth);
         }
-        if(topLeftY + screenHeight > tiles[0].length) {
+        if(topLeftY + rows > tiles[0].length) {
             rows += (tiles[0].length - topLeftY - screenHeight);
         }
 
@@ -274,6 +293,13 @@ public class GameBoard {
                 tile.drawTile(g, -topLeftX, -topLeftY);
             }
         }
+    }
+
+    private void drawMargin(Graphics g) {
+        int x = screenWidth * Constants.TILE_WIDTH.getValue();
+        int y = screenHeight * Constants.TILE_HEIGHT.getValue();
+        g.drawRect(x, 0, x + marginRight, AndroidGame.getScreenHeight(), Color.BLACK);
+        g.drawRect(0, y, AndroidGame.getScreenWidth(), y + marginBottom, Color.BLACK);
     }
 
     private void drawHalo(Graphics g) {
@@ -300,6 +326,8 @@ public class GameBoard {
                 distanceY *= Constants.TILE_HEIGHT.getValue();
 
                 radius = (int)Math.sqrt(distanceX * distanceX + distanceY * distanceY);
+                // add margin to radius to keep the halo visible
+                radius += Math.max(marginRight, marginBottom);
             }
         } else if (foodX > bottomRight.getPosX()){
             // food is right of the screen
@@ -320,6 +348,8 @@ public class GameBoard {
 
                 radius = (int)Math.sqrt(distanceX * distanceX + distanceY * distanceY);
             }
+            // add margin to radius to keep the halo visible
+            radius += Math.max(marginRight, marginBottom);
         } else {
             // food is above the screen
             if(foodY < topLeft.getPosY()) {
@@ -328,6 +358,8 @@ public class GameBoard {
             // food is below the screen
             } else if(foodY > bottomRight.getPosY()) {
                 radius = (foodY - bottomRight.getPosY()) * Constants.TILE_HEIGHT.getValue();
+                // add margin to radius to keep the halo visible
+                radius += Math.max(marginRight, marginBottom);
             }
         }
 
@@ -353,7 +385,12 @@ public class GameBoard {
     }
 
     private boolean isFoodVisible() {
-        return foodX >= topLeft.getPosX() && foodX <= bottomRight.getPosX() && foodY >= topLeft.getPosY() && foodY <= bottomRight.getPosY();
+        return checkVisible(foodX, foodY);
+    }
+
+    // checks whether x and y are visible on the current phone screen
+    private boolean checkVisible(int x, int y) {
+        return x >= topLeft.getPosX() && x < bottomRight.getPosX() && y >= topLeft.getPosY() && y < bottomRight.getPosY();
     }
 
     //HERE GETTER AND SETTER TO CHANGE VARIABLES DURING GAME
