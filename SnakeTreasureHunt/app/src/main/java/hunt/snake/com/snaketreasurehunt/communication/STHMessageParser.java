@@ -28,7 +28,7 @@ public class STHMessageParser {
 
     public void deserializeSTHMessage(JsonObject incomingMessage) {
 
-            Gson gson = new GsonBuilder().create();
+      /**      Gson gson = new GsonBuilder().create();
 
             JsonObject message = gson.fromJson(incomingMessage, JsonObject.class);
 
@@ -77,8 +77,8 @@ public class STHMessageParser {
                     board.setFoodX(foodx);
                     board.setFoodY(foody);
 
-                    break;
+                    break; 
 
-            }
+            } */
     }
 }

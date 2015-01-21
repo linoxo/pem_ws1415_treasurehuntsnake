@@ -17,8 +17,10 @@ public class STHMessage {
 
     public static final int NEWGUTTI_MESSAGE = 10044;
 
-    public static final int STITCHOUT_MESSAGE = 10054;
+    public static final int STITCHING_MESSAGE = 10054;
 
-    public static final int STITCHIN_MESSAGE = 10064;
+    public static final int GAMEPAUSE_START_MESSAGE = 10064;
+
+    public static final int GAMEPAUSE_STOP_MESSAGE = 10074;
 
 }
