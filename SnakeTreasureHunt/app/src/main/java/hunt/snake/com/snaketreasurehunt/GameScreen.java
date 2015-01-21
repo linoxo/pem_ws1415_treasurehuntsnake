@@ -1,8 +1,12 @@
 package hunt.snake.com.snaketreasurehunt;
 
+import android.content.ComponentName;
+import android.content.Context;
+import android.content.Intent;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.os.Looper;
+import android.os.IBinder;
 
 import java.util.List;
 
@@ -11,7 +15,9 @@ import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.Input.TouchEvent;
 import hunt.snake.com.framework.Screen;
 import hunt.snake.com.framework.impl.AndroidGame;
-import hunt.snake.com.snaketreasurehunt.view.CreateDialogs;
+import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
+import hunt.snake.com.snaketreasurehunt.wifi.Client;
+import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
 public class GameScreen extends Screen {
     enum GameState {
@@ -43,6 +49,9 @@ public class GameScreen extends Screen {
     float accel[] = new float[3];
     float accelDiff[] = new float[3];
 
+    private ClientService client;
+    private MessageHandler mHandler;
+
     public GameScreen(Game game) {
         super(game);
         gameBoard = new GameBoard();
@@ -51,13 +60,28 @@ public class GameScreen extends Screen {
 
     private void init() {
         state = GameState.READY;
+
         gameBoard.init();
+
         oldScore = 0;
         score = SCORE_TEXT + oldScore;
         isCountingDown = false;
         timer = COUNT_DOWN_TIME;
         accelTimer = ACCEL_TIME;
         isPhoneLifted = true;
+    }
+
+    public void setClient(ClientService client) {
+        this.client = client;
+        mHandler = client.getMessageHandler();
+        mHandler.setGameBoard(gameBoard);
+        client.sendMessage("In GameScreen");
+        if(client.isHost())
+            shareGame();
+    }
+
+    public void shareGame() {
+        mHandler.sendInitGame();
     }
 
     @Override
@@ -147,6 +171,7 @@ public class GameScreen extends Screen {
                     if(event.y > AndroidGame.getScreenHeight() / 2) {
                         gameBoard.setNextSnakeDirection(Snake.Direction.SOUTH);
                         System.out.println("Going SOUTH");
+                        client.sendMessage("GOING SOUTH");
                     } else {
                         gameBoard.setNextSnakeDirection(Snake.Direction.NORTH);
                         System.out.println("Going NORTH");

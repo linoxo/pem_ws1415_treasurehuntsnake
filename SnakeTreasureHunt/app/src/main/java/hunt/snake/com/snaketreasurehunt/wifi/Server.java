@@ -1,14 +1,8 @@
 package hunt.snake.com.snaketreasurehunt.wifi;
 
-import android.os.Handler;
-
-import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.io.IOException;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
@@ -82,14 +76,13 @@ public class Server {
     class CommunicationThread implements Runnable {
 
         private Socket clientSocket;
-        public PrintWriter out;
-
-        private BufferedReader reader;
+        public ObjectOutputStream out;
+        public ObjectInputStream in;
 
         public CommunicationThread(Socket clientSocket) {
             this.clientSocket = clientSocket;
             try {
-                out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(this.clientSocket.getOutputStream())), true);
+                out = new ObjectOutputStream(clientSocket.getOutputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -98,7 +91,8 @@ public class Server {
 
         public void initInputStream() {
             try {
-                reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                //reader = new BufferedReader(new InputStreamReader(clientSocket.getInputStream()));
+                in = new ObjectInputStream(clientSocket.getInputStream());
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -108,24 +102,30 @@ public class Server {
         public void run() {
             while(!Thread.currentThread().isInterrupted()) {
                 try {
-                    String read = reader.readLine();
-
-                    if(read != null) {
-                        System.out.println("In com: " + read);
-                        broadcast();
+                    Object obj = null;
+                    try {
+                        obj = in.readObject();
+                    } catch (IOException e) {
+                        e.printStackTrace();
                     }
-                } catch (IOException e) {
+                    System.out.println("In server: " + obj);
+                    broadcast(obj);
+                } catch (ClassNotFoundException e) {
                     e.printStackTrace();
                 }
             }
         }
 
-        private void broadcast() {
+        private void broadcast(Object obj) {
             for(CommunicationThread comThread : clients) {
                 if(comThread.clientSocket != clientSocket) {
-                    comThread.out.println("Ping");
-                    comThread.out.flush();
-                    System.out.println("Send to: " + comThread.clientSocket);
+                    try {
+                        comThread.out.writeObject(obj);
+                        comThread.out.flush();
+                        System.out.println("Send to: " + comThread.clientSocket);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
                 }
             }
         }

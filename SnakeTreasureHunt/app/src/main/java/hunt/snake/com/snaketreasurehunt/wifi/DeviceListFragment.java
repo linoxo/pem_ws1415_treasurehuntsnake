@@ -2,9 +2,12 @@ package hunt.snake.com.snaketreasurehunt.wifi;
 
 import android.app.ListFragment;
 import android.app.ProgressDialog;
+import android.content.ComponentName;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.IntentFilter;
+import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pDevice;
@@ -13,6 +16,7 @@ import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.PeerListListener;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.os.Bundle;
+import android.os.IBinder;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -27,13 +31,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hunt.snake.com.snaketreasurehunt.R;
+import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
 
 /**
  * A ListFragment that displays available peers on discovery and requests the
  * parent activity to handle user interaction events
  */
 public class DeviceListFragment extends ListFragment implements PeerListListener, ChannelListener, DeviceActionListener{
-
+    private static final String EXTRA_CLIENT = "EXTRA_CLIENT";
 
 	private ProgressDialog progressDialog = null;
 	private View mContentView;
@@ -43,12 +48,11 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
     private IntentFilter intentFilter;
 
     private WiFiReceiver receiver;
-    private WifiP2pDevice device;
     private WifiP2pManager.Channel channel;
     private WifiP2pManager manager;
     private List<WifiP2pDevice> peers = new ArrayList<WifiP2pDevice>();
     private Server server;
-    private Client client;
+    private WifiP2pDevice device;
 
     private Button btnStart;
 
@@ -103,11 +107,39 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
         btnStart.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                //START GAME
-                client.sendMessage(); //just for debugging
+                clientService.setIsHost(true);
+                Intent intent = new Intent(getActivity(), SnakeTreasureHuntGame.class);
+                startActivity(intent);
+                clientService.sendMessage("message sent");
             }
         });
         btnStart.setEnabled(false);
+    }
+
+
+    private ClientService clientService;
+
+    public void createClient(final String serverAddress) {
+        System.out.println("in init Client");
+        ServiceConnection connection = new ServiceConnection() {
+            @Override
+            public void onServiceConnected(ComponentName className, IBinder service) {
+                System.out.println("In service connected");
+                ClientService.ClientBinder binder = (ClientService.ClientBinder) service;
+                clientService = binder.getClient();
+                clientService.setCurrentActivity(getActivity());
+                System.out.println("Clientservice: " + clientService);
+                clientService.initClient(serverAddress);
+            }
+
+            @Override
+            public void onServiceDisconnected(ComponentName componentName) {
+
+            }
+        };
+
+        Intent intent = new Intent(getActivity(), ClientService.class);
+        getActivity().bindService(intent, connection, Context.BIND_AUTO_CREATE);
     }
 
     public WiFiReceiver getWifiReceiver() {
@@ -128,11 +160,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             createClient(server.serverAddress);
             btnStart.setEnabled(true);
         }
-    }
-
-    public void createClient(String serverAddress) {
-        if(client == null)
-            client = new Client(serverAddress);
     }
 
     private void makeAvailableToConnect() {
