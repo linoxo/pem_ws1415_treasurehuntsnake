@@ -81,6 +81,7 @@ public class GameBoard {
             generateGameBoard();
             //sendGameStartMessage();
             mHandler.sendInitGame();
+            //mHandler.test();
             System.out.println("after start");
             // TODO: alle phones die die message empfangen werden auf "nicht aktiv" und "nicht controllierend" gesetzt
         }

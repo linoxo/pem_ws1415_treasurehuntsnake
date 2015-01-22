@@ -1,6 +1,7 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 import android.content.Intent;
+import android.widget.Toast;
 
 import com.google.gson.JsonObject;
 
@@ -47,8 +48,8 @@ public class MessageHandler {
         //client.sendMessage(message);
         System.out.println("Serializer: " + serializer);
         JsonObject msg = serializer.serialize(STHMessage.GAMESTART_MESSAGE);
-        client.sendMessage(msg);
-        //client.sendMessage("GameStarted");
+        //client.sendMessage(msg);
+        client.sendMessage("GameStarted");
     }
 
     public void handleIncoming(Object obj) {
@@ -61,7 +62,8 @@ public class MessageHandler {
         */
 
         if(obj.equals("GameStarted")) {
-            startGame();
+            //startGame();
+            System.out.println("GAME START!!!!");
         }
     }
 
@@ -71,8 +73,9 @@ public class MessageHandler {
     }
 
     public void test() {
-        serializer = new STHMessageSerializer();
-        serializer.serialize(STHMessage.GAMESTART_MESSAGE);
+        client.sendMessage("Hallo World!");
+        //serializer = new STHMessageSerializer();
+        //serializer.serialize(STHMessage.GAMESTART_MESSAGE);
     }
 
 }
