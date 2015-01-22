@@ -41,7 +41,12 @@ public class ClientService extends Service {
         }
     }
 
+    public void test() {
+        mHandler.test();
+    }
+
     public MessageHandler getMessageHandler() {
+        System.out.println("Handler: " + mHandler);
         return mHandler;
     }
 

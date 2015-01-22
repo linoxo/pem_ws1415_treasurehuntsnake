@@ -1,4 +1,4 @@
-package com.example.stitching;
+package hunt.snake.com.snaketreasurehunt.stitching;
 
 import android.app.Activity;
 import android.content.Context;
@@ -220,7 +220,6 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 	@Override
 	public boolean onDoubleTap(MotionEvent arg) {
 		this.listener.onDoubleTap();
-		;
 		return true;
 	}
 
@@ -241,7 +240,7 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 		return false;
 	}
 
-	static interface SimpleGestureListener {
+	public static interface SimpleGestureListener {
 		void onSwipe(int direction);
 
 		void onDoubleTap();

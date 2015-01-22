@@ -24,7 +24,10 @@ public class MessageHandler {
         init();
     }
 
-    public MessageHandler(ClientService client) { this.client = client; }
+    public MessageHandler(ClientService client) {
+        this.client = client;
+        serializer = new STHMessageSerializer();
+    }
 
     public void setGameBoard(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
@@ -33,7 +36,6 @@ public class MessageHandler {
 
     private void init() {
         parser = new STHMessageParser(gameBoard);
-        serializer = new STHMessageSerializer();
     }
 
     public void setClient(ClientService client) {
@@ -41,10 +43,12 @@ public class MessageHandler {
     }
 
     public void sendInitGame() {
-        JsonObject message = serializer.serialize(gameBoard, STHMessage.GAMESTART_MESSAGE);
+        //JsonObject message = serializer.serialize(gameBoard, STHMessage.GAMESTART_MESSAGE);
         //client.sendMessage(message);
-
-        client.sendMessage("GameStarted");
+        System.out.println("Serializer: " + serializer);
+        JsonObject msg = serializer.serialize(STHMessage.GAMESTART_MESSAGE);
+        client.sendMessage(msg);
+        //client.sendMessage("GameStarted");
     }
 
     public void handleIncoming(Object obj) {
@@ -64,6 +68,11 @@ public class MessageHandler {
     private void startGame() {
         Intent intent = new Intent(client.getCurrentActivity(), SnakeTreasureHuntGame.class);
         client.getCurrentActivity().startActivity(intent);
+    }
+
+    public void test() {
+        serializer = new STHMessageSerializer();
+        serializer.serialize(STHMessage.GAMESTART_MESSAGE);
     }
 
 }

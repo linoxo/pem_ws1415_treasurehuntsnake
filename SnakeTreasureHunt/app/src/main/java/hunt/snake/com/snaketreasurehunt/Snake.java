@@ -305,4 +305,12 @@ public class Snake {
 
         return null;
     }
+
+    public boolean hasEaten() {
+        return hasEaten;
+    }
+
+    public Tile getHeadTile() {
+        return headTile;
+    }
 }

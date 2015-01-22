@@ -35,12 +35,12 @@ public enum Constants {
 
     TEXT_COLOR {
         @Override
-        public int getValue() { return 0xFF0000FF; }
+        public int getValue() { return 0xFFFFFFFF; }
     },
 
     LAYER_COLOR {
         @Override
-        public int getValue() { return 0x77000000; }
+        public int getValue() { return 0x88000000; }
     },
 
     TEXT_SIZE_XS {
@@ -51,6 +51,11 @@ public enum Constants {
     TEXT_SIZE_S {
         @Override
         public int getValue() { return 40; }
+    },
+
+    TEXT_SIZE_M {
+        @Override
+        public int getValue() { return 50; }
     },
 
     TEXT_SIZE_XXL {

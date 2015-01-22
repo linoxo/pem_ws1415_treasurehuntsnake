@@ -111,6 +111,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 Intent intent = new Intent(getActivity(), SnakeTreasureHuntGame.class);
                 startActivity(intent);
                 clientService.sendMessage("message sent");
+                //clientService.test();
             }
         });
         btnStart.setEnabled(false);
