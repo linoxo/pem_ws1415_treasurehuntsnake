@@ -1,3 +1,4 @@
+
 package hunt.snake.com.snaketreasurehunt.communication;
 
 
@@ -6,6 +7,7 @@ import android.provider.ContactsContract;
 import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import hunt.snake.com.snaketreasurehunt.GameBoard;
+import hunt.snake.com.snaketreasurehunt.messages.GameStartMessage;
 
 /**
  * Created by lino on 19.01.15.
@@ -15,15 +17,24 @@ public class STHMessageSerializer {
     public STHMessageSerializer() { }
 
     //Serialization of different Messages
-    public JsonObject serialize(int messageType) {
+    public String serialize(int messageType) {
         JsonObject obj = new JsonObject();
         Gson gson = new Gson();
+        String jsonMsg = "";
 
 
         switch(messageType) {
             //first case
             case STHMessage.GAMESTART_MESSAGE:
 
+                GameStartMessage msg = new GameStartMessage();
+                msg.gameBoard.setFieldHeight(DataTransferHandler.getFieldHeight());
+                msg.gameBoard.setFieldHeight(DataTransferHandler.getFieldWidth());
+
+                jsonMsg = gson.toJson(msg);
+                System.out.println(jsonMsg);
+
+                /*
                 obj.addProperty("messagetype", STHMessage.GAMESTART_MESSAGE);
 
                 JsonObject spielfeld = new JsonObject();
@@ -49,9 +60,9 @@ public class STHMessageSerializer {
 
                 }
 
-                spielfeld.add("tiles",tiles);
+                //spielfeld.add("tiles",tiles);
                 obj.add("spielfeld", spielfeld);
-
+                */
                 break;
             //second case
             case STHMessage.GAMEOVER_MESSAGE:
@@ -127,7 +138,8 @@ public class STHMessageSerializer {
                 break;
         }
         System.out.println("obj: " + obj);
-        return obj;
+        //return obj;
+        return jsonMsg;
     }
 
 }

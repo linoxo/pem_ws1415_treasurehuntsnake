@@ -3,10 +3,17 @@ package hunt.snake.com.snaketreasurehunt.communication;
 import android.content.Intent;
 import android.widget.Toast;
 
+import com.google.gson.Gson;
+import com.google.gson.GsonBuilder;
 import com.google.gson.JsonObject;
+
+import org.json.JSONObject;
+
+import java.util.Map;
 
 import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
+import hunt.snake.com.snaketreasurehunt.messages.GameStartMessage;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
 /**
@@ -18,6 +25,7 @@ public class MessageHandler {
     private STHMessageParser parser;
     private STHMessageSerializer serializer;
     private GameBoard gameBoard;
+    private Gson gson;
 
     public MessageHandler(ClientService client, GameBoard gameBoard) {
         this.client = client;
@@ -47,8 +55,9 @@ public class MessageHandler {
         //JsonObject message = serializer.serialize(gameBoard, STHMessage.GAMESTART_MESSAGE);
         //client.sendMessage(message);
         System.out.println("Serializer: " + serializer);
-        JsonObject msg = serializer.serialize(STHMessage.GAMESTART_MESSAGE);
-        //client.sendMessage(msg);
+        String msg = serializer.serialize(STHMessage.GAMESTART_MESSAGE);
+        System.out.println("Json: " + msg);
+        client.sendMessage(msg);
         client.sendMessage("GameStarted");
     }
 
@@ -61,8 +70,15 @@ public class MessageHandler {
         parser.deserializeSTHMessage(message);
         */
 
-        if(obj.equals("GameStarted")) {
+
+        if((in.charAt(0))=='{') {
             //startGame();
+            Gson gson = new Gson();
+
+            GameStartMessage msg = gson.fromJson(in, GameStartMessage.class);
+            System.out.println("Width: " + msg.getGameBoard().getFieldWidth());
+            System.out.println("Height: " + msg.getGameBoard().getFieldHeight());
+            System.out.println("Type: " + msg.getType());
             System.out.println("GAME START!!!!");
         }
     }
