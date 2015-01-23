@@ -1,19 +1,8 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-import com.google.gson.reflect.TypeToken;
-
-import org.json.JSONArray;
-
-import java.lang.reflect.Type;
-import java.util.ArrayList;
-
 import hunt.snake.com.snaketreasurehunt.GameBoard;
-import hunt.snake.com.snaketreasurehunt.GameElement;
-import hunt.snake.com.snaketreasurehunt.Snake;
-import hunt.snake.com.snaketreasurehunt.Tile;
+import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 /**
  * Created by lino on 18.01.15.
@@ -26,68 +15,101 @@ public class STHMessageParser {
         this.board = board;
     }
 
-    public void deserializeSTHMessage(JsonObject incomingMessage) {
+    public void deserializeSTHMessage(String incomingMessage) {
 
-      /**      Gson gson = new GsonBuilder().create();
->>>>>>> 5fb2a70663d25073f0c89e37a1ab46e3bd90e835
+        if (!incomingMessage.contains("null")) {
 
-            JsonObject message = gson.fromJson(incomingMessage, JsonObject.class);
+            Gson gson = new Gson();
+            GameMessage msg = gson.fromJson(incomingMessage, GameMessage.class);
 
-            System.out.println("MA " + message.get("ARRAY"));
-
-            System.out.println("IA " + incomingMessage.get("ARRAY"));
-
-            int[][] array = gson.fromJson(message.get("ARRAY"), int[][].class);
-            System.out.println("DE: " + array);
-
-
-
-            //int messageType = message.get("type").getAsInt();
-            int messageType = -1;
+            int messageType = msg.getType();
 
             switch (messageType) {
                 case STHMessage.GAMESTART_MESSAGE:
 
-                    Tile[][] tiles = gson.fromJson(message.get("tiles"), Tile[][].class);
-                    board.setTiles(tiles);
+                    int fieldheight = msg.getGameStart().getFieldHeight();
+                    int fieldwidth = msg.getGameStart().getFieldWidth();
+                    int[] tileXPos = msg.getGameStart().getTileXPos();
+                    int[] tileYPos = msg.getGameStart().getTileYPos();
+                    int[] tileType = msg.getGameStart().getTileType();
 
-                    Type listType = new TypeToken<ArrayList<GameElement>>(){}.getType();
-                    ArrayList<GameElement> list = gson.fromJson(message.get("entities"), listType);
-                    board.setGameElements(list);
+                    System.out.println("Width: " + fieldwidth);
+                    System.out.println("Height: " + fieldheight);
+                    System.out.println("tileX: " + tileXPos + ", tileY: " + tileYPos + ", tileType: " + tileType);
 
-                    Snake snake = gson.fromJson(message.get("snake"), Snake.class);
-                    board.setSnake(snake);
-
-                    int foodX = message.get("foodX").getAsInt();
-                    int foodY = message.get("foodY").getAsInt();
-                    board.setFoodX(foodX);
-                    board.setFoodY(foodY);
+                    DataTransferHandler.setFieldHeight(fieldheight);
+                    DataTransferHandler.setFieldWidth(fieldwidth);
+                    DataTransferHandler.setTileXPos(tileXPos);
+                    DataTransferHandler.setTileYPos(tileYPos);
+                    DataTransferHandler.setTileType(tileType);
 
                     break;
+
                 case STHMessage.GAMEOVER_MESSAGE:
 
-                    int score = incomingMessage.get("score").getAsInt();
+                    int score = msg.getGameOver().getScore();
 
-                    board.setScore(score);
-
-                    break;
-                case STHMessage.STITCHIN_MESSAGE:
-
+                    DataTransferHandler.setScore(score);
 
                     break;
-                case STHMessage.STITCHOUT_MESSAGE:
+                case STHMessage.STITCHING_MESSAGE:
+
+                    float tickTime = msg.getGameStitching().getTickTime();
+                    float timestamp = msg.getGameStitching().getTimestamp();
+                    int stitchingDirection = msg.getGameStitching().getStitchingDirection();
+                    int topLeftXPos = msg.getGameStitching().getTopLeftXPos();
+                    int topLeftYPos = msg.getGameStitching().getTopLeftYPos();
+                    int[] bodypartXPos = msg.getGameStitching().getSnake().getBodypartXPos();
+                    int[] bodypartYPos = msg.getGameStitching().getSnake().getBodypartYPos();
+                    boolean[] cornerPart = msg.getGameStitching().getSnake().getCornerPart();
+                    int[] origin = msg.getGameStitching().getSnake().getOrigin();
+                    int[] direction = msg.getGameStitching().getSnake().getDirection();
+
+                    System.out.println("tickTime: " + tickTime + ", timeStamp: " + timestamp);
+                    System.out.println("stitching: " + stitchingDirection + ", topleft: " + topLeftXPos + ", " + topLeftYPos);
+                    System.out.println("snake: " + msg.getGameStitching().getSnake());
+
+
+                    DataTransferHandler.setTickTime(tickTime);
+                    DataTransferHandler.setTimestamp(timestamp);
+                    DataTransferHandler.setStitchingDirection(stitchingDirection);
+                    DataTransferHandler.setTopLeftXPos(topLeftXPos);
+                    DataTransferHandler.setTopLeftYPos(topLeftYPos);
+                    DataTransferHandler.setBodypartXPos(bodypartXPos);
+                    DataTransferHandler.setBodypartYPos(bodypartYPos);
+                    DataTransferHandler.setCornerPart(cornerPart);
+                    DataTransferHandler.setOrigin(origin);
+                    DataTransferHandler.setDirection(direction);
 
                     break;
+
                 case STHMessage.NEWGUTTI_MESSAGE:
 
-                    int foodx = message.get("foodX").getAsInt();
-                    int foody = message.get("foodY").getAsInt();
+                    int foodXPos = msg.getGameNewGutti().getFoodXPos();
+                    int foodYPos = msg.getGameNewGutti().getFoodYPos();
 
-                    board.setFoodX(foodx);
-                    board.setFoodY(foody);
+                    System.out.println("food: " + foodXPos + ", " + foodYPos);
 
-                    break; 
+                    DataTransferHandler.setFoodXPos(foodXPos);
+                    DataTransferHandler.setFoodYPos(foodYPos);
 
-            } */
+                    break;
+
+                case STHMessage.GAMEPAUSE_START_MESSAGE:
+
+                    break;
+
+                case STHMessage.GAMEPAUSE_STOP_MESSAGE:
+
+                    float ticks = msg.getGamePauseStop().getTickTime();
+
+                    System.out.println("ticks: " + ticks);
+
+                    DataTransferHandler.setTickTime(ticks);
+
+                    break;
+            }
+
+        }
     }
 }

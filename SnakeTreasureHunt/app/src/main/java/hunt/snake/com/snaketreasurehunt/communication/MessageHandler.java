@@ -1,19 +1,12 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 import android.content.Intent;
-import android.widget.Toast;
 
 import com.google.gson.Gson;
-import com.google.gson.GsonBuilder;
-import com.google.gson.JsonObject;
-
-import org.json.JSONObject;
-
-import java.util.Map;
 
 import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
-import hunt.snake.com.snaketreasurehunt.messages.GameStartMessage;
+import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
 /**
@@ -73,12 +66,7 @@ public class MessageHandler {
 
         if((in.charAt(0))=='{') {
             //startGame();
-            Gson gson = new Gson();
-
-            GameStartMessage msg = gson.fromJson(in, GameStartMessage.class);
-            System.out.println("Width: " + msg.getGameBoard().getFieldWidth());
-            System.out.println("Height: " + msg.getGameBoard().getFieldHeight());
-            System.out.println("Type: " + msg.getType());
+            parser.deserializeSTHMessage(in);
             System.out.println("GAME START!!!!");
         }
     }
