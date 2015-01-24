@@ -69,8 +69,6 @@ public class GameBoard {
         // get the size of the game board
         boardWidth = Constants.BOARD_WIDTH.getValue();
         boardHeight = Constants.BOARD_HEIGHT.getValue();
-        DataTransferHandler.setFieldWidth(boardWidth);
-        DataTransferHandler.setFieldHeight(boardHeight);
 
         TICK = TICK_INIT;
         gameOver = false;
@@ -79,7 +77,7 @@ public class GameBoard {
         System.out.println("before if");
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
-            //sendGameStartMessage();
+            sendGameStartMessage();
             mHandler.sendInitGame();
             //mHandler.test();
             System.out.println("after start");
@@ -434,6 +432,14 @@ public class GameBoard {
     public void sendGameStartMessage() {
         DataTransferHandler.setFieldWidth(boardWidth);
         DataTransferHandler.setFieldHeight(boardHeight);
+
+        int[]tileX = {1,2,3,4,5};
+        int[]tileY = {1,2,3,4,5};
+        int[]tileType = {1,2,3,4,5};
+
+        DataTransferHandler.setTileXPos(tileX);
+        DataTransferHandler.setTileYPos(tileY);
+        DataTransferHandler.setTileType(tileType);
 
         // TODO: store occupied tiles
     }

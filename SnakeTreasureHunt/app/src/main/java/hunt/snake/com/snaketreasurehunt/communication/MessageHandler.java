@@ -23,21 +23,16 @@ public class MessageHandler {
     public MessageHandler(ClientService client, GameBoard gameBoard) {
         this.client = client;
         this.gameBoard = gameBoard;
-        init();
     }
 
     public MessageHandler(ClientService client) {
         this.client = client;
         serializer = new STHMessageSerializer();
+        parser = new STHMessageParser();
     }
 
     public void setGameBoard(GameBoard gameBoard) {
         this.gameBoard = gameBoard;
-        init();
-    }
-
-    private void init() {
-        parser = new STHMessageParser(gameBoard);
     }
 
     public void setClient(ClientService client) {
@@ -66,6 +61,7 @@ public class MessageHandler {
 
         if((in.charAt(0))=='{') {
             //startGame();
+            System.out.println("Parser: " + parser + " MSG: " + in);
             parser.deserializeSTHMessage(in);
             System.out.println("GAME START!!!!");
         }

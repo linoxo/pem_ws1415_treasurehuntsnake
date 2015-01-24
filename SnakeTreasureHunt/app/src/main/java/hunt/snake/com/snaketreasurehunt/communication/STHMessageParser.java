@@ -1,7 +1,6 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 import com.google.gson.Gson;
-import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 /**
@@ -9,11 +8,7 @@ import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
  */
 public class STHMessageParser {
 
-    private GameBoard board;
-
-    public STHMessageParser(GameBoard board) {
-        this.board = board;
-    }
+    public STHMessageParser(){}
 
     public void deserializeSTHMessage(String incomingMessage) {
 
@@ -36,6 +31,9 @@ public class STHMessageParser {
                     System.out.println("Width: " + fieldwidth);
                     System.out.println("Height: " + fieldheight);
                     System.out.println("tileX: " + tileXPos + ", tileY: " + tileYPos + ", tileType: " + tileType);
+                    for(int i : tileXPos) {
+                       System.out.println("x: " + i);
+                    }
 
                     DataTransferHandler.setFieldHeight(fieldheight);
                     DataTransferHandler.setFieldWidth(fieldwidth);
