@@ -133,6 +133,8 @@ public class Tile {
         return hasGameElement;
     }
 
+    public void setHasGameElement(boolean hasGameElement) { this.hasGameElement = hasGameElement; }
+
     public GameElement getGameElement() { return gameElement; }
 
     public GameElementType getGameElementType() {

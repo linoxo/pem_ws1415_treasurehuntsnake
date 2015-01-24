@@ -263,9 +263,13 @@ public class Snake {
                 if(bodyParts.get(1).getTile() == foodTile) {
                     food.hidden(false);
                 }
+                GameElement lastPart = bodyParts.getLast();
+                lastPart.getTile().setHasGameElement(false);
                 bodyParts.removeLast();
             }
         } else {
+            GameElement lastPart = bodyParts.getLast();
+            lastPart.getTile().setHasGameElement(false);
             bodyParts.removeLast();
         }
 
