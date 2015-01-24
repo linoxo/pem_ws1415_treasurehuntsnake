@@ -60,7 +60,7 @@ public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureL
     @Override
     public void onSwipe(int direction) {
 
-        methods.swipeType(direction);
+        methods.swipeType(direction, screen);
     }
 
     @Override

@@ -3,18 +3,24 @@ package hunt.snake.com.snaketreasurehunt.stitching;
 import android.os.Handler;
 import android.util.Log;
 
+import hunt.snake.com.snaketreasurehunt.GameBoard;
+
 public class Stitching {
     boolean stitchingEnabled = false;
     boolean isActiveDevice = false;
     private Handler mHandler;
+    private GameBoard board;
 
-    public Stitching(){
+    public Stitching(GameBoard board){
        mHandler = new Handler();
+        this.board = board;
     }
     public void enableStitching() {
         //is called when player swipes out of the active device enables stitching
         if (isActiveDevice) {
             stitchingEnabled = true;
+
+            board.sendStitchOutMessage();
 
             //send gameboard data to all devices
             Log.d("DEBUG", "Stitch Mode aktiv.");

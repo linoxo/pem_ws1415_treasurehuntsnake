@@ -348,6 +348,10 @@ public class GameScreen extends Screen {
         g.drawText(GAME_OVER_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
     }
 
+
+    public GameBoard getGameBoard(){
+        return gameBoard;
+    }
     @Override
     public void pause() {
         // pause game if app is closed and continues operating in background

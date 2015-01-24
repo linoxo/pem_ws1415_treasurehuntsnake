@@ -424,9 +424,15 @@ public class GameBoard {
 
     public void setFoodY(int foodY) { this.foodY = foodY; }
 
+    public void setStitchingDirection(int direction){
+        //1=NORTH,2=EAST,3=SOUTH,4=WEST
+        stitchingDirection=direction;
+    }
+
     public void setMessageHandler(MessageHandler mHandler) {
         this.mHandler = mHandler;
     }
+
 
     // Methods for sending the messages during the game
     public void sendGameStartMessage() {
