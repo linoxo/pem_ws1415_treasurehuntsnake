@@ -10,14 +10,15 @@ public class STHMessageParser {
 
     public STHMessageParser(){}
 
-    public void deserializeSTHMessage(String incomingMessage) {
+    public int deserializeSTHMessage(String incomingMessage) {
 
+        int messageType = -1;
         if (!incomingMessage.contains("null")) {
 
             Gson gson = new Gson();
             GameMessage msg = gson.fromJson(incomingMessage, GameMessage.class);
 
-            int messageType = msg.getType();
+            messageType = msg.getType();
 
             // set flag that we received a message and store the message type
             DataTransferHandler.setReceivedMessage(true);
@@ -111,7 +112,7 @@ public class STHMessageParser {
 
                     break;
             }
-
         }
+        return messageType;
     }
 }
