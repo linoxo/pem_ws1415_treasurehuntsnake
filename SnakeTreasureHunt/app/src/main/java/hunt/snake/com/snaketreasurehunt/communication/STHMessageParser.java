@@ -19,6 +19,10 @@ public class STHMessageParser {
 
             int messageType = msg.getType();
 
+            // set flag that we received a message and store the message type
+            DataTransferHandler.setReceivedMessage(true);
+            DataTransferHandler.setMessageType(messageType);
+
             switch (messageType) {
                 case STHMessage.GAMESTART_MESSAGE:
 

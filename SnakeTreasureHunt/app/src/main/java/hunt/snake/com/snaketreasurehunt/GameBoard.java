@@ -11,6 +11,7 @@ import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.impl.AndroidGame;
 import hunt.snake.com.snaketreasurehunt.communication.DataTransferHandler;
 import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
+import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
 import hunt.snake.com.snaketreasurehunt.stitching.SnakeGestureListener;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
@@ -20,6 +21,9 @@ public class GameBoard {
     private static final float TICK_INIT = 1.0f;        // starting value for the tick
     private static final float TICK_DECREMENT = 0.15f;  // it gets this faster after eating
     private static final float TICK_MIN = 0.25f;        // the minimum tick time
+
+    private static float STITCHING_THRESHOLD = 2.0f;
+    private float stitchingTimer;
 
     private int boardWidth;         // width of the game board in tiles
     private int boardHeight;        // height of the game board in tiles
@@ -40,12 +44,13 @@ public class GameBoard {
     private float snakeCanTurnCounter;
     private boolean snakeHasEatenLock;
     private List<GameElement> gameElements;
+    private boolean gamePaused;
     private boolean gameOver;
     private int score;
     private Random random;
 
     private float tickTime = 0;
-    private int stitchingDirection; // side of the phone where there was a swipe out
+    private Snake.Direction stitchingDirection; // side of the phone where there was a swipe out
     private MessageHandler mHandler;
 
     public GameBoard() {
@@ -66,11 +71,10 @@ public class GameBoard {
         marginRight = AndroidGame.getScreenWidth() - screenWidth * Constants.TILE_WIDTH.getValue();
         marginBottom = AndroidGame.getScreenHeight() - screenHeight * Constants.TILE_HEIGHT.getValue();
 
-        // get the size of the game board
-        boardWidth = Constants.BOARD_WIDTH.getValue();
-        boardHeight = Constants.BOARD_HEIGHT.getValue();
-
         TICK = TICK_INIT;
+        tickTime = 0.0f;
+        stitchingTimer = 0.0f;
+        gamePaused = false;
         gameOver = false;
         score = 0;
 
@@ -78,14 +82,19 @@ public class GameBoard {
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
             sendGameStartMessage();
-            mHandler.sendInitGame();
+            //mHandler.sendInitGame();
             //mHandler.test();
             System.out.println("after start");
-            // TODO: alle phones die die message empfangen werden auf "nicht aktiv" und "nicht controllierend" gesetzt
         }
     }
 
     public void generateGameBoard() {
+        // get the size of the game board
+        boardWidth = Constants.BOARD_WIDTH.getValue();
+        boardHeight = Constants.BOARD_HEIGHT.getValue();
+        DataTransferHandler.setFieldWidth(boardWidth);
+        DataTransferHandler.setFieldHeight(boardHeight);
+
         // set top left tile
         topLeft.setPositionOnBoard(0, 0);
         bottomRight.setPositionOnBoard(screenWidth, screenHeight);
@@ -112,7 +121,7 @@ public class GameBoard {
         }
 
         // check whether current phone is active
-        checkControlling();
+        //checkControlling();
 
         // manage the snakes possibility to turn
         if(!snakeCanTurn) {
@@ -121,6 +130,13 @@ public class GameBoard {
         if(snakeCanTurnCounter <= 0.0f) {
             snakeCanTurnCounter = TICK;
             snakeCanTurn = true;
+        }
+
+        // update stitching timer
+        if(stitchingTimer > 0.0f) {
+            stitchingTimer -= deltaTime;
+        } else {
+            stitchingTimer = 0.0f;
         }
 
         tickTime += deltaTime;
@@ -136,35 +152,13 @@ public class GameBoard {
                 return;
             }
 
-            Snake.Direction sideAtWhichSnakeIsOutOfScreen = snake.snakeOutOfScreen(topLeft, bottomRight);
-            if(sideAtWhichSnakeIsOutOfScreen != null) {
-                // snake is out of the screen --> show new part of game board on screen
-                switch (sideAtWhichSnakeIsOutOfScreen) {
-                    case NORTH:
-                        topLeft.move(0, -screenHeight);
-                        bottomRight.move(0, -screenHeight);
-                        break;
-                    case EAST:
-                        topLeft.move(screenWidth, 0);
-                        bottomRight.move(screenWidth, 0);
-                        break;
-                    case SOUTH:
-                        topLeft.move(0, screenHeight);
-                        bottomRight.move(0, screenHeight);
-                        break;
-                    case WEST:
-                        topLeft.move(-screenWidth, 0);
-                        bottomRight.move(-screenWidth, 0);
-                        break;
-                }
-            }
-
             // check whether snake has eaten something
             if(snake.hasEaten() && !snakeHasEatenLock) {
                 snakeHasEatenLock = true;
 
                 // increase score, spawn new gutti, increase speed and send new gutti message
                 score += Constants.SCORE_INCREMENT.getValue();
+                removeFood();
                 spawnFood();
                 if(TICK > TICK_MIN) {
                     TICK -= TICK_DECREMENT;
@@ -202,6 +196,16 @@ public class GameBoard {
 
         // spawn food
         spawnFood();
+    }
+
+    // removes the food from our game elements list
+    public void removeFood() {
+        for(GameElement gameElement : gameElements) {
+            if(gameElement.getType() == GameElementType.FOOD) {
+                gameElements.remove(gameElement);
+                break;
+            }
+        }
     }
 
     public void spawnFood() {
@@ -373,6 +377,10 @@ public class GameBoard {
         g.drawHalo(centerX, centerY, radius, 10, Color.YELLOW);
     }
 
+    boolean isGamePaused() {
+        return gamePaused;
+    }
+
     boolean isGameOver() {
         return gameOver;
     }
@@ -424,9 +432,33 @@ public class GameBoard {
 
     public void setFoodY(int foodY) { this.foodY = foodY; }
 
-    public void setStitchingDirection(int direction){
-        //1=NORTH,2=EAST,3=SOUTH,4=WEST
-        stitchingDirection=direction;
+    public void setStitchingDirection(Snake.Direction stitchingDirection) {
+        // 1=NORTH, 2=EAST, 3=SOUTH, 4=WEST
+        this.stitchingDirection = stitchingDirection;
+    }
+
+    public void checkStitching(Snake.Direction stitchInDirection) {
+        System.out.println("CHECK STITCHIN");
+
+        // check if stitching was complete within the stitching threshold
+        if(stitchingTimer <= 0.0f) {
+            return;
+        }
+
+        System.out.println("CHECK STITCHIN 2222");
+        stitchingDirection = Snake.Direction.values()[DataTransferHandler.getStitchingDirection()];
+        // check if the stich was in the right direction
+        if(stitchingDirection == stitchInDirection) {
+            System.out.println("CHECK STITCHIN ö3ojrölqj");
+            // STITCH !
+            int topLeftXPos = DataTransferHandler.getTopLeftXPos();
+            int topLeftYPos = DataTransferHandler.getTopLeftYPos();
+
+            // set top left and bottom right tile
+            topLeft.setPositionOnBoard(topLeftXPos, topLeftYPos);
+            bottomRight.setPositionOnBoard(topLeftXPos + screenWidth, topLeftYPos + screenHeight);
+
+        }
     }
 
     public void setMessageHandler(MessageHandler mHandler) {
@@ -434,38 +466,133 @@ public class GameBoard {
     }
 
 
-    // Methods for sending the messages during the game
+    // ================================
+    // === IN-GAME MESSAGE HANDLING ===
+    // ================================
+
+    // check whether a message was received and handle it if so
+    public void handleMessages() {
+        if(DataTransferHandler.hasReceivedMessage()) {
+            // unset the flag that we received a message
+            DataTransferHandler.setReceivedMessage(false);
+
+            switch (DataTransferHandler.getMessageType()) {
+                case STHMessage.GAMESTART_MESSAGE: handleGameStartMessage(); break;
+                case STHMessage.STITCHING_MESSAGE: handleStitchOutMessage(); break;
+                case STHMessage.NEWGUTTI_MESSAGE: handleNewGuttiMessage(); break;
+                case STHMessage.GAMEPAUSE_START_MESSAGE: handlePauseMessage(); break;
+                case STHMessage.GAMEPAUSE_STOP_MESSAGE: handleResumeMessage(); break;
+                case STHMessage.GAMEOVER_MESSAGE: handleGameOverMessage(); break;
+            }
+        }
+    }
+
+    // stores required data for game start message and sends game start message
     public void sendGameStartMessage() {
         DataTransferHandler.setFieldWidth(boardWidth);
         DataTransferHandler.setFieldHeight(boardHeight);
 
-        int[]tileX = {1,2,3,4,5};
-        int[]tileY = {1,2,3,4,5};
-        int[]tileType = {1,2,3,4,5};
+        int numOfOccupiedFields = gameElements.size();
+        for (GameElement gameElement : gameElements) {
+            if (gameElement instanceof BigGameElement) {
+                numOfOccupiedFields += ((BigGameElement) gameElement).getGameElements().size();
+            }
+        }
 
-        DataTransferHandler.setTileXPos(tileX);
-        DataTransferHandler.setTileYPos(tileY);
+        int tileXPos[] = new int[numOfOccupiedFields];
+        int tileYPos[] = new int[numOfOccupiedFields];
+        int tileType[] = new int[numOfOccupiedFields];
+
+        // Add all game elements as well as their inner game elements to the lists
+        int i = -1;
+        for (GameElement gameElement : gameElements) {
+            i++;
+            System.out.println("Trying to add (" + i + "): " + gameElement);
+            System.out.println("Trying to add (" + i + "): " + gameElement.getType().name());
+            System.out.println("Trying to add (" + i + "): " + gameElement.getTile());
+            System.out.println("Trying to add (" + i + "): " + gameElement.getTile().getPosX());
+            tileXPos[i] = gameElement.getTile().getPosX();
+            tileYPos[i] = gameElement.getTile().getPosY();
+            tileType[i] = gameElement.getTile().getGameElementType().ordinal();
+
+            if (gameElement instanceof BigGameElement) {
+                for(GameElement innerGameElement : (((BigGameElement) gameElement).getGameElements())) {
+                    i++;
+                    tileXPos[i] = innerGameElement.getTile().getPosX();
+                    tileYPos[i] = innerGameElement.getTile().getPosY();
+                    tileType[i] = innerGameElement.getTile().getGameElementType().ordinal();
+                }
+            }
+        }
+
+        DataTransferHandler.setNumOfOccupiedTiles(numOfOccupiedFields);
+        DataTransferHandler.setTileXPos(tileXPos);
+        DataTransferHandler.setTileYPos(tileYPos);
         DataTransferHandler.setTileType(tileType);
+    }
 
-        // TODO: store occupied tiles
+    // defines what to do if we receive a game start message
+    public void handleGameStartMessage() {
+        boardWidth = DataTransferHandler.getFieldWidth();
+        boardHeight = DataTransferHandler.getFieldHeight();
+
+        createTiles();
+
+        int numOfOccupiedTiles = DataTransferHandler.getNumOfOccupiedTiles();
+        int tileXPos[] = DataTransferHandler.getTileXPos();
+        int tileYPos[] = DataTransferHandler.getTileYPos();
+        int tileType[] = DataTransferHandler.getTileType();
+
+        gameElements.clear();
+        for(int i = 0; i < numOfOccupiedTiles; i++) {
+            if(tileType[i] == GameElementType.RECT_OBSTACLE.ordinal()) {
+                gameElements.add(new Obstacle(tiles[tileXPos[i]][tileYPos[i]], tiles, GameElementType.RECT_OBSTACLE, 0));
+            } else if(tileType[i] == GameElementType.FOOD.ordinal()) {
+                gameElements.add(createGameElement(GameElementType.FOOD, tiles[tileXPos[i]][tileYPos[i]]));
+            }
+        }
     }
 
     public void sendStitchOutMessage() {
+        System.out.println("STITCHOUT MESSAGE");
         DataTransferHandler.setTickTime(tickTime);
         DataTransferHandler.setTimestamp(System.nanoTime() / 1000000000.0f);
-        DataTransferHandler.setStitchingDirection(stitchingDirection);
+        DataTransferHandler.setStitchingDirection(stitchingDirection.ordinal());
 
         int topLeftXPos = topLeft.getPosX();
         int topLeftYPos = topLeft.getPosY();
         switch(stitchingDirection) {
-            case SnakeGestureListener.SWIPEOUT_TOP: topLeftYPos -= screenHeight; break;
-            case SnakeGestureListener.SWIPEOUT_LEFT: topLeftXPos -= screenWidth; break;
-            case SnakeGestureListener.SWIPEOUT_RIGHT: topLeftXPos += screenWidth; break;
-            case SnakeGestureListener.SWIPEOUT_BOTTOM: topLeftYPos += screenHeight; break;
+            case NORTH: topLeftYPos -= screenHeight; break;
+            case EAST: topLeftXPos += screenWidth; break;
+            case SOUTH: topLeftYPos += screenHeight; break;
+            case WEST: topLeftXPos -= screenWidth; break;
         }
         DataTransferHandler.setTopLeftXPos(topLeftXPos);
         DataTransferHandler.setTopLeftYPos(topLeftYPos);
         // TODO: store snake
+
+        DataTransferHandler.setReceivedMessage(true);
+        DataTransferHandler.setMessageType(STHMessage.STITCHING_MESSAGE);
+    }
+
+    public void handleStitchOutMessage() {
+        System.out.println("STITCHIN MESSAGE");
+        // if phone is already active, ignore the message
+        /*if(SnakeTreasureHuntGame.isPhoneActive) {
+            return;
+        }*/
+
+        float tickTime = DataTransferHandler.getTickTime();
+        float timestamp = DataTransferHandler.getTimestamp();
+
+        float currentTime = System.nanoTime() / 1000000000.0f;
+        float timeDiff = currentTime - timestamp;
+        this.tickTime = tickTime + timeDiff;
+
+        // start stitching counter
+        stitchingTimer = STITCHING_THRESHOLD; //- timeDiff;
+
+        // TODO: get snake
     }
 
     public void sendNewGuttiMessage() {
@@ -473,7 +600,37 @@ public class GameBoard {
         DataTransferHandler.setFoodYPos(foodY);
     }
 
+    public void handleNewGuttiMessage() {
+        foodX = DataTransferHandler.getFoodXPos();
+        foodY = DataTransferHandler.getFoodYPos();
+
+        // remove old food and create new one
+        removeFood();
+        gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
+    }
+
+    public void sendPauseMessage() {
+
+    }
+
+    public void handlePauseMessage() {
+        gamePaused = true;
+    }
+
+    public void sendResumeMessage() {
+
+    }
+
+    public void handleResumeMessage() {
+        gamePaused = false;
+    }
+
     public void sendGameOverMessage() {
         DataTransferHandler.setScore(score);
+    }
+
+    public void handleGameOverMessage() {
+        score = DataTransferHandler.getScore();
+        gameOver = true;
     }
 }

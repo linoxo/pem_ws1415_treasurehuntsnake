@@ -6,7 +6,7 @@ import hunt.snake.com.framework.Graphics;
 
 public class Snake {
 
-    enum Direction {
+    public enum Direction {
         NORTH,
         EAST,
         SOUTH,

@@ -14,8 +14,10 @@ public class Obstacle extends BigGameElement {
     public Obstacle(Tile startTile, Tile[][] tiles, GameElementType type, int size) {
         super();
         this.startTile = startTile;
+        setTile(startTile);
         this.tiles = tiles;
         this.type = type;
+        setType(type);
         this.size = size;
 
         init();

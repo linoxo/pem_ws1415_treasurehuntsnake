@@ -1,6 +1,9 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 public class DataTransferHandler {
+    private static boolean receivedMessage; // haben wir eine Nachricht empfangen?
+    private static int messageType;         // welche Nachrichtenart haben wir als letztes empfangen?
+
     // Data transferred when starting the game (GAMESTART_MESSAGE)
     private static int fieldWidth;          // Spielfeldbreite
     private static int fieldHeight;         // Spielfeldhöhe
@@ -29,6 +32,22 @@ public class DataTransferHandler {
     // Data transferred when the game is over (GAMEOVER_MESSAGE)
     private static int score;               // aktueller Spielstand
 
+
+    public static boolean hasReceivedMessage() {
+        return receivedMessage;
+    }
+
+    public static void setReceivedMessage(boolean receivedMessage) {
+        DataTransferHandler.receivedMessage = receivedMessage;
+    }
+
+    public static int getMessageType() {
+        return messageType;
+    }
+
+    public static void setMessageType(int messageType) {
+        DataTransferHandler.messageType = messageType;
+    }
 
     public static int getFieldWidth() {
         return fieldWidth;

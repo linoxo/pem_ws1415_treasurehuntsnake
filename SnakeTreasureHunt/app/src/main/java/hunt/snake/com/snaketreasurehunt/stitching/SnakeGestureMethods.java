@@ -5,6 +5,7 @@ import android.util.Log;
 
 import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.GameScreen;
+import hunt.snake.com.snaketreasurehunt.Snake;
 
 
 public class SnakeGestureMethods {
@@ -39,44 +40,48 @@ public class SnakeGestureMethods {
                 if (stitch.isStitchingEnabled()) {
                     stitch.completeStitching();
                 }
+                board.checkStitching(Snake.Direction.EAST);
                 break;
             case SnakeGestureListener.SWIPEIN_RIGHT:
                 swipeInRight();
                 if (stitch.isStitchingEnabled()) {
                     stitch.completeStitching();
                 }
+                board.checkStitching(Snake.Direction.WEST);
                 break;
             case SnakeGestureListener.SWIPEOUT_LEFT:
                 swipeOutLeft();
+                board.setStitchingDirection(Snake.Direction.WEST);
                 stitch.enableStitching();
-                board.setStitchingDirection(4);
                 break;
             case SnakeGestureListener.SWIPEIN_TOP:
                 swipeInTop();
                 if (stitch.isStitchingEnabled()) {
                     stitch.completeStitching();
                 }
+                board.checkStitching(Snake.Direction.SOUTH);
                 break;
             case SnakeGestureListener.SWIPEOUT_TOP:
                 swipeOutTop();
+                board.setStitchingDirection(Snake.Direction.NORTH);
                 stitch.enableStitching();
-                board.setStitchingDirection(1);
                 break;
             case SnakeGestureListener.SWIPEOUT_BOTTOM:
                 swipeOutBottom();
+                board.setStitchingDirection(Snake.Direction.SOUTH);
                 stitch.enableStitching();
-                board.setStitchingDirection(3);
                 break;
             case SnakeGestureListener.SWIPEIN_BOTTOM:
                 swipeInBottom();
                 if (stitch.isStitchingEnabled()) {
                     stitch.completeStitching();
                 }
+                board.checkStitching(Snake.Direction.NORTH);
                 break;
             case SnakeGestureListener.SWIPEOUT_RIGHT:
                 swipeOutRight();
+                board.setStitchingDirection(Snake.Direction.EAST);
                 stitch.enableStitching();
-                board.setStitchingDirection(2);
                 break;
 
         }

@@ -58,6 +58,11 @@ public enum Constants {
         public int getValue() { return 50; }
     },
 
+    TEXT_SIZE_XL {
+        @Override
+        public int getValue() { return 75; }
+    },
+
     TEXT_SIZE_XXL {
         @Override
         public int getValue() { return 100; }

@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.graphics.Rect;
 import android.graphics.RectF;
 import android.os.Looper;
 
@@ -29,13 +30,17 @@ public class GameScreen extends Screen {
     }
 
     private static final String READY_TEXT = "Ready?";
+    private static final String READY_INSTRUCTION_TEXT = "Put phone down to start!";
     private static final String PAUSED_TEXT = "Paused";
+    private static final String PAUSED_INSTRUCTION_TEXT = "Put phone down to resume!";
     private static final String GAME_OVER_TEXT = "Game Over";
+    private static final String GAME_OVER_INSTRUCTION_TEXT = "Tap to start a new game!";
     private static final String SCORE_TEXT = "Score: ";
-    private static final String FOG_OF_WAR_TEXT = "~ Fog of War ~";
+    private static final String FOG_OF_WAR_TEXT = "Stitch to join!";
     private static final float COUNT_DOWN_TIME = 2.99f;
     private static final float ACCEL_TIME = 0.5f;
-    private static final float ACCEL_THRESHOLD = 1.0f;
+    private static final float ACCEL_THRESHOLD = 2.0f;
+    private static final int DPadSize = 100;
 
     GameState state;
     GameBoard gameBoard;
@@ -46,11 +51,8 @@ public class GameScreen extends Screen {
     float timer;
     float accelTimer;
     boolean isPhoneLifted;
-    String accelX = "";
-    String accelY = "";
-    String accelZ = "";
-    float accel[] = new float[3];
-    float accelDiff[] = new float[3];
+    String inactivePhoneText;
+    RectF DPad[] = new RectF[4];
 
     private ClientService client;
     private MessageHandler mHandler;
@@ -62,10 +64,20 @@ public class GameScreen extends Screen {
     public void init() {
         gameBoard = new GameBoard();
         gameBoard.setMessageHandler(mHandler);
-        mHandler.setGameBoard(gameBoard);
+        //mHandler.setGameBoard(gameBoard);
         gameBoard.init();
 
         state = GameState.READY;
+
+        // init d-pad
+        int dPadNorthLeft = AndroidGame.getScreenWidth() - DPadSize * 5 / 2;
+        int dPadNorthTop = AndroidGame.getScreenHeight() - DPadSize * 7 / 2;
+        int dPadNorthRight = dPadNorthLeft + DPadSize;
+        int dPadNorthBottom = dPadNorthTop + DPadSize;
+        DPad[Snake.Direction.NORTH.ordinal()] = new RectF(dPadNorthLeft, dPadNorthTop, dPadNorthRight, dPadNorthBottom);
+        DPad[Snake.Direction.EAST.ordinal()] = new RectF(dPadNorthRight, dPadNorthBottom, dPadNorthRight + DPadSize, dPadNorthBottom + DPadSize);
+        DPad[Snake.Direction.SOUTH.ordinal()] = new RectF(dPadNorthLeft, dPadNorthBottom + DPadSize, dPadNorthRight, dPadNorthBottom + 2 * DPadSize);
+        DPad[Snake.Direction.WEST.ordinal()] = new RectF(dPadNorthLeft - DPadSize, dPadNorthBottom, dPadNorthLeft, dPadNorthBottom + DPadSize);
 
         oldScore = 0;
         score = SCORE_TEXT + oldScore;
@@ -90,12 +102,10 @@ public class GameScreen extends Screen {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
 
-        // if our phone is not controlling, we have nothing to do!
-        if(!SnakeTreasureHuntGame.isControllingPhone) {
-            return;
-        }
+        // handle incoming messages
+        gameBoard.handleMessages();
 
-        if(state == GameState.READY) {
+        if(state == GameState.READY && SnakeTreasureHuntGame.isControllingPhone) {
             updateReady(touchEvents, deltaTime);
             return;
         }
@@ -107,7 +117,7 @@ public class GameScreen extends Screen {
             updatePaused(touchEvents, deltaTime);
             return;
         }
-        if(state == GameState.GAME_OVER) {
+        if(state == GameState.GAME_OVER && SnakeTreasureHuntGame.isControllingPhone) {
             updateGameOver(touchEvents);
         }
     }
@@ -116,11 +126,11 @@ public class GameScreen extends Screen {
         if(isCountingDown) {
             // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
             // COMMENT THE FOLLOWING IF CLAUSE OUT
-            /*if(!isPhonePlacedOnGround(deltaTime)) {
+            if(!isPhonePlacedOnGround(deltaTime)) {
                 timer = COUNT_DOWN_TIME;
                 isCountingDown = false;
                 return;
-            }*/
+            }
             timer -= deltaTime;
             if(timer <= 0.0f) {
                 // change from "ready" to "running" if screen was touched
@@ -130,13 +140,13 @@ public class GameScreen extends Screen {
             // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
             // COMMENT THE FOLLOWING IF CLAUSE OUT AND UNCOMMENT THE ONE BELOW
             // start countdown when phone is placed on ground
-            /*if(isPhonePlacedOnGround(deltaTime)) {
-                isCountingDown = true;
-            }*/
-            // start countdown when screen is touched
-            if (touchEvents.size() > 0) {
+            if(isPhonePlacedOnGround(deltaTime)) {
                 isCountingDown = true;
             }
+            // start countdown when screen is touched
+            /*if (touchEvents.size() > 0) {
+                isCountingDown = true;
+            }*/
         }
     }
 
@@ -160,27 +170,16 @@ public class GameScreen extends Screen {
     }
 
     private void updateRunning(List<TouchEvent> touchEvents, float deltaTime) {
-        int size = touchEvents.size();
-        for(int i = 0; i < size; i++) {
-            TouchEvent event = touchEvents.get(i);
-            if(event.type == TouchEvent.TOUCH_UP) {
-                System.out.println("Touch at x=" + event.x + "/" + AndroidGame.getScreenWidth() + "and y=" + event.y + "/" + AndroidGame.getScreenHeight());
-                if(gameBoard.nextSnakeDirection == Snake.Direction.NORTH || gameBoard.nextSnakeDirection == Snake.Direction.SOUTH) {
-                    if(event.x > AndroidGame.getScreenWidth() / 2) {
-                        gameBoard.setNextSnakeDirection(Snake.Direction.EAST);
-                        System.out.println("Going EAST");
-                    } else {
-                        gameBoard.setNextSnakeDirection(Snake.Direction.WEST);
-                        System.out.println("Going WEST");
-                    }
-                } else {
-                    if(event.y > AndroidGame.getScreenHeight() / 2) {
-                        gameBoard.setNextSnakeDirection(Snake.Direction.SOUTH);
-                        System.out.println("Going SOUTH");
-                        client.sendMessage("GOING SOUTH");
-                    } else {
-                        gameBoard.setNextSnakeDirection(Snake.Direction.NORTH);
-                        System.out.println("Going NORTH");
+        if(SnakeTreasureHuntGame.isControllingPhone) {
+            int size = touchEvents.size();
+            for (int i = 0; i < size; i++) {
+                TouchEvent event = touchEvents.get(i);
+                if (event.type == TouchEvent.TOUCH_UP) {
+                    System.out.println("Touch at x=" + event.x + "/" + AndroidGame.getScreenWidth() + "and y=" + event.y + "/" + AndroidGame.getScreenHeight());
+                    for(int j = 0; j < Snake.Direction.values().length; j++) {
+                        if(DPad[j].contains(event.x, event.y)) {
+                            gameBoard.setNextSnakeDirection(Snake.Direction.values()[j]);
+                        }
                     }
                 }
             }
@@ -189,23 +188,28 @@ public class GameScreen extends Screen {
         // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
         // COMMENT THE FOLLOWING IF CLAUSE OUT
         // change from "running" to "paused" if phone was lifted (controlling phone)
-        // change from active to non-active (fog of war) if phone was lifted (active phone)
-        /*if(!isPhonePlacedOnGround(deltaTime)) {
+        // change from active to non-active if phone was lifted (active phone)
+        if(!isPhonePlacedOnGround(deltaTime)) {
             SnakeTreasureHuntGame.isPhonePlacedOnGround = false;
 
             if(SnakeTreasureHuntGame.isControllingPhone) {
                 state = GameState.PAUSED;
-                // TODO: send message that game is paused
+                gameBoard.sendPauseMessage();
             } else if(SnakeTreasureHuntGame.isPhoneActive) {
                 SnakeTreasureHuntGame.isPhoneActive = false;
             }
             return;
         } else {
             SnakeTreasureHuntGame.isPhonePlacedOnGround = true;
-        }*/
+        }
 
-        // update the game board and check whether the game is over
-        gameBoard.update(deltaTime);
+        // update the game board if it is active and check whether the game is over
+        if(gameBoard.isGamePaused()) {
+            state = GameState.PAUSED;
+        }
+        if(SnakeTreasureHuntGame.isPhoneActive) {
+            gameBoard.update(deltaTime);
+        }
         if(gameBoard.isGameOver()) {
             state = GameState.GAME_OVER;
         }
@@ -230,10 +234,16 @@ public class GameScreen extends Screen {
 
         // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
         // COMMENT THE FOLLOWING IF CLAUSE OUT
-        // change from "paused" to "running" if phone is placed on ground
-        /*if(isPhonePlacedOnGround(deltaTime)) {
+        // change from "paused" to "running" if phone is placed on ground (controlling phone)
+        if(SnakeTreasureHuntGame.isControllingPhone && isPhonePlacedOnGround(deltaTime)) {
+            SnakeTreasureHuntGame.isPhonePlacedOnGround = true;
             state = GameState.RUNNING;
-        }*/
+            gameBoard.sendResumeMessage();
+        }
+        // change from "paused" to "running" if we received the according message (not-controlling phone)
+        if(!SnakeTreasureHuntGame.isControllingPhone && !gameBoard.isGamePaused()) {
+            state = GameState.RUNNING;
+        }
     }
 
     private void updateGameOver(List<TouchEvent> touchEvents) {
@@ -253,9 +263,9 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
 
-        // if our phone is not active, we just display a "fog of war"
+        // if our phone is not active, we draw a special UI
         if(!SnakeTreasureHuntGame.isPhoneActive) {
-            drawFogOfWar(g);
+            drawInactivePhoneUI(g);
             return;
         }
 
@@ -279,12 +289,27 @@ public class GameScreen extends Screen {
         }
     }
 
-    private void drawFogOfWar(Graphics g) {
+    private void drawInactivePhoneUI(Graphics g) {
         // grey background
         g.clear(Color.DKGRAY);
 
-        // "fog of war" text
-        g.drawText(FOG_OF_WAR_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        // draw text of inactive phone depending on the game state
+        if(state == GameState.READY) {
+            inactivePhoneText = "";
+        } else if (state == GameState.RUNNING) {
+            inactivePhoneText = FOG_OF_WAR_TEXT;
+        } else if (state == GameState.PAUSED) {
+            inactivePhoneText = PAUSED_TEXT;
+        } else if (state == GameState.GAME_OVER) {
+            inactivePhoneText = GAME_OVER_TEXT;
+        }
+
+        g.drawText(inactivePhoneText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+
+        // if the game is over, also draw the score
+        if(state == GameState.GAME_OVER) {
+            g.drawText(score, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 2 / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XL.getValue(), Paint.Align.CENTER);
+        }
     }
 
     private void drawGameBoard(Graphics g) {
@@ -302,6 +327,7 @@ public class GameScreen extends Screen {
         } else {
             // draw ready text
             g.drawText(READY_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+            g.drawText(READY_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 2 / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
         }
     }
 
@@ -310,26 +336,10 @@ public class GameScreen extends Screen {
         g.drawRoundRect(scoreBoard, 25, 25, 0x99000000);
         g.drawText(score, 50, 95, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.LEFT);
 
-        // draw accelerometer values
-        /*timer -= deltaTime;
-        if(timer < 0.0f) {
-            accelDiff[0] = Math.abs(accel[0] - game.getInput().getAccelX());
-            accelDiff[1] = Math.abs(accel[1] - game.getInput().getAccelY());
-            accelDiff[2] = Math.abs(accel[2] - game.getInput().getAccelZ());
-            accel[0] = game.getInput().getAccelX();
-            accel[1] = game.getInput().getAccelY();
-            accel[2] = game.getInput().getAccelZ();
-            accelX = "x = " + accel[0];
-            accelY = "y = " + accel[1];
-            accelZ = "z = " + accel[2];
-            timer = 0.5f;
+        // draw d-pad
+        for(int i = 0; i < Snake.Direction.values().length; i++) {
+            g.drawRoundRect(DPad[i], 25, 25, 0x99FFFFFF);
         }
-        g.drawText(accelX, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 55, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText("" + accelDiff[0], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 55, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText(accelY, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText("" + accelDiff[1], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 35, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText(accelZ, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);
-        g.drawText("" + accelDiff[2], AndroidGame.getScreenWidth() * 3 / 4, AndroidGame.getScreenHeight() - 15, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XS.getValue() * 2, Paint.Align.LEFT);*/
     }
 
     private void drawPausedUI(Graphics g) {
@@ -338,20 +348,23 @@ public class GameScreen extends Screen {
 
         // draw paused text
         g.drawText(PAUSED_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        g.drawText(PAUSED_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 2 / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
     }
 
     private void drawGameOverUI(Graphics g) {
         // darken screen with transparent layer
         g.drawRect(0, 0, AndroidGame.getScreenWidth(), AndroidGame.getScreenHeight(), Constants.LAYER_COLOR.getValue());
 
-        // draw game over text
-        g.drawText(GAME_OVER_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        // draw game over text and score
+        g.drawText(GAME_OVER_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        g.drawText(score, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XL.getValue(), Paint.Align.CENTER);
+        g.drawText(GAME_OVER_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 3 / 4, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
     }
 
-
-    public GameBoard getGameBoard(){
+    public GameBoard getGameBoard() {
         return gameBoard;
     }
+
     @Override
     public void pause() {
         // pause game if app is closed and continues operating in background
