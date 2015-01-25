@@ -469,6 +469,7 @@ public class GameBoard {
 
             switch (DataTransferHandler.getMessageType()) {
                 case STHMessage.GAMESTART_MESSAGE: handleGameStartMessage(); break;
+                case STHMessage.GAMERUNNING_MESSAGE: handleGameRunningMessage(); break;
                 case STHMessage.STITCHING_MESSAGE: handleStitchOutMessage(); break;
                 case STHMessage.NEWGUTTI_MESSAGE: handleNewGuttiMessage(); break;
                 case STHMessage.GAMEPAUSE_START_MESSAGE: handlePauseMessage(); break;
