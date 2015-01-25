@@ -28,7 +28,7 @@ public class STHMessageSerializer {
 
 
                 msg.getGameStart().setFieldHeight(DataTransferHandler.getFieldHeight());
-                msg.getGameStart().setFieldHeight(DataTransferHandler.getFieldWidth());
+                msg.getGameStart().setFieldWidth(DataTransferHandler.getFieldWidth());
                 msg.getGameStart().setTileXPos(DataTransferHandler.getTileXPos());
                 msg.getGameStart().setTileYPos(DataTransferHandler.getTileYPos());
                 msg.getGameStart().setTileType(DataTransferHandler.getTileType());

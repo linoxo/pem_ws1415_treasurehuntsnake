@@ -31,6 +31,7 @@ public class GameScreen extends Screen {
 
     private static final String READY_TEXT = "Ready?";
     private static final String READY_INSTRUCTION_TEXT = "Put phone down to start!";
+    private static final String READY_CLIENT_TEXT = "Wait for host to start game!";
     private static final String PAUSED_TEXT = "Paused";
     private static final String PAUSED_INSTRUCTION_TEXT = "Put phone down to resume!";
     private static final String GAME_OVER_TEXT = "Game Over";
@@ -207,6 +208,7 @@ public class GameScreen extends Screen {
         // update the game board if it is active and check whether the game is over
         if(gameBoard.isGamePaused()) {
             state = GameState.PAUSED;
+            return;
         }
         if(SnakeTreasureHuntGame.isPhoneActive) {
             gameBoard.update(deltaTime);
@@ -296,7 +298,7 @@ public class GameScreen extends Screen {
 
         // draw text of inactive phone depending on the game state
         if(state == GameState.READY) {
-            inactivePhoneText = "";
+            inactivePhoneText = READY_CLIENT_TEXT;
         } else if (state == GameState.RUNNING) {
             inactivePhoneText = FOG_OF_WAR_TEXT;
         } else if (state == GameState.PAUSED) {
@@ -371,6 +373,7 @@ public class GameScreen extends Screen {
         // pause game if app is closed and continues operating in background
         if(state == GameState.RUNNING) {
             state = GameState.PAUSED;
+            gameBoard.sendPauseMessage();
         }
     }
 
