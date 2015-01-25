@@ -2,7 +2,6 @@ package hunt.snake.com.snaketreasurehunt;
 
 import android.graphics.Color;
 
-import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -12,8 +11,6 @@ import hunt.snake.com.framework.impl.AndroidGame;
 import hunt.snake.com.snaketreasurehunt.communication.DataTransferHandler;
 import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
 import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
-import hunt.snake.com.snaketreasurehunt.stitching.SnakeGestureListener;
-import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
 public class GameBoard {
 
@@ -131,7 +128,7 @@ public class GameBoard {
         }
 
         // check whether current phone is active
-        //checkControlling();
+        checkControlling();
 
         // manage the snakes possibility to turn
         if(!snakeCanTurn) {

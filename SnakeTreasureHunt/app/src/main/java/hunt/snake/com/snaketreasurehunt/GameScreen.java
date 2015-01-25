@@ -131,38 +131,30 @@ public class GameScreen extends Screen {
     }
 
     private void updateReady(List<TouchEvent> touchEvents, float deltaTime) {
-        if(!SnakeTreasureHuntGame.isControllingPhone) {
-            // check whether the game is running
-            if(gameBoard.isGameRunning()) {
-                state = GameState.RUNNING;
+        // check whether the game is running (non-controlling phone)
+        if(!SnakeTreasureHuntGame.isControllingPhone && gameBoard.isGameRunning()) {
+            state = GameState.RUNNING;
+
+        } else if (SnakeTreasureHuntGame.isControllingPhone) {
+            if (isCountingDown) {
+                if (!isPhonePlacedOnGround(deltaTime)) {
+                    timer = COUNT_DOWN_TIME;
+                    isCountingDown = false;
+                    return;
+                }
+                timer -= deltaTime;
+                if (timer <= 0.0f) {
+                    // change from "ready" to "running" if screen was touched
+                    state = GameState.RUNNING;
+                    // signalize to other phones that game is running
+                    gameBoard.sendGameRunningMessage();
+                }
+            } else {
+                // start countdown when phone is placed on ground
+                if (isPhonePlacedOnGround(deltaTime)) {
+                    isCountingDown = true;
+                }
             }
-        }
-        if(isCountingDown) {
-            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
-            // COMMENT THE FOLLOWING IF CLAUSE OUT
-            if(!isPhonePlacedOnGround(deltaTime)) {
-                timer = COUNT_DOWN_TIME;
-                isCountingDown = false;
-                return;
-            }
-            timer -= deltaTime;
-            if(timer <= 0.0f) {
-                // change from "ready" to "running" if screen was touched
-                state = GameState.RUNNING;
-                // signalize to other phones that game is running
-                gameBoard.sendGameRunningMessage();
-            }
-        } else {
-            // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
-            // COMMENT THE FOLLOWING IF CLAUSE OUT AND UNCOMMENT THE ONE BELOW
-            // start countdown when phone is placed on ground
-            if(isPhonePlacedOnGround(deltaTime)) {
-                isCountingDown = true;
-            }
-            // start countdown when screen is touched
-            /*if (touchEvents.size() > 0) {
-                isCountingDown = true;
-            }*/
         }
     }
 
@@ -201,8 +193,6 @@ public class GameScreen extends Screen {
             }
         }
 
-        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
-        // COMMENT THE FOLLOWING IF CLAUSE OUT
         // change from "running" to "paused" if phone was lifted (controlling phone)
         // change from active to non-active if phone was lifted (active phone)
         if(!isPhonePlacedOnGround(deltaTime)) {
@@ -239,18 +229,6 @@ public class GameScreen extends Screen {
     }
 
     private void updatePaused(List<TouchEvent> touchEvents, float deltaTime) {
-        int size = touchEvents.size();
-        for(int i = 0; i < size; i++) {
-            TouchEvent event = touchEvents.get(i);
-            if(event.type == TouchEvent.TOUCH_UP) {
-                // change from "paused" to "running" if screen was touched
-                // state = GameState.RUNNING;
-                // return;
-            }
-        }
-
-        // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
-        // COMMENT THE FOLLOWING IF CLAUSE OUT
         // change from "paused" to "running" if phone is placed on ground (controlling phone)
         if(SnakeTreasureHuntGame.isControllingPhone && isPhonePlacedOnGround(deltaTime)) {
             SnakeTreasureHuntGame.isPhonePlacedOnGround = true;
