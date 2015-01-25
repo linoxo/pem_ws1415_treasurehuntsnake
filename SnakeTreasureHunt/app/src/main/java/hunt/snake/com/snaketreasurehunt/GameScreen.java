@@ -87,6 +87,7 @@ public class GameScreen extends Screen {
         timer = COUNT_DOWN_TIME;
         accelTimer = ACCEL_TIME;
         isPhoneLifted = true;
+        inactivePhoneText = READY_CLIENT_TEXT;
     }
 
     public void setClient(ClientService client) {
@@ -306,6 +307,8 @@ public class GameScreen extends Screen {
         } else if (state == GameState.GAME_OVER) {
             inactivePhoneText = GAME_OVER_TEXT;
         }
+
+        System.out.println("Inactive phone: " + inactivePhoneText);
 
         g.drawText(inactivePhoneText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
 
