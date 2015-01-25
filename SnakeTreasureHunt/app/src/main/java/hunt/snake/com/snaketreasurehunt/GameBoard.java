@@ -82,10 +82,6 @@ public class GameBoard {
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
             sendGameStartMessage();
-            test();
-            mHandler.sendStitching();
-            //mHandler.sendInitGame();
-            //mHandler.test();
             System.out.println("after start");
         }
     }
