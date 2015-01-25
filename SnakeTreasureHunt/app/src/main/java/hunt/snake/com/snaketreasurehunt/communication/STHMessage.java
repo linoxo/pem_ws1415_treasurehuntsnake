@@ -17,4 +17,6 @@ public class STHMessage {
 
     public static final int GAMEPAUSE_STOP_MESSAGE = 10074;
 
+    public static final int GAMERUNNING_MESSAGE = 10084;
+
 }

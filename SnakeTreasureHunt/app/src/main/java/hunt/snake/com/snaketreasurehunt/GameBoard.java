@@ -44,6 +44,7 @@ public class GameBoard {
     private float snakeCanTurnCounter;
     private boolean snakeHasEatenLock;
     private List<GameElement> gameElements;
+    private boolean gameRunning;
     private boolean gamePaused;
     private boolean gameOver;
     private int score;
@@ -74,6 +75,7 @@ public class GameBoard {
         TICK = TICK_INIT;
         tickTime = 0.0f;
         stitchingTimer = 0.0f;
+        gameRunning = false;
         gamePaused = false;
         gameOver = false;
         score = 0;
@@ -385,6 +387,10 @@ public class GameBoard {
         g.drawHalo(centerX, centerY, radius, 10, Color.YELLOW);
     }
 
+    boolean isGameRunning() {
+        return gameRunning;
+    }
+
     boolean isGamePaused() {
         return gamePaused;
     }
@@ -537,6 +543,15 @@ public class GameBoard {
         }
     }
 
+    public void sendGameRunningMessage() {
+        // send message over MessageHandler
+        mHandler.sendGameRunning();
+    }
+
+    public void handleGameRunningMessage() {
+        gameRunning = true;
+    }
+
     public void test() {
         snake.parseToDataTransferHandler();
     }
@@ -598,7 +613,7 @@ public class GameBoard {
         DataTransferHandler.setFoodYPos(foodY);
 
         // send message over MessageHandler
-        mHandler.sendStitching();
+        mHandler.sendNewGutti();
     }
 
     public void handleNewGuttiMessage() {

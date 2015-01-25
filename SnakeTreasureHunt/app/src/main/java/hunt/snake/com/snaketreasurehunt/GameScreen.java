@@ -113,7 +113,7 @@ public class GameScreen extends Screen {
         if(gameBoard != null)
             gameBoard.handleMessages();
 
-        if(state == GameState.READY && SnakeTreasureHuntGame.isControllingPhone) {
+        if(state == GameState.READY) {
             updateReady(touchEvents, deltaTime);
             return;
         }
@@ -131,6 +131,12 @@ public class GameScreen extends Screen {
     }
 
     private void updateReady(List<TouchEvent> touchEvents, float deltaTime) {
+        if(!SnakeTreasureHuntGame.isControllingPhone) {
+            // check whether the game is running
+            if(gameBoard.isGameRunning()) {
+                state = GameState.RUNNING;
+            }
+        }
         if(isCountingDown) {
             // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,
             // COMMENT THE FOLLOWING IF CLAUSE OUT
@@ -143,6 +149,8 @@ public class GameScreen extends Screen {
             if(timer <= 0.0f) {
                 // change from "ready" to "running" if screen was touched
                 state = GameState.RUNNING;
+                // signalize to other phones that game is running
+                gameBoard.sendGameRunningMessage();
             }
         } else {
             // IF THE "PLACE PHONE ON GROUND" FEATURE SHALL BE DISABLED,

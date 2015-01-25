@@ -49,6 +49,11 @@ public class MessageHandler {
         client.sendMessage("GameStarted");
     }
 
+    public void sendGameRunning() {
+        String msg = serializer.serialize(STHMessage.GAMERUNNING_MESSAGE);
+        client.sendMessage(msg);
+    }
+
     public void sendStitching() {
         String msg = serializer.serialize(STHMessage.STITCHING_MESSAGE);
         client.sendMessage(msg);

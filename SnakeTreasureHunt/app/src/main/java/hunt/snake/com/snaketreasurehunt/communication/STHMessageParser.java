@@ -126,6 +126,10 @@ public class STHMessageParser {
                     DataTransferHandler.setTickTime(ticks);
 
                     break;
+
+                case STHMessage.GAMERUNNING_MESSAGE:
+
+                    break;
             }
         }
         return messageType;

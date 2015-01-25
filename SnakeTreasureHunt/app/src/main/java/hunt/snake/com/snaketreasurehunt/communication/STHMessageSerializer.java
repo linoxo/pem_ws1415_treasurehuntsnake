@@ -82,6 +82,10 @@ public class STHMessageSerializer {
                 msg.getGamePauseStop().setTickTime(DataTransferHandler.getTickTime());
 
                 break;
+
+            case STHMessage.GAMERUNNING_MESSAGE:
+
+                break;
         }
 
         jsonMsg = gson.toJson(msg);
