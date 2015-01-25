@@ -536,7 +536,9 @@ public class GameBoard {
             if(tileType[i] == GameElementType.RECT_OBSTACLE.ordinal()) {
                 gameElements.add(new Obstacle(tiles[tileXPos[i]][tileYPos[i]], tiles, GameElementType.RECT_OBSTACLE, 0));
             } else if(tileType[i] == GameElementType.FOOD.ordinal()) {
-                gameElements.add(createGameElement(GameElementType.FOOD, tiles[tileXPos[i]][tileYPos[i]]));
+                foodX = tileXPos[i];
+                foodY = tileYPos[i];
+                gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
     }
