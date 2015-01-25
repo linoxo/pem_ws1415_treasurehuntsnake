@@ -581,9 +581,6 @@ public class GameBoard {
         // serialize snake
         snake.parseToDataTransferHandler();
 
-        DataTransferHandler.setReceivedMessage(true);
-        DataTransferHandler.setMessageType(STHMessage.STITCHING_MESSAGE);
-
         // send message over MessageHandler
         mHandler.sendStitching();
     }
