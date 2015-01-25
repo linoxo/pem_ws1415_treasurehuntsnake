@@ -20,6 +20,8 @@ public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureL
     public static boolean isPhoneActive = true;
     // is our phone placed on the ground (and therefore ready for stitching)?
     public static boolean isPhonePlacedOnGround = false;
+    // are we connected to the client?
+    public static boolean isConnectedToClient = false;
 
     SnakeGestureMethods methods = new SnakeGestureMethods();
     SnakeGestureListener detector;
@@ -51,6 +53,7 @@ public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureL
                 clientService.sendMessage("In Game");
                 screen.setClient(clientService);
                 screen.init();
+                isConnectedToClient = true;
             }
 
             @Override

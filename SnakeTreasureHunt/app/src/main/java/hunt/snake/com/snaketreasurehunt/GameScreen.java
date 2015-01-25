@@ -104,6 +104,11 @@ public class GameScreen extends Screen {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
         game.getInput().getKeyEvents();
 
+        // wait until we are connected to the client
+        if(!SnakeTreasureHuntGame.isConnectedToClient) {
+            return;
+        }
+
         // handle incoming messages
         if(gameBoard != null)
             gameBoard.handleMessages();
@@ -267,6 +272,11 @@ public class GameScreen extends Screen {
     public void present(float deltaTime) {
         Graphics g = game.getGraphics();
 
+        // wait until we are connected to the client
+        if(!SnakeTreasureHuntGame.isConnectedToClient) {
+            return;
+        }
+
         // if our phone is not active, we draw a special UI
         if(!SnakeTreasureHuntGame.isPhoneActive) {
             drawInactivePhoneUI(g);
@@ -307,8 +317,6 @@ public class GameScreen extends Screen {
         } else if (state == GameState.GAME_OVER) {
             inactivePhoneText = GAME_OVER_TEXT;
         }
-
-        System.out.println("Inactive phone: " + inactivePhoneText);
 
         g.drawText(inactivePhoneText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
 
