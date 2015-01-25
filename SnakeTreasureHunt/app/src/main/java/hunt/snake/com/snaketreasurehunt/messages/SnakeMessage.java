@@ -1,5 +1,7 @@
 package hunt.snake.com.snaketreasurehunt.messages;
 
+import hunt.snake.com.snaketreasurehunt.Snake;
+
 /**
  * Created by lino on 23.01.15.
  */
@@ -10,6 +12,7 @@ public class SnakeMessage {
     private boolean[] cornerPart;
     private int[] origin;
     private int[] direction;
+    private Snake.Direction headDirection;
 
     public SnakeMessage() {}
 
@@ -52,4 +55,8 @@ public class SnakeMessage {
     public void setDirection(int[] direction) {
         this.direction = direction;
     }
+
+    public Snake.Direction getHeadDirection() { return headDirection; }
+
+    public void setHeadDirection(Snake.Direction headDirection) { this.headDirection = headDirection; }
 }

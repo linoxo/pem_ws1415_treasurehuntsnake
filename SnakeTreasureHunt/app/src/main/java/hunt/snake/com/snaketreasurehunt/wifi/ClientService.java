@@ -41,10 +41,6 @@ public class ClientService extends Service {
         }
     }
 
-    public void test() {
-        mHandler.test();
-    }
-
     public MessageHandler getMessageHandler() {
         System.out.println("Handler: " + mHandler);
         return mHandler;
@@ -65,10 +61,6 @@ public class ClientService extends Service {
 
     public Activity getCurrentActivity() {
         return currentActivity;
-    }
-
-    public boolean isHost() {
-        return isHost;
     }
 
     public void setIsHost(boolean isHost) {

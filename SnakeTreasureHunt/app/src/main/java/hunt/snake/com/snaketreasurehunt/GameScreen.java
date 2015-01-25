@@ -103,7 +103,8 @@ public class GameScreen extends Screen {
         game.getInput().getKeyEvents();
 
         // handle incoming messages
-        gameBoard.handleMessages();
+        if(gameBoard != null)
+            gameBoard.handleMessages();
 
         if(state == GameState.READY && SnakeTreasureHuntGame.isControllingPhone) {
             updateReady(touchEvents, deltaTime);

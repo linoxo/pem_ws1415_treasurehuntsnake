@@ -49,6 +49,31 @@ public class MessageHandler {
         client.sendMessage("GameStarted");
     }
 
+    public void sendStitching() {
+        String msg = serializer.serialize(STHMessage.STITCHING_MESSAGE);
+        client.sendMessage(msg);
+    }
+
+    public void sendGameOver() {
+        String msg = serializer.serialize(STHMessage.GAMEOVER_MESSAGE);
+        client.sendMessage(msg);
+    }
+
+    public void sendNewGutti() {
+        String msg = serializer.serialize(STHMessage.NEWGUTTI_MESSAGE);
+        client.sendMessage(msg);
+    }
+
+    public void sendPaused() {
+        String msg = serializer.serialize(STHMessage.GAMEPAUSE_START_MESSAGE);
+        client.sendMessage(msg);
+    }
+
+    public void sendResumed() {
+        String msg = serializer.serialize(STHMessage.GAMEPAUSE_STOP_MESSAGE);
+        client.sendMessage(msg);
+    }
+
     public void handleIncoming(Object obj) {
         String in = (String) obj;
         System.out.println("In incoming Handler: " + in);
@@ -59,16 +84,22 @@ public class MessageHandler {
         */
 
 
+
         if((in.charAt(0))=='{') {
             //startGame();
             System.out.println("Parser: " + parser + " MSG: " + in);
-            parser.deserializeSTHMessage(in);
-            System.out.println("GAME START!!!!");
+            int type = parser.deserializeSTHMessage(in);
+            System.out.println("Message Type: " + type);
+
+            if(type == STHMessage.GAMESTART_MESSAGE) {
+                startGame();
+            }
         }
     }
 
     private void startGame() {
         Intent intent = new Intent(client.getCurrentActivity(), SnakeTreasureHuntGame.class);
+        intent.putExtra("isHost", false);
         client.getCurrentActivity().startActivity(intent);
     }
 

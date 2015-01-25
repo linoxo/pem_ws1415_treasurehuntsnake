@@ -82,6 +82,8 @@ public class GameBoard {
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
             sendGameStartMessage();
+            test();
+            mHandler.sendStitching();
             //mHandler.sendInitGame();
             //mHandler.test();
             System.out.println("after start");
@@ -105,6 +107,18 @@ public class GameBoard {
         // create snake
         Snake.Direction startDirection = Snake.Direction.WEST;
         snake.init(tiles[2][3], tiles, 3, startDirection);
+
+        //TEST FOR PARSING
+        /*
+        int[] x = {4,4,4,3,3,2,1,0,0,0,1,2,2,3,4,4,5,5,5};
+        int[] y = {5,4,3,3,2,2,2,2,1,0,0,0,1,1,1,2,2,3,4};
+        DataTransferHandler.setBodypartXPos(x);
+        DataTransferHandler.setBodypartYPos(y);
+        DataTransferHandler.setHeadDirection(Snake.Direction.SOUTH);
+        startDirection = Snake.Direction.SOUTH;
+        snake.init(tiles);
+        */
+
         nextSnakeDirection = startDirection;
         snakeCanTurn = true;
         snakeCanTurnCounter = TICK;
@@ -553,6 +567,10 @@ public class GameBoard {
         }
     }
 
+    public void test() {
+        snake.parseToDataTransferHandler();
+    }
+
     public void sendStitchOutMessage() {
         System.out.println("STITCHOUT MESSAGE");
         DataTransferHandler.setTickTime(tickTime);
@@ -570,6 +588,7 @@ public class GameBoard {
         DataTransferHandler.setTopLeftXPos(topLeftXPos);
         DataTransferHandler.setTopLeftYPos(topLeftYPos);
         // TODO: store snake
+        snake.parseToDataTransferHandler();
 
         DataTransferHandler.setReceivedMessage(true);
         DataTransferHandler.setMessageType(STHMessage.STITCHING_MESSAGE);

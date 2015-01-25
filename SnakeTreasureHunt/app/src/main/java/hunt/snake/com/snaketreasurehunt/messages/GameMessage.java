@@ -45,9 +45,6 @@ public class GameMessage extends Message {
                 gamePauseStop = new GamePauseStop();
 
         }
-
-
-        setType(STHMessage.GAMESTART_MESSAGE);
     }
 
     public GameStart getGameStart() {

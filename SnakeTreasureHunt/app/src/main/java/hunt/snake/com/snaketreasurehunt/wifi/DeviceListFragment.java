@@ -109,6 +109,7 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             public void onClick(View v) {
                 clientService.setIsHost(true);
                 Intent intent = new Intent(getActivity(), SnakeTreasureHuntGame.class);
+                intent.putExtra("isHost", true);
                 startActivity(intent);
                 clientService.sendMessage("message sent");
                 //clientService.test();

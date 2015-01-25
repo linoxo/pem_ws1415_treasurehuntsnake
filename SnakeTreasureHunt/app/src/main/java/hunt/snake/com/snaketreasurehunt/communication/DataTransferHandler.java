@@ -1,5 +1,7 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
+import hunt.snake.com.snaketreasurehunt.Snake;
+
 public class DataTransferHandler {
     private static boolean receivedMessage; // haben wir eine Nachricht empfangen?
     private static int messageType;         // welche Nachrichtenart haben wir als letztes empfangen?
@@ -24,6 +26,7 @@ public class DataTransferHandler {
     private static boolean[] cornerPart;    // Ist das Körperteil ein Eckteil?
     private static int[] origin;            // "Herkunft" des Körperteils (nur bei Eckteilen)
     private static int[] direction;         // Richtung des Körperteils
+    private static Snake.Direction headDirection;
 
     // Data transferred after the snake has eaten and a new gutti is spawned (NEWGUTTI_MESSAGE)
     private static int foodXPos;            // X-Position des Guttis
@@ -184,6 +187,10 @@ public class DataTransferHandler {
     public static void setDirection(int[] direction) {
         DataTransferHandler.direction = direction;
     }
+
+    public static void setHeadDirection(Snake.Direction headDirection) { DataTransferHandler.headDirection = headDirection; }
+
+    public static Snake.Direction getHeadDirection() { return headDirection; }
 
     public static int getFoodXPos() {
         return foodXPos;

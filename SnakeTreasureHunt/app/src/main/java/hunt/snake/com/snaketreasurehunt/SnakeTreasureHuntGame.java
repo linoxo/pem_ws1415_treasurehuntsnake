@@ -21,15 +21,20 @@ public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureL
     // is our phone placed on the ground (and therefore ready for stitching)?
     public static boolean isPhonePlacedOnGround = false;
 
-    SnakeGestureMethods methods= new SnakeGestureMethods();
+    SnakeGestureMethods methods = new SnakeGestureMethods();
     SnakeGestureListener detector;
     private GameScreen screen;
 
     public Screen getStartScreen() {
         //ABFRAGE FUER IS HOST OR CLIENT
+        boolean isHost = getIntent().getBooleanExtra("isHost", false);
+        System.out.println("Is Host? " + isHost);
+        isControllingPhone = isHost;
+        isPhoneActive = isHost;
+
         screen = new GameScreen(this);
-        screen.init(); // diese Zeile löschen wenn die untere Zeile einkommentiert wird
-        //initClient();
+        //screen.init(); // diese Zeile löschen wenn die untere Zeile einkommentiert wird
+        initClient();
         detector = new SnakeGestureListener(this,this);
 
         return screen;

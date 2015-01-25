@@ -1,6 +1,8 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
 import com.google.gson.Gson;
+
+import hunt.snake.com.snaketreasurehunt.Snake;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 /**
@@ -62,11 +64,18 @@ public class STHMessageParser {
                     int stitchingDirection = msg.getGameStitching().getStitchingDirection();
                     int topLeftXPos = msg.getGameStitching().getTopLeftXPos();
                     int topLeftYPos = msg.getGameStitching().getTopLeftYPos();
+                    /*LINHS PART
                     int[] bodypartXPos = msg.getGameStitching().getSnake().getBodypartXPos();
                     int[] bodypartYPos = msg.getGameStitching().getSnake().getBodypartYPos();
                     boolean[] cornerPart = msg.getGameStitching().getSnake().getCornerPart();
                     int[] origin = msg.getGameStitching().getSnake().getOrigin();
                     int[] direction = msg.getGameStitching().getSnake().getDirection();
+                    */
+                    //TOMS PART
+                    int[] bodypartXPos = msg.getGameStitching().getSnake().getBodypartXPos();
+                    int[] bodypartYPos = msg.getGameStitching().getSnake().getBodypartYPos();
+                    Snake.Direction headDirection = msg.getGameStitching().getSnake().getHeadDirection();
+
 
                     System.out.println("tickTime: " + tickTime + ", timeStamp: " + timestamp);
                     System.out.println("stitching: " + stitchingDirection + ", topleft: " + topLeftXPos + ", " + topLeftYPos);
@@ -78,11 +87,17 @@ public class STHMessageParser {
                     DataTransferHandler.setStitchingDirection(stitchingDirection);
                     DataTransferHandler.setTopLeftXPos(topLeftXPos);
                     DataTransferHandler.setTopLeftYPos(topLeftYPos);
+                    /*LINHS PART
                     DataTransferHandler.setBodypartXPos(bodypartXPos);
                     DataTransferHandler.setBodypartYPos(bodypartYPos);
                     DataTransferHandler.setCornerPart(cornerPart);
                     DataTransferHandler.setOrigin(origin);
                     DataTransferHandler.setDirection(direction);
+                    */
+                    //TOMS PART
+                    DataTransferHandler.setBodypartXPos(bodypartXPos);
+                    DataTransferHandler.setBodypartYPos(bodypartYPos);
+                    DataTransferHandler.setHeadDirection(headDirection);
 
                     break;
 

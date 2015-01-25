@@ -3,6 +3,7 @@ package hunt.snake.com.snaketreasurehunt;
 import java.util.LinkedList;
 
 import hunt.snake.com.framework.Graphics;
+import hunt.snake.com.snaketreasurehunt.communication.DataTransferHandler;
 
 public class Snake {
 
@@ -40,6 +41,74 @@ public class Snake {
         hasEaten = false;
         bodyParts.clear();
         createSnake();
+    }
+
+    public void init(Tile[][] tiles) {
+        this.tiles = tiles;
+        int[] bodyPartsX = DataTransferHandler.getBodypartXPos();
+        int[] bodyPartsY = DataTransferHandler.getBodypartYPos();
+        Direction headDirection = DataTransferHandler.getHeadDirection();
+
+        this.headDirection = headDirection;
+        headTile = tiles[bodyPartsX[0]][bodyPartsY[0]];
+        hasEaten = false;
+        bodyParts.clear();
+
+        GameElement bodyPart;
+        bodyPart = createHead();
+        bodyParts.addFirst(bodyPart);
+
+        Tile tile;
+        Tile nextTile;
+        Direction prevDirection = headDirection;
+        Direction direction = null;
+
+
+        for(int i = 1; i < bodyPartsX.length; i++) {
+            tile = tiles[bodyPartsX[i]][bodyPartsY[i]];
+            if(i != bodyPartsX.length - 1) {
+                nextTile = tiles[bodyPartsX[i+1]][bodyPartsY[i+1]];
+                direction = getBodyPartDirection(tile, nextTile, prevDirection);
+                if(direction == prevDirection) {
+                    bodyPart = createBodyPart(tile, direction);
+                } else {
+                    bodyPart = createCornerBodyPart(tile, direction, prevDirection);
+                    prevDirection = direction;
+                }
+            } else {
+                bodyPart = createBodyPart(tile, prevDirection);
+            }
+            System.out.println("Bodypart: x: " + tile.getPosX() + ", y: " + tile.getPosY() + ", direction: " + direction);
+            bodyParts.add(bodyPart);
+        }
+    }
+
+    private Direction getBodyPartDirection(Tile tile, Tile nextTile, Direction prevDirection) {
+        Direction direction = prevDirection;
+
+        switch(prevDirection) {
+            case NORTH:
+            case SOUTH:
+                if(nextTile.getPosX() == tile.getPosX()) {
+                    direction = prevDirection;
+                } else if(nextTile.getPosX() < tile.getPosX()) {
+                    direction = Direction.EAST;
+                } else {
+                    direction = Direction.WEST;
+                }
+                break;
+            case EAST:
+            case WEST:
+                if(nextTile.getPosY() == tile.getPosY()) {
+                    direction = prevDirection;
+                } else if(nextTile.getPosY() > tile.getPosY()) {
+                    direction = Direction.NORTH;
+                } else {
+                    direction = Direction.SOUTH;
+                }
+                break;
+        }
+        return direction;
     }
 
     //draws the snake on the canvas
@@ -152,7 +221,6 @@ public class Snake {
 
         if(nextTile.hasGameElement()) {
             if(nextTile.getGameElementType() == GameElementType.FOOD) {
-                System.out.println("Next: " + nextTile.getPosX() + ", " + nextTile.getPosY());
                 eat(nextTile);
             } else {
                 return null;
@@ -316,5 +384,20 @@ public class Snake {
 
     public Tile getHeadTile() {
         return headTile;
+    }
+
+    public void parseToDataTransferHandler() {
+        DataTransferHandler.setHeadDirection(headDirection);
+        int[] bpX = new int[bodyParts.size()];
+        int[] bpY = new int[bodyParts.size()];;
+        int i = 0;
+        for(GameElement bp : bodyParts) {
+            System.out.println("BP: " + bp.getTile().getPosX() + " y: " + bp.getTile().getPosY());
+            bpX[i] = bp.getTile().getPosX();
+            bpY[i] = bp.getTile().getPosY();
+            i++;
+        }
+        DataTransferHandler.setBodypartXPos(bpX);
+        DataTransferHandler.setBodypartYPos(bpY);
     }
 }
