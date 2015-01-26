@@ -214,7 +214,7 @@ public class GameScreen extends Screen {
             state = GameState.PAUSED;
             return;
         }
-        if(SnakeTreasureHuntGame.isPhoneActive) {
+        if(SnakeTreasureHuntGame.isPhoneActive || gameBoard.hasReceivedStitchoutMessage) {
             gameBoard.update(deltaTime);
         }
         if(gameBoard.isGameOver()) {
@@ -304,7 +304,7 @@ public class GameScreen extends Screen {
             inactivePhoneText = GAME_OVER_TEXT;
         }
 
-        g.drawText(inactivePhoneText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
+        g.drawText(inactivePhoneText, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XL.getValue(), Paint.Align.CENTER);
 
         // if the game is over, also draw the score
         if(state == GameState.GAME_OVER) {
@@ -336,9 +336,11 @@ public class GameScreen extends Screen {
         g.drawRoundRect(scoreBoard, 25, 25, 0x99000000);
         g.drawText(score, 50, 95, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.LEFT);
 
-        // draw d-pad
-        for(int i = 0; i < Snake.Direction.values().length; i++) {
-            g.drawRoundRect(DPad[i], 25, 25, 0x99FFFFFF);
+        if(SnakeTreasureHuntGame.isControllingPhone) {
+            // draw d-pad
+            for (int i = 0; i < Snake.Direction.values().length; i++) {
+                g.drawRoundRect(DPad[i], 25, 25, 0x99FFFFFF);
+            }
         }
     }
 
@@ -348,7 +350,9 @@ public class GameScreen extends Screen {
 
         // draw paused text
         g.drawText(PAUSED_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
-        g.drawText(PAUSED_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 2 / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
+        if(SnakeTreasureHuntGame.isControllingPhone) {
+            g.drawText(PAUSED_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 2 / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
+        }
     }
 
     private void drawGameOverUI(Graphics g) {
@@ -358,7 +362,9 @@ public class GameScreen extends Screen {
         // draw game over text and score
         g.drawText(GAME_OVER_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 3, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XXL.getValue(), Paint.Align.CENTER);
         g.drawText(score, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() / 2, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_XL.getValue(), Paint.Align.CENTER);
-        g.drawText(GAME_OVER_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 3 / 4, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
+        if(SnakeTreasureHuntGame.isControllingPhone) {
+            g.drawText(GAME_OVER_INSTRUCTION_TEXT, AndroidGame.getScreenWidth() / 2, AndroidGame.getScreenHeight() * 3 / 4, Constants.TEXT_COLOR.getValue(), Constants.TEXT_SIZE_M.getValue(), Paint.Align.CENTER);
+        }
     }
 
     public GameBoard getGameBoard() {

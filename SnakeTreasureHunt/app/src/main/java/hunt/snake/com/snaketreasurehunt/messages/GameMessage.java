@@ -9,6 +9,7 @@ import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
 public class GameMessage extends Message {
 
     private GameStart gameStart;
+    private GameRunning gameRunning;
     private GameOver gameOver;
     private GameStitching gameStitching;
     private GamePauseStart gamePauseStart;
@@ -23,6 +24,10 @@ public class GameMessage extends Message {
             case STHMessage.GAMESTART_MESSAGE:
                 setType(STHMessage.GAMESTART_MESSAGE);
                 gameStart = new GameStart();
+                break;
+            case STHMessage.GAMERUNNING_MESSAGE:
+                setType(STHMessage.GAMERUNNING_MESSAGE);
+                gameRunning = new GameRunning();
                 break;
             case STHMessage.GAMEOVER_MESSAGE:
                 setType(STHMessage.GAMEOVER_MESSAGE);
@@ -49,6 +54,10 @@ public class GameMessage extends Message {
 
     public GameStart getGameStart() {
         return gameStart;
+    }
+
+    public GameRunning getGameRunning() {
+        return gameRunning;
     }
 
     public GameOver getGameOver() { return gameOver; }
@@ -99,6 +108,14 @@ public class GameMessage extends Message {
         public void setTileType(int[] tileType) { this.tileType = tileType; }
 
         public int[] getTileType() { return tileType; }
+
+    }
+
+    public class GameRunning {
+
+        public GameRunning() {
+
+        }
 
     }
 
