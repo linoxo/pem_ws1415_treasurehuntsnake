@@ -19,4 +19,6 @@ public class STHMessage {
 
     public static final int GAMERUNNING_MESSAGE = 10084;
 
+    public static final int MOVEMENT_MESSAGE = 10094;
+
 }

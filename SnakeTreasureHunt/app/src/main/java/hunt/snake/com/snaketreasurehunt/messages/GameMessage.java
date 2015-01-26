@@ -1,6 +1,7 @@
 package hunt.snake.com.snaketreasurehunt.messages;
 
 import hunt.snake.com.snaketreasurehunt.GameBoard;
+import hunt.snake.com.snaketreasurehunt.Snake;
 import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
 
 /**
@@ -14,6 +15,7 @@ public class GameMessage extends Message {
     private GamePauseStart gamePauseStart;
     private GamePauseStop gamePauseStop;
     private GameNewGutti gameNewGutti;
+    private GameSnakeMovement gameSnakeMovement;
 
 
     public GameMessage(int messageType) {
@@ -43,6 +45,11 @@ public class GameMessage extends Message {
             case STHMessage.GAMEPAUSE_STOP_MESSAGE:
                 setType(STHMessage.GAMEPAUSE_STOP_MESSAGE);
                 gamePauseStop = new GamePauseStop();
+                break;
+            case STHMessage.MOVEMENT_MESSAGE:
+                setType(STHMessage.MOVEMENT_MESSAGE);
+                gameSnakeMovement = new GameSnakeMovement();
+                break;
 
         }
     }
@@ -61,6 +68,8 @@ public class GameMessage extends Message {
 
     public GameNewGutti getGameNewGutti() { return gameNewGutti; }
 
+    public GameSnakeMovement getGameSnakeMovement() { return gameSnakeMovement; }
+
 
     public class GameStart {
 
@@ -69,6 +78,7 @@ public class GameMessage extends Message {
         private int[] tileXPos;
         private int[] tileYPos;
         private int[] tileType;
+        private SnakeMessage snake;
 
         public GameStart() {}
 
@@ -99,6 +109,10 @@ public class GameMessage extends Message {
         public void setTileType(int[] tileType) { this.tileType = tileType; }
 
         public int[] getTileType() { return tileType; }
+
+        public SnakeMessage getSnake() { return snake; }
+
+        public void setSnake(SnakeMessage snake) { this.snake = snake; }
 
     }
 
@@ -212,9 +226,16 @@ public class GameMessage extends Message {
         public void setFoodYPos(int foodYPos) {
             this.foodYPos = foodYPos;
         }
-
     }
 
+    public class GameSnakeMovement {
+        private Snake.Direction direction;
+        private SnakeMessage snake;
 
+        public GameSnakeMovement() {}
 
+        public Snake.Direction getMovementDirection() { return direction; }
+
+        public void setMovementDirection(Snake.Direction direction) { this.direction = direction; }
+    }
 }

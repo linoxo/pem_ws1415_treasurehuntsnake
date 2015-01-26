@@ -35,6 +35,9 @@ public class DataTransferHandler {
     // Data transferred when the game is over (GAMEOVER_MESSAGE)
     private static int score;               // aktueller Spielstand
 
+    //FOR MOVEMENT
+    private static Snake.Direction movementDirection;
+
 
     public static boolean hasReceivedMessage() {
         return receivedMessage;
@@ -215,4 +218,9 @@ public class DataTransferHandler {
     public static void setScore(int score) {
         DataTransferHandler.score = score;
     }
+
+    public static Snake.Direction getMovementDirection() { return movementDirection; }
+
+    public static void setMovementDirection(Snake.Direction movementDirection) {DataTransferHandler.movementDirection = movementDirection; }
+
 }

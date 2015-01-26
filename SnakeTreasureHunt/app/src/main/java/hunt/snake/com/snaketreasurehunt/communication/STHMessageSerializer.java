@@ -25,8 +25,12 @@ public class STHMessageSerializer {
         switch(messageType) {
             //first case
             case STHMessage.GAMESTART_MESSAGE:
+                SnakeMessage snakeMessage = new SnakeMessage();
+                snakeMessage.setBodypartXPos(DataTransferHandler.getBodypartXPos());
+                snakeMessage.setBodypartYPos(DataTransferHandler.getBodypartYPos());
+                snakeMessage.setHeadDirection(DataTransferHandler.getHeadDirection());
 
-
+                msg.getGameStart().setSnake(snakeMessage);
                 msg.getGameStart().setFieldHeight(DataTransferHandler.getFieldHeight());
                 msg.getGameStart().setFieldWidth(DataTransferHandler.getFieldWidth());
                 msg.getGameStart().setTileXPos(DataTransferHandler.getTileXPos());
@@ -85,6 +89,10 @@ public class STHMessageSerializer {
 
             case STHMessage.GAMERUNNING_MESSAGE:
 
+                break;
+
+            case STHMessage.MOVEMENT_MESSAGE:
+                msg.getGameSnakeMovement().setMovementDirection(DataTransferHandler.getMovementDirection());
                 break;
         }
 

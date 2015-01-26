@@ -50,6 +50,7 @@ public class Snake {
         Direction headDirection = DataTransferHandler.getHeadDirection();
 
         this.headDirection = headDirection;
+        System.out.println("Tiles: " + tiles);
         headTile = tiles[bodyPartsX[0]][bodyPartsY[0]];
         hasEaten = false;
         bodyParts.clear();

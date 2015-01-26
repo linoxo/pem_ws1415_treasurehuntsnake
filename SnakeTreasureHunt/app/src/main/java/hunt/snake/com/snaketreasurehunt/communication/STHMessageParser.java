@@ -130,6 +130,11 @@ public class STHMessageParser {
                 case STHMessage.GAMERUNNING_MESSAGE:
 
                     break;
+
+                case STHMessage.MOVEMENT_MESSAGE:
+                    Snake.Direction direction = msg.getGameSnakeMovement().getMovementDirection();
+                    DataTransferHandler.setMovementDirection(direction);
+                    break;
             }
         }
         return messageType;

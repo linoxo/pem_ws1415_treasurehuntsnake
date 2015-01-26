@@ -79,6 +79,11 @@ public class MessageHandler {
         client.sendMessage(msg);
     }
 
+    public void sendMovement() {
+        String msg = serializer.serialize(STHMessage.MOVEMENT_MESSAGE);
+        client.sendMessage(msg);
+    }
+
     public void handleIncoming(Object obj) {
         String in = (String) obj;
         System.out.println("In incoming Handler: " + in);

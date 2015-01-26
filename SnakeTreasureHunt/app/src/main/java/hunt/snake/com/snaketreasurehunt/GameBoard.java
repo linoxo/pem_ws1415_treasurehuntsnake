@@ -80,6 +80,7 @@ public class GameBoard {
         System.out.println("before if");
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
+
             sendGameStartMessage();
             System.out.println("after start");
         }
@@ -157,6 +158,8 @@ public class GameBoard {
                 gameOver = true;
                 sendGameOverMessage();
                 return;
+            } else {
+                sendMovementMessage();
             }
 
             // check whether snake has eaten something
@@ -434,6 +437,8 @@ public class GameBoard {
         }
 
         stitchingDirection = Snake.Direction.values()[DataTransferHandler.getStitchingDirection()];
+        System.out.println("stitchingDirection: " + stitchingDirection);
+        System.out.println("stitchInDirection: " + stitchInDirection);
         // check if the stitch was in the right direction
         if(stitchingDirection == stitchInDirection) {
             // STITCH !
@@ -472,6 +477,7 @@ public class GameBoard {
                 case STHMessage.GAMEPAUSE_START_MESSAGE: handlePauseMessage(); break;
                 case STHMessage.GAMEPAUSE_STOP_MESSAGE: handleResumeMessage(); break;
                 case STHMessage.GAMEOVER_MESSAGE: handleGameOverMessage(); break;
+                case STHMessage.MOVEMENT_MESSAGE: handleMovementMessage(); break;
             }
         }
     }
@@ -515,6 +521,8 @@ public class GameBoard {
         DataTransferHandler.setTileYPos(tileYPos);
         DataTransferHandler.setTileType(tileType);
 
+        snake.parseToDataTransferHandler();
+
         // send message over MessageHandler
         mHandler.sendInitGame();
     }
@@ -541,6 +549,7 @@ public class GameBoard {
                 gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
+        snake.init(tiles);
     }
 
     public void sendGameRunningMessage() {
@@ -582,6 +591,11 @@ public class GameBoard {
 
         // send message over MessageHandler
         mHandler.sendStitching();
+    }
+
+    public void sendMovementMessage() {
+        DataTransferHandler.setMovementDirection(nextSnakeDirection);
+        mHandler.sendMovement();
     }
 
     public void handleStitchOutMessage() {
@@ -653,5 +667,9 @@ public class GameBoard {
     public void handleGameOverMessage() {
         score = DataTransferHandler.getScore();
         gameOver = true;
+    }
+
+    public void handleMovementMessage() {
+        snake.move(DataTransferHandler.getMovementDirection());
     }
 }
