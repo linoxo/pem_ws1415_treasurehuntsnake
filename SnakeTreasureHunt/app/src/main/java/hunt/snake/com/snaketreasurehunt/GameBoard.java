@@ -160,7 +160,8 @@ public class GameBoard {
                 sendGameOverMessage();
                 return;
             } else {
-                sendMovementMessage();
+                if(hasReceivedStitchoutMessage)
+                    sendMovementMessage();
             }
 
             // check whether snake has eaten something
@@ -551,8 +552,6 @@ public class GameBoard {
         DataTransferHandler.setTileYPos(tileYPos);
         DataTransferHandler.setTileType(tileType);
 
-        snake.parseToDataTransferHandler();
-
         // send message over MessageHandler
         mHandler.sendInitGame();
     }
@@ -579,7 +578,6 @@ public class GameBoard {
                 gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
-        snake.init(tiles);
     }
 
     public void sendGameRunningMessage() {

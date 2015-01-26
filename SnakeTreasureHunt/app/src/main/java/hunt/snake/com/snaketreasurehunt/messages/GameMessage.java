@@ -87,7 +87,6 @@ public class GameMessage extends Message {
         private int[] tileXPos;
         private int[] tileYPos;
         private int[] tileType;
-        private SnakeMessage snake;
 
         public GameStart() {}
 
@@ -118,10 +117,6 @@ public class GameMessage extends Message {
         public void setTileType(int[] tileType) { this.tileType = tileType; }
 
         public int[] getTileType() { return tileType; }
-
-        public SnakeMessage getSnake() { return snake; }
-
-        public void setSnake(SnakeMessage snake) { this.snake = snake; }
 
     }
 

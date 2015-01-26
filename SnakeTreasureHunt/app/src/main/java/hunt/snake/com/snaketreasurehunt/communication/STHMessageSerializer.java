@@ -29,14 +29,6 @@ public class STHMessageSerializer {
                 snakeMessage.setBodypartXPos(DataTransferHandler.getBodypartXPos());
                 snakeMessage.setBodypartYPos(DataTransferHandler.getBodypartYPos());
                 snakeMessage.setHeadDirection(DataTransferHandler.getHeadDirection());
-
-                msg.getGameStart().setSnake(snakeMessage);
-                msg.getGameStart().setFieldHeight(DataTransferHandler.getFieldHeight());
-                msg.getGameStart().setFieldWidth(DataTransferHandler.getFieldWidth());
-                msg.getGameStart().setTileXPos(DataTransferHandler.getTileXPos());
-                msg.getGameStart().setTileYPos(DataTransferHandler.getTileYPos());
-                msg.getGameStart().setTileType(DataTransferHandler.getTileType());
-
                 break;
 
             //second case
