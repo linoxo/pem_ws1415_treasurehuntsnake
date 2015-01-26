@@ -46,6 +46,7 @@ public class GameBoard {
     private boolean gameOver;
     private int score;
     private Random random;
+    boolean hasReceivedStitchoutMessage = false;
 
     private float tickTime = 0;
     private Snake.Direction stitchingDirection; // side of the phone where there was a swipe out
@@ -198,6 +199,34 @@ public class GameBoard {
         }
 
         drawMargin(g);
+        drawMiniMap(g);
+    }
+
+    public void drawMiniMap(Graphics g) {
+        int margin = 50;
+        int scale = 10;
+        int x = AndroidGame.getScreenWidth() - scale * boardWidth - margin;
+        int y = margin;
+
+        // BOARD
+        // horizontal top
+        g.drawLine(x, y, x + scale * boardWidth, y, 5, Constants.TEXT_COLOR.getValue());
+        // horizontal bottom
+        g.drawLine(x, y + scale * boardHeight, x + scale * boardWidth, y + scale * boardHeight, 5, Constants.TEXT_COLOR.getValue());
+        // vertical left
+        g.drawLine(x, y, x, y + scale * boardHeight, 5, Constants.TEXT_COLOR.getValue());
+        // vertical right
+        g.drawLine(x + scale * boardWidth, y, x + scale * boardWidth, y + scale * boardHeight, 5, Constants.TEXT_COLOR.getValue());
+
+        int px = AndroidGame.getScreenWidth() - scale * (boardWidth - topLeft.getPosX()) - margin;
+        int py = scale * topLeft.getPosY() + margin;
+        // PHONE
+        g.drawRect(px, py, scale * screenWidth, scale * screenHeight, Constants.TEXT_COLOR.getValue());
+
+        // SNAKE
+        for(GameElement bp : snake.getBodyParts()) {
+            g.drawRect(x + scale * bp.getTile().getPosX(), y + scale * bp.getTile().getPosY(), scale, scale, 0xFF000000);
+        }
     }
 
     public void createGameElements() {
@@ -451,6 +480,7 @@ public class GameBoard {
 
             // phone is now active!
             SnakeTreasureHuntGame.isPhoneActive = true;
+            //hasReceivedStitchoutMessage = false;
         }
     }
 
@@ -559,6 +589,7 @@ public class GameBoard {
 
     public void handleGameRunningMessage() {
         gameRunning = true;
+        System.out.println("GAME RUNNING RECEIVED!!!");
     }
 
     public void test() {
@@ -609,7 +640,7 @@ public class GameBoard {
 
         float currentTime = System.nanoTime() / 1000000000.0f;
         float timeDiff = currentTime - timestamp;
-        this.tickTime = tickTime + timeDiff;
+        //this.tickTime = tickTime + timeDiff;
 
         // start stitching counter
         stitchingTimer = STITCHING_THRESHOLD;
@@ -617,6 +648,8 @@ public class GameBoard {
         // parse snake
         snake.init(tiles);
         nextSnakeDirection = DataTransferHandler.getHeadDirection();
+
+        hasReceivedStitchoutMessage = true;
     }
 
     public void sendNewGuttiMessage() {

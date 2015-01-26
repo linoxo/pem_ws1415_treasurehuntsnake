@@ -401,4 +401,8 @@ public class Snake {
         DataTransferHandler.setBodypartXPos(bpX);
         DataTransferHandler.setBodypartYPos(bpY);
     }
+
+    public LinkedList<GameElement> getBodyParts() {
+        return bodyParts;
+    }
 }
