@@ -106,6 +106,14 @@ public class Server {
                         obj = in.readObject();
                     } catch (IOException e) {
                         e.printStackTrace();
+                    } finally {
+                        try {
+                            in.close();
+                            out.close();
+                            serverSocket.close();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
                     System.out.println("In server: " + obj);
                     broadcast(obj);

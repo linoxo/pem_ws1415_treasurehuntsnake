@@ -224,6 +224,7 @@ public class Snake {
             if(nextTile.getGameElementType() == GameElementType.FOOD) {
                 eat(nextTile);
             } else {
+                System.out.println("NextTileType: " + nextTile.getGameElement().getType());
                 return null;
             }
         }
@@ -306,6 +307,8 @@ public class Snake {
         GameElement newBodyPart;
         Tile oldTile = headTile;
         Tile nextTile = getNextTile(direction);
+
+        System.out.println("NextTile: " + nextTile + " onBorder: " + nextTile.isOnBorder());
 
         if(nextTile == null || nextTile.isOnBorder())
             return false;
