@@ -103,6 +103,7 @@ public class ClientService extends Service {
                             input.close();
                             socket.close();
                             System.out.println("Socket closed...");
+                            Thread.currentThread().interrupt();
                         } catch (IOException e1) {
                             e1.printStackTrace();
                         }

@@ -111,6 +111,7 @@ public class Server {
                             out.close();
                             serverSocket.close();
                             System.out.println("Socket closed...");
+                            Thread.currentThread().interrupt();
                         } catch (IOException el) {
                             el.printStackTrace();
                         }

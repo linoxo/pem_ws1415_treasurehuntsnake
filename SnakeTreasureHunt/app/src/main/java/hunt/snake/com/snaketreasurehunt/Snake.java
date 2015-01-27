@@ -225,6 +225,7 @@ public class Snake {
                 eat(nextTile);
             } else {
                 System.out.println("NextTileType: " + nextTile.getGameElement().getType());
+                System.out.println("NextTileInMethod: [" + nextTile.getPosX() + ", " + nextTile.getPosY() + "]");
                 return null;
             }
         }
@@ -308,9 +309,13 @@ public class Snake {
         Tile oldTile = headTile;
         Tile nextTile = getNextTile(direction);
 
-        System.out.println("NextTile: " + nextTile);
-        if(nextTile != null)
-            System.out.println("onBoarder: " + nextTile.isOnBorder());
+
+        if(nextTile != null) {
+            System.out.println("NextTile: [" + nextTile.getPosX() + ", " + nextTile.getPosY() + "]");
+            System.out.println("onBorder: " + nextTile.isOnBorder());
+        } else {
+            System.out.println("NextTile is null");
+        }
 
         if(nextTile == null || nextTile.isOnBorder())
             return false;
