@@ -32,17 +32,14 @@ public class ClientService extends Service {
 
     public void sendMessage(Object message) {
         try {
-            System.out.println("Before send");
             out.writeObject(message);
             out.flush();
-            System.out.println("Sent!!");
         } catch (IOException e) {
             e.printStackTrace();
         }
     }
 
     public MessageHandler getMessageHandler() {
-        System.out.println("Handler: " + mHandler);
         return mHandler;
     }
 
@@ -98,7 +95,6 @@ public class ClientService extends Service {
                     Object obj = null;
                     try{
                         obj = input.readObject();
-                        System.out.println("OBJ: " + obj);
                         mHandler.handleIncoming(obj);
                     } catch (IOException e) {
                         e.printStackTrace();

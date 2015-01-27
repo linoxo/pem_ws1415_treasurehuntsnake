@@ -341,16 +341,7 @@ public class Snake {
             lastPart.getTile().setHasGameElement(false);
             bodyParts.removeLast();
         }
-
-        /*
-        if( !(hasEaten && bodyParts.getLast().getTile() == foodTile) ) {
-            bodyParts.removeLast();
-            foodTile.removeGameElement();
-        } else {
-            hasEaten = false;
-        }
-        */
-
+        System.out.println("MOVE");
         return true;
     }
 

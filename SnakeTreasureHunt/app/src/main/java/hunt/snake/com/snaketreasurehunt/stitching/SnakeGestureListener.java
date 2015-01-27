@@ -155,10 +155,10 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 		// screen width and height
 		width = size.x;
 		height = size.y;
-		rightEdge = width - 120;
-		leftEdge = 120;
-		topEdge = 300;
-		bottomEdge = height - 120;
+		rightEdge = width - 200;
+		leftEdge = 60;
+		topEdge = 400;
+		bottomEdge = height - 200;
 
 		// horizontal swipes
 		if (velocityX > this.swipe_Min_Velocity
