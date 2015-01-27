@@ -308,7 +308,9 @@ public class Snake {
         Tile oldTile = headTile;
         Tile nextTile = getNextTile(direction);
 
-        System.out.println("NextTile: " + nextTile + " onBorder: " + nextTile.isOnBorder());
+        System.out.println("NextTile: " + nextTile);
+        if(nextTile != null)
+            System.out.println("onBoarder: " + nextTile.isOnBorder());
 
         if(nextTile == null || nextTile.isOnBorder())
             return false;

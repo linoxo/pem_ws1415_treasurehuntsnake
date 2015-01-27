@@ -98,13 +98,13 @@ public class ClientService extends Service {
                         mHandler.handleIncoming(obj);
                     } catch (IOException e) {
                         e.printStackTrace();
-                    } finally {
                         try {
                             out.close();
                             input.close();
                             socket.close();
-                        } catch (IOException e) {
-                            e.printStackTrace();
+                            System.out.println("Socket closed...");
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
                         }
                     }
                 } catch (ClassNotFoundException e) {
