@@ -248,6 +248,9 @@ public class GameBoard {
     public void createGameElements() {
         // create obstacle
         gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
+        gameElements.add(new Obstacle(tiles[14][11], tiles, GameElementType.RECT_OBSTACLE, 6));
+        gameElements.add(new Obstacle(tiles[6][20], tiles, GameElementType.RECT_OBSTACLE, 8));
+        gameElements.add(new Obstacle(tiles[17][18], tiles, GameElementType.RECT_OBSTACLE, 5));
 
         // spawn food
         spawnFood();
