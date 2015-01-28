@@ -152,38 +152,39 @@ public class GameBoard {
 
         // updates game board every TICK seconds
         while (tickTime > TICK) {
-            tickTime -= TICK;
+            if(SnakeTreasureHuntGame.isControllingPhone) {
+                tickTime -= TICK;
 
-            System.out.println("TICK1!");
+                System.out.println("TICK1!");
 
-            // move snake in the direction of its head
-            if(!snake.move(nextSnakeDirection)) {
-                gameOver = true;
-                sendGameOverMessage();
-                return;
-            } else {
-                System.out.println("StitchOut " + hasReceivedStitchoutMessage);
-                System.out.println("Controlling " + SnakeTreasureHuntGame.isControllingPhone);
-                if (SnakeTreasureHuntGame.isControllingPhone)
+                // move snake in the direction of its head
+                if (!snake.move(nextSnakeDirection)) {
+                    gameOver = true;
+                    sendGameOverMessage();
+                    return;
+                } else {
+                    System.out.println("StitchOut " + hasReceivedStitchoutMessage);
+                    System.out.println("Controlling " + SnakeTreasureHuntGame.isControllingPhone);
                     sendMovementMessage();
-            }
-
-            System.out.println("TICK2!");
-
-            // check whether snake has eaten something
-            if(snake.hasEaten() && !snakeHasEatenLock) {
-                snakeHasEatenLock = true;
-
-                // increase score, spawn new gutti, increase speed and send new gutti message
-                score += Constants.SCORE_INCREMENT.getValue();
-                removeFood();
-                spawnFood();
-                if(TICK > TICK_MIN) {
-                    TICK -= TICK_DECREMENT;
                 }
-                sendNewGuttiMessage();
-            } else if(!snake.hasEaten() && snakeHasEatenLock) {
-                snakeHasEatenLock = false;
+
+                System.out.println("TICK2!");
+
+                // check whether snake has eaten something
+                if (snake.hasEaten() && !snakeHasEatenLock) {
+                    snakeHasEatenLock = true;
+
+                    // increase score, spawn new gutti, increase speed and send new gutti message
+                    score += Constants.SCORE_INCREMENT.getValue();
+                    removeFood();
+                    spawnFood();
+                    if (TICK > TICK_MIN) {
+                        TICK -= TICK_DECREMENT;
+                    }
+                    sendNewGuttiMessage();
+                } else if (!snake.hasEaten() && snakeHasEatenLock) {
+                    snakeHasEatenLock = false;
+                }
             }
         }
     }
@@ -443,6 +444,7 @@ public class GameBoard {
         if(snakeCanTurn) {
             snakeCanTurn = false;
             this.nextSnakeDirection = nextSnakeDirection;
+            sendMovementMessage();
         }
     }
 
@@ -586,6 +588,10 @@ public class GameBoard {
                 gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
+
+        
+
+        snake.init(tiles);
     }
 
     public void sendGameRunningMessage() {
@@ -709,9 +715,12 @@ public class GameBoard {
         gameOver = true;
     }
 
+    int c = 0;
     public void handleMovementMessage() {
         System.out.println("Handle Movement");
-        //snake.move(DataTransferHandler.getMovementDirection());
+        c++;
+        System.out.println("Move Count: " + c);
+        snake.move(DataTransferHandler.getMovementDirection());
         nextSnakeDirection = DataTransferHandler.getMovementDirection();
     }
 }

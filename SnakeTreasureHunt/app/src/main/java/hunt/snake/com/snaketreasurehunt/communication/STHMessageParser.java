@@ -34,6 +34,9 @@ public class STHMessageParser {
                     int[] tileXPos = msg.getGameStart().getTileXPos();
                     int[] tileYPos = msg.getGameStart().getTileYPos();
                     int[] tileType = msg.getGameStart().getTileType();
+                    int[] bodyPartsX = msg.getGameStart().getSnake().getBodypartXPos();
+                    int[] bodyPartsY = msg.getGameStart().getSnake().getBodypartYPos();
+                    Snake.Direction headDir = msg.getGameStart().getSnake().getHeadDirection();
 
                     System.out.println("Width: " + fieldwidth);
                     System.out.println("Height: " + fieldheight);
@@ -47,6 +50,10 @@ public class STHMessageParser {
                     DataTransferHandler.setTileXPos(tileXPos);
                     DataTransferHandler.setTileYPos(tileYPos);
                     DataTransferHandler.setTileType(tileType);
+
+                    DataTransferHandler.setBodypartXPos(bodyPartsX);
+                    DataTransferHandler.setBodypartYPos(bodyPartsY);
+                    DataTransferHandler.setHeadDirection(headDir);
 
                     break;
 
