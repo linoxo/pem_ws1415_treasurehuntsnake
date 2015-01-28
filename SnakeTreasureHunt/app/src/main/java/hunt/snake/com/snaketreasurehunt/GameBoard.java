@@ -475,6 +475,12 @@ public class GameBoard {
             int topLeftXPos = DataTransferHandler.getTopLeftXPos();
             int topLeftYPos = DataTransferHandler.getTopLeftYPos();
 
+            if(stitchingDirection == Snake.Direction.WEST) {
+                topLeftXPos -= screenWidth;
+            } else if(stitchingDirection == Snake.Direction.NORTH) {
+                topLeftYPos -= screenHeight;
+            }
+
             // set top left and bottom right tile
             topLeft.setPositionOnBoard(topLeftXPos, topLeftYPos);
             bottomRight.setPositionOnBoard(topLeftXPos + screenWidth, topLeftYPos + screenHeight);
@@ -614,10 +620,8 @@ public class GameBoard {
         int topLeftXPos = topLeft.getPosX();
         int topLeftYPos = topLeft.getPosY();
         switch(stitchingDirection) {
-            case NORTH: topLeftYPos -= screenHeight; break;
             case EAST: topLeftXPos += screenWidth; break;
             case SOUTH: topLeftYPos += screenHeight; break;
-            case WEST: topLeftXPos -= screenWidth; break;
         }
         DataTransferHandler.setTopLeftXPos(topLeftXPos);
         DataTransferHandler.setTopLeftYPos(topLeftYPos);
