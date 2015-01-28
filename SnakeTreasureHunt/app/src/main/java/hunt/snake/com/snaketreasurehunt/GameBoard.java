@@ -562,6 +562,8 @@ public class GameBoard {
 
         System.out.println("WIDTH: " + DataTransferHandler.getFieldWidth() + " HEIGHT: " + DataTransferHandler.getFieldHeight());
 
+        snake.parseToDataTransferHandler();
+
         // send message over MessageHandler
         mHandler.sendInitGame();
     }
@@ -588,8 +590,6 @@ public class GameBoard {
                 gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
-
-        
 
         snake.init(tiles);
     }
