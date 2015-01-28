@@ -196,6 +196,7 @@ public class Snake {
     //returns next tile depending on the cardinal direction the snake is moving
     //return null if tile is out of bounds or will kill
     private Tile getNextTile(Direction direction) {
+        System.out.println("HeadTile: " + headTile);
         int posX = headTile.getPosX();
         int posY = headTile.getPosY();
 
