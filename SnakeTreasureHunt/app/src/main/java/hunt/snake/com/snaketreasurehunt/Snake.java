@@ -200,6 +200,8 @@ public class Snake {
         int posX = headTile.getPosX();
         int posY = headTile.getPosY();
 
+        System.out.println("Como direction? " + direction);
+
         switch(direction) {
             case EAST:
                 posX += 1;

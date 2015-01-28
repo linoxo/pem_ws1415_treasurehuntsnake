@@ -96,14 +96,14 @@ public class MessageHandler {
 
 
         if((in.charAt(0))=='{') {
-            //startGame();
-            System.out.println("Parser: " + parser + " MSG: " + in);
-            int type = parser.deserializeSTHMessage(in);
-            System.out.println("Message Type: " + type);
 
-            if(type == STHMessage.GAMESTART_MESSAGE) {
+            Gson gson = new Gson();
+            GameMessage msg = gson.fromJson(in, GameMessage.class);
+
+            if(msg.getType() == STHMessage.GAMESTART_MESSAGE) {
                 startGame();
             }
+            DataTransferHandler.pushMessage(msg);
         }
     }
 

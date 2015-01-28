@@ -69,11 +69,13 @@ public class STHMessageSerializer {
                 msg.getGameStitching().getSnake().setDirection(DataTransferHandler.getDirection());
                 */
                 //TOMS PART
+                /*
                 SnakeMessage snakeMsg = new SnakeMessage();
                 snakeMsg.setBodypartXPos(DataTransferHandler.getBodypartXPos());
                 snakeMsg.setBodypartYPos(DataTransferHandler.getBodypartYPos());
                 snakeMsg.setHeadDirection(DataTransferHandler.getHeadDirection());
                 msg.getGameStitching().setSnake(snakeMsg);
+                */
                 break;
 
             case STHMessage.GAMEPAUSE_START_MESSAGE:

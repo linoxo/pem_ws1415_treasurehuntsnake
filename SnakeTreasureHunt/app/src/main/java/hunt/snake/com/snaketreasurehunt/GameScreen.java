@@ -18,7 +18,6 @@ import hunt.snake.com.framework.Input.TouchEvent;
 import hunt.snake.com.framework.Screen;
 import hunt.snake.com.framework.impl.AndroidGame;
 import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
-import hunt.snake.com.snaketreasurehunt.wifi.Client;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
 public class GameScreen extends Screen {
@@ -256,7 +255,6 @@ public class GameScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
-        System.out.println("Present! " + state);
         Graphics g = game.getGraphics();
 
         // wait until we are connected to the client
@@ -280,7 +278,6 @@ public class GameScreen extends Screen {
             drawReadyUI(g);
         }
         if(state == GameState.RUNNING) {
-            System.out.println("GameRunningPresent");
             drawRunningUI(g, deltaTime);
         }
         if(state == GameState.PAUSED) {

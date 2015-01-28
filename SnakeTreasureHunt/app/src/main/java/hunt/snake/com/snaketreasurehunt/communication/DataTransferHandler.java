@@ -1,8 +1,13 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
+import java.util.LinkedList;
+
 import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 public class DataTransferHandler {
+    private static LinkedList<GameMessage> messageList = new LinkedList<GameMessage>();
+
     private static boolean receivedMessage; // haben wir eine Nachricht empfangen?
     private static int messageType;         // welche Nachrichtenart haben wir als letztes empfangen?
 
@@ -222,5 +227,13 @@ public class DataTransferHandler {
     public static Snake.Direction getMovementDirection() { return movementDirection; }
 
     public static void setMovementDirection(Snake.Direction movementDirection) {DataTransferHandler.movementDirection = movementDirection; }
+
+    public static void pushMessage(GameMessage message) {
+        messageList.addLast(message);
+    }
+
+    public static GameMessage pollMessage() {
+        return messageList.pollFirst();
+    }
 
 }

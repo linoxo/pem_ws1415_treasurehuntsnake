@@ -3,6 +3,7 @@ package hunt.snake.com.snaketreasurehunt;
 import android.graphics.Color;
 
 import java.util.ArrayList;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Random;
 
@@ -11,6 +12,8 @@ import hunt.snake.com.framework.impl.AndroidGame;
 import hunt.snake.com.snaketreasurehunt.communication.DataTransferHandler;
 import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
 import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
+import hunt.snake.com.snaketreasurehunt.communication.STHMessageParser;
+import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 public class GameBoard {
 
@@ -52,12 +55,17 @@ public class GameBoard {
     private Snake.Direction stitchingDirection; // side of the phone where there was a swipe out
     private MessageHandler mHandler;
 
+    private STHMessageParser parser;
+    private LinkedList<Snake.Direction> directions;
+
     public GameBoard() {
         topLeft = new Tile();
         bottomRight = new Tile();
         snake = new Snake();
         gameElements = new ArrayList<GameElement>();
         random = new Random();
+        parser = new STHMessageParser();
+        directions = new LinkedList<Snake.Direction>();
     }
 
     public void init(){
@@ -121,9 +129,6 @@ public class GameBoard {
         // check whether current phone is active
         checkControlling();
 
-        if(!SnakeTreasureHuntGame.isControllingPhone)
-            return;
-
         // manage the snakes possibility to turn
         if(!snakeCanTurn) {
             snakeCanTurnCounter -= deltaTime;
@@ -144,6 +149,15 @@ public class GameBoard {
 
         // updates game board every TICK seconds
         while (tickTime > TICK) {
+
+            if(!SnakeTreasureHuntGame.isControllingPhone) {
+                if(!directions.isEmpty())
+                    snake.move(directions.pollFirst());
+                else
+                   tickTime = TICK;
+                return;
+            }
+
             if(SnakeTreasureHuntGame.isControllingPhone) {
                 tickTime -= TICK;
 
@@ -502,6 +516,24 @@ public class GameBoard {
 
     // check whether a message was received and handle it if so
     public void handleMessages() {
+
+        GameMessage msg;
+        while((msg = DataTransferHandler.pollMessage()) != null) {
+            parser.deserializeSTHMessage(msg);
+            switch (DataTransferHandler.getMessageType()) {
+                case STHMessage.GAMESTART_MESSAGE: handleGameStartMessage(); break;
+                case STHMessage.GAMERUNNING_MESSAGE: handleGameRunningMessage(); break;
+                case STHMessage.STITCHING_MESSAGE: handleStitchOutMessage(); break;
+                case STHMessage.NEWGUTTI_MESSAGE: handleNewGuttiMessage(); break;
+                case STHMessage.GAMEPAUSE_START_MESSAGE: handlePauseMessage(); break;
+                case STHMessage.GAMEPAUSE_STOP_MESSAGE: handleResumeMessage(); break;
+                case STHMessage.GAMEOVER_MESSAGE: handleGameOverMessage(); break;
+                case STHMessage.MOVEMENT_MESSAGE: handleMovementMessage(); break;
+            }
+            System.out.println("MessageHandle " + DataTransferHandler.getMessageType() + " " + msg.getType());
+        }
+
+        /*
         if(DataTransferHandler.hasReceivedMessage()) {
             // unset the flag that we received a message
             DataTransferHandler.setReceivedMessage(false);
@@ -518,6 +550,7 @@ public class GameBoard {
                 case STHMessage.MOVEMENT_MESSAGE: handleMovementMessage(); break;
             }
         }
+        */
     }
 
     // stores required data for game start message and sends game start message
@@ -627,7 +660,7 @@ public class GameBoard {
         DataTransferHandler.setTopLeftYPos(topLeftYPos);
 
         // serialize snake
-        snake.parseToDataTransferHandler();
+        // snake.parseToDataTransferHandler();
 
         // send message over MessageHandler
         mHandler.sendStitching();
@@ -656,8 +689,8 @@ public class GameBoard {
         stitchingTimer = STITCHING_THRESHOLD;
 
         // parse snake
-        snake.init(tiles);
-        nextSnakeDirection = DataTransferHandler.getHeadDirection();
+        //snake.init(tiles);
+        //nextSnakeDirection = DataTransferHandler.getHeadDirection();
 
         hasReceivedStitchoutMessage = true;
     }
@@ -717,8 +750,9 @@ public class GameBoard {
         System.out.println("Handle Movement");
         c++;
         System.out.println("Move Count: " + c);
-        snake.move(DataTransferHandler.getMovementDirection());
+        //snake.move(DataTransferHandler.getMovementDirection());
         System.out.println("Head: " + snake.getHeadTile().getPosX() + ", " + snake.getHeadTile().getPosY());
         nextSnakeDirection = DataTransferHandler.getMovementDirection();
+        directions.addLast(DataTransferHandler.getMovementDirection());
     }
 }

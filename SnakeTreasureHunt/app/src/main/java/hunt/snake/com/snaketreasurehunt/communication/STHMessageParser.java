@@ -12,13 +12,14 @@ public class STHMessageParser {
 
     public STHMessageParser(){}
 
-    public int deserializeSTHMessage(String incomingMessage) {
+    public int deserializeSTHMessage(GameMessage msg) {
 
         int messageType = -1;
-        if (!incomingMessage.contains("null")) {
+        //if (!incomingMessage.contains("null")) {
+        if(msg != null) {
 
-            Gson gson = new Gson();
-            GameMessage msg = gson.fromJson(incomingMessage, GameMessage.class);
+            // Gson gson = new Gson();
+            //GameMessage msg = gson.fromJson(incomingMessage, GameMessage.class);
 
             messageType = msg.getType();
 
@@ -79,10 +80,11 @@ public class STHMessageParser {
                     int[] direction = msg.getGameStitching().getSnake().getDirection();
                     */
                     //TOMS PART
+                    /*
                     int[] bodypartXPos = msg.getGameStitching().getSnake().getBodypartXPos();
                     int[] bodypartYPos = msg.getGameStitching().getSnake().getBodypartYPos();
                     Snake.Direction headDirection = msg.getGameStitching().getSnake().getHeadDirection();
-
+                    */
 
                     System.out.println("tickTime: " + tickTime + ", timeStamp: " + timestamp);
                     System.out.println("stitching: " + stitchingDirection + ", topleft: " + topLeftXPos + ", " + topLeftYPos);
@@ -102,10 +104,11 @@ public class STHMessageParser {
                     DataTransferHandler.setDirection(direction);
                     */
                     //TOMS PART
+                    /*
                     DataTransferHandler.setBodypartXPos(bodypartXPos);
                     DataTransferHandler.setBodypartYPos(bodypartYPos);
                     DataTransferHandler.setHeadDirection(headDirection);
-
+                    */
                     break;
 
                 case STHMessage.NEWGUTTI_MESSAGE:
