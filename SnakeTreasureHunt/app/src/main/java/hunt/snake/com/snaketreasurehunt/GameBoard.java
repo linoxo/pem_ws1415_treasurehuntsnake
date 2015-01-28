@@ -151,8 +151,10 @@ public class GameBoard {
         while (tickTime > TICK) {
 
             if(!SnakeTreasureHuntGame.isControllingPhone) {
-                if(!directions.isEmpty())
-                    snake.move(directions.pollFirst());
+                if(!directions.isEmpty()) {
+                    nextSnakeDirection = directions.pollFirst();
+                    snake.move(nextSnakeDirection);
+                }
                 else
                    tickTime = TICK;
                 return;
@@ -265,7 +267,7 @@ public class GameBoard {
         // spawn food at random position inside the game board and not at an obstacle
         do {
             foodX = random.nextInt(boardWidth - 2) + 1;
-            foodY = random.nextInt(boardHeight - 2) + 1;
+            foodY =  random.nextInt(boardHeight - 2) + 1;
 
             boolean foodIsOnObstacle = false;
             for (GameElement gameElement : gameElements) {
@@ -499,6 +501,8 @@ public class GameBoard {
             topLeft.setPositionOnBoard(topLeftXPos, topLeftYPos);
             bottomRight.setPositionOnBoard(topLeftXPos + screenWidth, topLeftYPos + screenHeight);
 
+            System.out.println("TopLeft Received: x=" + topLeftXPos + "(== " + topLeft.getPosX() + "), y=" + topLeftYPos + "(== " + topLeft.getPosY() + ")");
+
             // phone is now active!
             SnakeTreasureHuntGame.isPhoneActive = true;
             //hasReceivedStitchoutMessage = false;
@@ -592,6 +596,9 @@ public class GameBoard {
         DataTransferHandler.setTileYPos(tileYPos);
         DataTransferHandler.setTileType(tileType);
 
+        DataTransferHandler.setFoodXPos(foodX);
+        DataTransferHandler.setFoodYPos(foodY);
+
         System.out.println("WIDTH: " + DataTransferHandler.getFieldWidth() + " HEIGHT: " + DataTransferHandler.getFieldHeight());
 
         snake.parseToDataTransferHandler();
@@ -616,12 +623,10 @@ public class GameBoard {
         for(int i = 0; i < numOfOccupiedTiles; i++) {
             if(tileType[i] == GameElementType.RECT_OBSTACLE.ordinal()) {
                 gameElements.add(new Obstacle(tiles[tileXPos[i]][tileYPos[i]], tiles, GameElementType.RECT_OBSTACLE, 0));
-            } else if(tileType[i] == GameElementType.FOOD.ordinal()) {
-                foodX = tileXPos[i];
-                foodY = tileYPos[i];
-                gameElements.add(createGameElement(GameElementType.FOOD, tiles[foodX][foodY]));
             }
         }
+
+        handleNewGuttiMessage();
 
         snake.init(tiles);
     }
@@ -658,6 +663,7 @@ public class GameBoard {
         }
         DataTransferHandler.setTopLeftXPos(topLeftXPos);
         DataTransferHandler.setTopLeftYPos(topLeftYPos);
+        System.out.println("TopLeft " + topLeftXPos + ", " + topLeftYPos);
 
         // serialize snake
         // snake.parseToDataTransferHandler();
@@ -706,6 +712,8 @@ public class GameBoard {
     public void handleNewGuttiMessage() {
         foodX = DataTransferHandler.getFoodXPos();
         foodY = DataTransferHandler.getFoodYPos();
+
+        System.out.println("Food: " + foodX + ", " + foodY);
 
         // remove old food and create new one
         removeFood();

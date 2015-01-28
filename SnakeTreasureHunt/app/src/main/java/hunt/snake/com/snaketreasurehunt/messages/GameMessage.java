@@ -26,6 +26,7 @@ public class GameMessage extends Message {
             case STHMessage.GAMESTART_MESSAGE:
                 setType(STHMessage.GAMESTART_MESSAGE);
                 gameStart = new GameStart();
+                gameNewGutti = new GameNewGutti();
                 break;
             case STHMessage.GAMERUNNING_MESSAGE:
                 setType(STHMessage.GAMERUNNING_MESSAGE);

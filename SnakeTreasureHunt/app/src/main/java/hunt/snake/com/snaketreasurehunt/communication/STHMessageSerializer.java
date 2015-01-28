@@ -36,6 +36,9 @@ public class STHMessageSerializer {
                 msg.getGameStart().setTileYPos(DataTransferHandler.getTileYPos());
                 msg.getGameStart().setTileType(DataTransferHandler.getTileType());
                 msg.getGameStart().setSnake(snakeMessage);
+
+                msg.getGameNewGutti().setFoodXPos(DataTransferHandler.getFoodXPos());
+                msg.getGameNewGutti().setFoodYPos(DataTransferHandler.getFoodYPos());
                 break;
 
             //second case

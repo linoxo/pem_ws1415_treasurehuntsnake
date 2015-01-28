@@ -56,6 +56,10 @@ public class STHMessageParser {
                     DataTransferHandler.setBodypartYPos(bodyPartsY);
                     DataTransferHandler.setHeadDirection(headDir);
 
+
+                    DataTransferHandler.setFoodXPos(msg.getGameNewGutti().getFoodXPos());
+                    DataTransferHandler.setFoodYPos(msg.getGameNewGutti().getFoodYPos());
+
                     break;
 
                 case STHMessage.GAMEOVER_MESSAGE:

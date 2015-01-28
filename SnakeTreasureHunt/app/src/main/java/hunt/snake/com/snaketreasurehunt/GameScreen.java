@@ -1,9 +1,5 @@
 package hunt.snake.com.snaketreasurehunt;
 
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Rect;
@@ -30,7 +26,7 @@ public class GameScreen extends Screen {
 
     private static final String READY_TEXT = "Ready?";
     private static final String READY_INSTRUCTION_TEXT = "Put phone down to start!";
-    private static final String READY_CLIENT_TEXT = "Wait for host to start game!";
+    private static final String READY_CLIENT_TEXT = "Waiting...";
     private static final String PAUSED_TEXT = "Paused";
     private static final String PAUSED_INSTRUCTION_TEXT = "Put phone down to resume!";
     private static final String GAME_OVER_TEXT = "Game Over";
