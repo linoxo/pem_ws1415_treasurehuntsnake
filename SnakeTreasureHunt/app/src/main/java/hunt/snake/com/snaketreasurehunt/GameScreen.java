@@ -38,7 +38,7 @@ public class GameScreen extends Screen {
     private static final String GAME_OVER_INSTRUCTION_TEXT = "Tap to start a new game!";
     private static final String SCORE_TEXT = "Score: ";
     private static final String FOG_OF_WAR_TEXT = "Stitch to join!";
-    private static final float COUNT_DOWN_TIME = 2.99f;
+    private static final float COUNT_DOWN_TIME = 4.99f;
     private static final float ACCEL_TIME = 0.5f;
     private static final float ACCEL_THRESHOLD = 2.0f;
     private static final int DPadSize = 100;
@@ -256,6 +256,7 @@ public class GameScreen extends Screen {
 
     @Override
     public void present(float deltaTime) {
+        System.out.println("Present! " + state);
         Graphics g = game.getGraphics();
 
         // wait until we are connected to the client
@@ -279,6 +280,7 @@ public class GameScreen extends Screen {
             drawReadyUI(g);
         }
         if(state == GameState.RUNNING) {
+            System.out.println("GameRunningPresent");
             drawRunningUI(g, deltaTime);
         }
         if(state == GameState.PAUSED) {

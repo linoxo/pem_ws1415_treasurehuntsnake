@@ -103,17 +103,6 @@ public class GameBoard {
         Snake.Direction startDirection = Snake.Direction.WEST;
         snake.init(tiles[2][3], tiles, 3, startDirection);
 
-        //TEST FOR PARSING
-        /*
-        int[] x = {4,4,4,3,3,2,1,0,0,0,1,2,2,3,4,4,5,5,5};
-        int[] y = {5,4,3,3,2,2,2,2,1,0,0,0,1,1,1,2,2,3,4};
-        DataTransferHandler.setBodypartXPos(x);
-        DataTransferHandler.setBodypartYPos(y);
-        DataTransferHandler.setHeadDirection(Snake.Direction.SOUTH);
-        startDirection = Snake.Direction.SOUTH;
-        snake.init(tiles);
-        */
-
         nextSnakeDirection = startDirection;
         snakeCanTurn = true;
         snakeCanTurnCounter = TICK;
@@ -131,6 +120,9 @@ public class GameBoard {
 
         // check whether current phone is active
         checkControlling();
+
+        if(!SnakeTreasureHuntGame.isControllingPhone)
+            return;
 
         // manage the snakes possibility to turn
         if(!snakeCanTurn) {
@@ -507,6 +499,7 @@ public class GameBoard {
         if(DataTransferHandler.hasReceivedMessage()) {
             // unset the flag that we received a message
             DataTransferHandler.setReceivedMessage(false);
+            System.out.println("Has Received: " + DataTransferHandler.getMessageType());
 
             switch (DataTransferHandler.getMessageType()) {
                 case STHMessage.GAMESTART_MESSAGE: handleGameStartMessage(); break;
@@ -721,6 +714,7 @@ public class GameBoard {
         c++;
         System.out.println("Move Count: " + c);
         snake.move(DataTransferHandler.getMovementDirection());
+        System.out.println("Head: " + snake.getHeadTile().getPosX() + ", " + snake.getHeadTile().getPosY());
         nextSnakeDirection = DataTransferHandler.getMovementDirection();
     }
 }
