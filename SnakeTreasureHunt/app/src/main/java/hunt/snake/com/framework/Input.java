@@ -3,26 +3,6 @@ package hunt.snake.com.framework;
 import java.util.List;
 
 public interface Input {
-    public static class KeyEvent {
-        public static final int KEY_DOWN = 0;
-        public static final int KEY_UP = 1;
-
-        public int type;
-        public int keyCode;
-        public char keyChar;
-
-        public String toString() {
-            StringBuilder builder = new StringBuilder();
-            if (type == KEY_DOWN)
-                builder.append("key down, ");
-            else
-                builder.append("key up, ");
-            builder.append(keyCode);
-            builder.append(",");
-            builder.append(keyChar);
-            return builder.toString();
-        }
-    }
 
     public static class TouchEvent {
         public static final int TOUCH_DOWN = 0;
@@ -50,8 +30,6 @@ public interface Input {
         }
     }
 
-    public boolean isKeyPressed(int keyCode);
-
     public boolean isTouchDown(int pointer);
 
     public int getTouchX(int pointer);
@@ -63,8 +41,6 @@ public interface Input {
     public float getAccelY();
 
     public float getAccelZ();
-
-    public List<KeyEvent> getKeyEvents();
 
     public List<TouchEvent> getTouchEvents();
 }

@@ -12,8 +12,6 @@ import android.os.PowerManager.WakeLock;
 import android.view.Window;
 import android.view.WindowManager;
 
-import hunt.snake.com.framework.Audio;
-import hunt.snake.com.framework.FileIO;
 import hunt.snake.com.framework.Game;
 import hunt.snake.com.framework.Graphics;
 import hunt.snake.com.framework.Input;
@@ -24,12 +22,9 @@ public abstract class AndroidGame extends Activity implements Game {
     private static int screenWidth;
     private static int screenHeight;
 
-    Context context;
     AndroidFastRenderView renderView;
     Graphics graphics;
-    Audio audio;
     Input input;
-    FileIO fileIO;
     Screen screen;
     WakeLock wakeLock;
 
@@ -54,11 +49,8 @@ public abstract class AndroidGame extends Activity implements Game {
         Bitmap frameBuffer = Bitmap.createBitmap(frameBufferWidth,
                 frameBufferHeight, Config.RGB_565);
 
-        context = getApplicationContext();
         renderView = new AndroidFastRenderView(this, frameBuffer);
-        graphics = new AndroidGraphics(getAssets(), frameBuffer);
-        fileIO = new AndroidFileIO(this);
-        audio = new AndroidAudio(this);
+        graphics = new AndroidGraphics(frameBuffer);
         input = new AndroidInput(this, renderView, 1, 1);
         screen = getStartScreen();
         setContentView(renderView);
@@ -86,24 +78,12 @@ public abstract class AndroidGame extends Activity implements Game {
             screen.dispose();
     }
 
-    public Context getContext() {
-        return context;
-    }
-
     public Input getInput() {
         return input;
     }
 
-    public FileIO getFileIO() {
-        return fileIO;
-    }
-
     public Graphics getGraphics() {
         return graphics;
-    }
-
-    public Audio getAudio() {
-        return audio;
     }
 
     public void setScreen(Screen screen) {

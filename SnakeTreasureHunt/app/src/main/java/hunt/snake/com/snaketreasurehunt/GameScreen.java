@@ -97,7 +97,6 @@ public class GameScreen extends Screen {
     @Override
     public void update(float deltaTime) {
         List<TouchEvent> touchEvents = game.getInput().getTouchEvents();
-        game.getInput().getKeyEvents();
 
         // wait until we are connected to the client
         if(!SnakeTreasureHuntGame.isConnectedToClient) {

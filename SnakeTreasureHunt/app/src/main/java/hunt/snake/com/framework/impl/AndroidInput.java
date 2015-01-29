@@ -10,20 +10,11 @@ import hunt.snake.com.framework.Input;
 
 public class AndroidInput implements Input {    
     AccelerometerHandler accelHandler;
-    KeyboardHandler keyHandler;
     TouchHandler touchHandler;
 
     public AndroidInput(Context context, View view, float scaleX, float scaleY) {
         accelHandler = new AccelerometerHandler(context);
-        keyHandler = new KeyboardHandler(view);               
-        if (Integer.parseInt(VERSION.SDK) < 5) 
-            touchHandler = new SingleTouchHandler(view, scaleX, scaleY);
-        else
-            touchHandler = new MultiTouchHandler(view, scaleX, scaleY);        
-    }
-
-    public boolean isKeyPressed(int keyCode) {
-        return keyHandler.isKeyPressed(keyCode);
+        touchHandler = new MultiTouchHandler(view, scaleX, scaleY);
     }
 
     public boolean isTouchDown(int pointer) {
@@ -54,7 +45,4 @@ public class AndroidInput implements Input {
         return touchHandler.getTouchEvents();
     }
     
-    public List<KeyEvent> getKeyEvents() {
-        return keyHandler.getKeyEvents();
-    }
 }
