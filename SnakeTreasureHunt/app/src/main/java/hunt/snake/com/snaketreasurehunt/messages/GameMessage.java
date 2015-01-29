@@ -226,6 +226,7 @@ public class GameMessage extends Message {
 
         private int foodXPos;
         private int foodYPos;
+        private int score;
 
         public GameNewGutti() {}
 
@@ -244,6 +245,10 @@ public class GameMessage extends Message {
         public void setFoodYPos(int foodYPos) {
             this.foodYPos = foodYPos;
         }
+
+        public void setScore(int score) { this.score = score; }
+
+        public int getScore() { return score; }
     }
 
     public class GameSnakeMovement {

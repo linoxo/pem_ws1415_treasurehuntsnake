@@ -84,11 +84,11 @@ public class STHMessageParser {
                     int[] direction = msg.getGameStitching().getSnake().getDirection();
                     */
                     //TOMS PART
-                    /*
+
                     int[] bodypartXPos = msg.getGameStitching().getSnake().getBodypartXPos();
                     int[] bodypartYPos = msg.getGameStitching().getSnake().getBodypartYPos();
                     Snake.Direction headDirection = msg.getGameStitching().getSnake().getHeadDirection();
-                    */
+
 
                     System.out.println("tickTime: " + tickTime + ", timeStamp: " + timestamp);
                     System.out.println("stitching: " + stitchingDirection + ", topleft: " + topLeftXPos + ", " + topLeftYPos);
@@ -108,11 +108,11 @@ public class STHMessageParser {
                     DataTransferHandler.setDirection(direction);
                     */
                     //TOMS PART
-                    /*
+
                     DataTransferHandler.setBodypartXPos(bodypartXPos);
                     DataTransferHandler.setBodypartYPos(bodypartYPos);
                     DataTransferHandler.setHeadDirection(headDirection);
-                    */
+
                     break;
 
                 case STHMessage.NEWGUTTI_MESSAGE:
@@ -124,6 +124,7 @@ public class STHMessageParser {
 
                     DataTransferHandler.setFoodXPos(foodXPos);
                     DataTransferHandler.setFoodYPos(foodYPos);
+                    DataTransferHandler.setScore(msg.getGameNewGutti().getScore());
 
                     break;
 

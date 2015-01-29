@@ -165,6 +165,7 @@ public class GameBoard {
 
                 System.out.println("TICK1!");
 
+
                 // move snake in the direction of its head
                 if (!snake.move(nextSnakeDirection)) {
                     gameOver = true;
@@ -220,7 +221,7 @@ public class GameBoard {
 
     public void drawMiniMap(Graphics g) {
         int margin = 50;
-        int scale = 10;
+        int scale = 5;
         int x = AndroidGame.getScreenWidth() - scale * boardWidth - margin;
         int y = margin;
 
@@ -248,9 +249,20 @@ public class GameBoard {
     public void createGameElements() {
         // create obstacle
         gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
-        gameElements.add(new Obstacle(tiles[14][11], tiles, GameElementType.RECT_OBSTACLE, 6));
-        gameElements.add(new Obstacle(tiles[6][20], tiles, GameElementType.RECT_OBSTACLE, 8));
-        gameElements.add(new Obstacle(tiles[17][18], tiles, GameElementType.RECT_OBSTACLE, 5));
+        /*gameElements.add(new Obstacle(tiles[14][25], tiles, GameElementType.RECT_OBSTACLE, 6));
+        gameElements.add(new Obstacle(tiles[23][40], tiles, GameElementType.RECT_OBSTACLE, 8));
+        gameElements.add(new Obstacle(tiles[33][18], tiles, GameElementType.RECT_OBSTACLE, 5));
+        gameElements.add(new Obstacle(tiles[44][60], tiles, GameElementType.RECT_OBSTACLE, 4));
+        gameElements.add(new Obstacle(tiles[25][70], tiles, GameElementType.RECT_OBSTACLE, 6));
+        gameElements.add(new Obstacle(tiles[32][35], tiles, GameElementType.RECT_OBSTACLE, 8));
+        gameElements.add(new Obstacle(tiles[7][54], tiles, GameElementType.RECT_OBSTACLE, 5));*/
+        int numOfObstacles = random.nextInt(6) + 14;
+        for(int i = 0; i < numOfObstacles; i++) {
+            int x = random.nextInt(boardWidth - screenWidth) + screenWidth;
+            int y = random.nextInt(boardHeight - screenHeight) + screenHeight;
+            int size = random.nextInt(4) + 4;
+            gameElements.add(new Obstacle(tiles[x][y], tiles, GameElementType.RECT_OBSTACLE, size));
+        }
 
         // spawn food
         spawnFood();
@@ -669,7 +681,7 @@ public class GameBoard {
         System.out.println("TopLeft " + topLeftXPos + ", " + topLeftYPos);
 
         // serialize snake
-        // snake.parseToDataTransferHandler();
+        snake.parseToDataTransferHandler();
 
         // send message over MessageHandler
         mHandler.sendStitching();
@@ -698,7 +710,7 @@ public class GameBoard {
         stitchingTimer = STITCHING_THRESHOLD;
 
         // parse snake
-        //snake.init(tiles);
+        snake.init(tiles);
         //nextSnakeDirection = DataTransferHandler.getHeadDirection();
 
         hasReceivedStitchoutMessage = true;
@@ -707,6 +719,7 @@ public class GameBoard {
     public void sendNewGuttiMessage() {
         DataTransferHandler.setFoodXPos(foodX);
         DataTransferHandler.setFoodYPos(foodY);
+        DataTransferHandler.setScore(score);
 
         // send message over MessageHandler
         mHandler.sendNewGutti();
@@ -715,6 +728,8 @@ public class GameBoard {
     public void handleNewGuttiMessage() {
         foodX = DataTransferHandler.getFoodXPos();
         foodY = DataTransferHandler.getFoodYPos();
+
+        score = DataTransferHandler.getScore();
 
         System.out.println("Food: " + foodX + ", " + foodY);
 

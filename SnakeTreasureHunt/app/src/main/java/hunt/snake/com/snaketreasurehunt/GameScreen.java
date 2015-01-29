@@ -244,6 +244,7 @@ public class GameScreen extends Screen {
                 // change from "game over" to "ready" if screen was touched
                 gameBoard.init();
                 init();
+                gameBoard.sendGameStartMessage();
                 return;
             }
         }
