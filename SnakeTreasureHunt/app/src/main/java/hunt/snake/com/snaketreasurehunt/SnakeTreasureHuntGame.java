@@ -28,14 +28,12 @@ public class SnakeTreasureHuntGame extends AndroidGame implements SimpleGestureL
     private GameScreen screen;
 
     public Screen getStartScreen() {
-        //ABFRAGE FUER IS HOST OR CLIENT
         boolean isHost = getIntent().getBooleanExtra("isHost", false);
         System.out.println("Is Host? " + isHost);
         isControllingPhone = isHost;
         isPhoneActive = isHost;
 
         screen = new GameScreen(this);
-        //screen.init(); // diese Zeile löschen wenn die untere Zeile einkommentiert wird
         initClient();
         detector = new SnakeGestureListener(this,this);
 

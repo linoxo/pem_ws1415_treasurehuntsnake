@@ -6,7 +6,6 @@ import hunt.snake.com.framework.Graphics;
 
 public class RectangleGameElement extends GameElement {
 
-    private Position position;
     private Rect rect;
     private int left;
     private int top;
@@ -27,17 +26,6 @@ public class RectangleGameElement extends GameElement {
         int left = rect.left + deltaX * Constants.TILE_WIDTH.getValue();
         int top = rect.top + deltaY * Constants.TILE_HEIGHT.getValue();
         g.drawRect(left, top, rect.width(), rect.height(), color);
-    }
-
-    /*
-    public void setPosition(Position position) {
-        this.position = position;
-        update();
-    }
-    */
-
-    public Position getPosition() {
-        return position;
     }
 
     @Override

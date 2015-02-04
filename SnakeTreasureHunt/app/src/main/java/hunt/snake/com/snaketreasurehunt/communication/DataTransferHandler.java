@@ -28,9 +28,6 @@ public class DataTransferHandler {
     private static int numOfSnakeBodyparts; // Zahl der Körperteile der Schlange (= Größe der Arrays unten)
     private static int[] bodypartXPos;      // X-Positionen aller Schlangen-Körperteile
     private static int[] bodypartYPos;      // Y-Positionen aller Schlangen-Körperteile
-    private static boolean[] cornerPart;    // Ist das Körperteil ein Eckteil?
-    private static int[] origin;            // "Herkunft" des Körperteils (nur bei Eckteilen)
-    private static int[] direction;         // Richtung des Körperteils
     private static Snake.Direction headDirection;
 
     // Data transferred after the snake has eaten and a new gutti is spawned (NEWGUTTI_MESSAGE)
@@ -170,30 +167,6 @@ public class DataTransferHandler {
 
     public static void setBodypartYPos(int[] bodypartYPos) {
         DataTransferHandler.bodypartYPos = bodypartYPos;
-    }
-
-    public static boolean[] getCornerPart() {
-        return cornerPart;
-    }
-
-    public static void setCornerPart(boolean[] cornerPart) {
-        DataTransferHandler.cornerPart = cornerPart;
-    }
-
-    public static int[] getOrigin() {
-        return origin;
-    }
-
-    public static void setOrigin(int[] origin) {
-        DataTransferHandler.origin = origin;
-    }
-
-    public static int[] getDirection() {
-        return direction;
-    }
-
-    public static void setDirection(int[] direction) {
-        DataTransferHandler.direction = direction;
     }
 
     public static void setHeadDirection(Snake.Direction headDirection) { DataTransferHandler.headDirection = headDirection; }

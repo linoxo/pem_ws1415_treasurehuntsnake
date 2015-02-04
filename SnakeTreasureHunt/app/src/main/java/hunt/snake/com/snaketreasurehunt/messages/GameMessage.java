@@ -1,12 +1,8 @@
 package hunt.snake.com.snaketreasurehunt.messages;
 
-import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.Snake;
 import hunt.snake.com.snaketreasurehunt.communication.STHMessage;
 
-/**
- * Created by Tom on 1/23/15.
- */
 public class GameMessage extends Message {
 
     private GameStart gameStart;

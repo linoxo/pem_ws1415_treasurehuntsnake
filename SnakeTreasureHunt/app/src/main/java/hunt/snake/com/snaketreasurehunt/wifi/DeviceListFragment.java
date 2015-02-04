@@ -38,7 +38,6 @@ import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
  * parent activity to handle user interaction events
  */
 public class DeviceListFragment extends ListFragment implements PeerListListener, ChannelListener, DeviceActionListener{
-    private static final String EXTRA_CLIENT = "EXTRA_CLIENT";
 
 	private ProgressDialog progressDialog = null;
 	private View mContentView;
@@ -98,7 +97,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
             public void onClick(View v) {
                 createReceiver();
                 onInitiateDiscovery();
-                //if(!isWifiP2pEnabled) Toast.makeText(getActivity(), "WiFi Direct not enabled. You need to turn it on first.", Toast.LENGTH_SHORT).show();
                 makeAvailableToConnect();
             }
         });
@@ -112,7 +110,6 @@ public class DeviceListFragment extends ListFragment implements PeerListListener
                 intent.putExtra("isHost", true);
                 startActivity(intent);
                 clientService.sendMessage("message sent");
-                //clientService.test();
             }
         });
         btnStart.setEnabled(false);

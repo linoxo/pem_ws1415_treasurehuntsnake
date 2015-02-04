@@ -1,7 +1,6 @@
 package hunt.snake.com.snaketreasurehunt;
 
 import android.graphics.Color;
-import android.graphics.Paint;
 
 import hunt.snake.com.framework.Graphics;
 
@@ -36,14 +35,6 @@ public class Tile {
         this.posY = posY;
     }
 
-    public void move(int deltaX, int deltaY) {
-        setPositionOnBoard(posX + deltaX, posY + deltaY);
-    }
-
-    public void drawTile(Graphics g) {
-        drawTile(g, 0, 0);
-    }
-
     public void drawTile(Graphics g, int deltaX, int deltaY) {
         int left = (posX + deltaX) * tileWidth;
         int top = (posY + deltaY) * tileHeight;
@@ -60,13 +51,7 @@ public class Tile {
 
         g.drawRect(left, top, tileWidth, tileHeight, color);
 
-        if(!isOnBorder()) {
-            //g.drawText(posX + ", " + posY, left + 50, top + 50, Color.WHITE, Constants.TEXT_SIZE_XS.getValue(), Paint.Align.CENTER);
-        }
-
         drawDetails(g);
-
-        //System.out.println("Tile " + posX + ", " + posY + ": " + top + ", " + left + ", " + height + ", " + width);
     }
 
     public void drawDetails(Graphics g) {
@@ -121,12 +106,6 @@ public class Tile {
         this.gameElement = gameElement;
         setGameElementType(gameElement.getType());
         hasGameElement = true;
-    }
-
-    public void removeGameElement() {
-        gameElement = null;
-        setGameElementType(null);
-        hasGameElement = false;
     }
 
     public boolean hasGameElement() {

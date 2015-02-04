@@ -86,12 +86,9 @@ public class GameBoard {
         gameOver = false;
         score = 0;
 
-        System.out.println("before if");
         if(SnakeTreasureHuntGame.isControllingPhone) {
             generateGameBoard();
-
             sendGameStartMessage();
-            System.out.println("after start");
         }
     }
 
@@ -163,9 +160,6 @@ public class GameBoard {
             if(SnakeTreasureHuntGame.isControllingPhone) {
                 tickTime -= TICK;
 
-                System.out.println("TICK1!");
-
-
                 // move snake in the direction of its head
                 if (!snake.move(nextSnakeDirection)) {
                     gameOver = true;
@@ -176,8 +170,6 @@ public class GameBoard {
                     System.out.println("Controlling " + SnakeTreasureHuntGame.isControllingPhone);
                     sendMovementMessage();
                 }
-
-                System.out.println("TICK2!");
 
                 // check whether snake has eaten something
                 if (snake.hasEaten() && !snakeHasEatenLock) {
@@ -237,6 +229,7 @@ public class GameBoard {
 
         int px = AndroidGame.getScreenWidth() - scale * (boardWidth - topLeft.getPosX()) - margin;
         int py = scale * topLeft.getPosY() + margin;
+
         // PHONE
         g.drawRect(px, py, scale * screenWidth, scale * screenHeight, Constants.TEXT_COLOR.getValue());
 
@@ -247,15 +240,8 @@ public class GameBoard {
     }
 
     public void createGameElements() {
-        // create obstacle
+        // generate random obstacles
         gameElements.add(new Obstacle(tiles[4][9], tiles, GameElementType.RECT_OBSTACLE, 4));
-        /*gameElements.add(new Obstacle(tiles[14][25], tiles, GameElementType.RECT_OBSTACLE, 6));
-        gameElements.add(new Obstacle(tiles[23][40], tiles, GameElementType.RECT_OBSTACLE, 8));
-        gameElements.add(new Obstacle(tiles[33][18], tiles, GameElementType.RECT_OBSTACLE, 5));
-        gameElements.add(new Obstacle(tiles[44][60], tiles, GameElementType.RECT_OBSTACLE, 4));
-        gameElements.add(new Obstacle(tiles[25][70], tiles, GameElementType.RECT_OBSTACLE, 6));
-        gameElements.add(new Obstacle(tiles[32][35], tiles, GameElementType.RECT_OBSTACLE, 8));
-        gameElements.add(new Obstacle(tiles[7][54], tiles, GameElementType.RECT_OBSTACLE, 5));*/
         int numOfObstacles = random.nextInt(6) + 14;
         for(int i = 0; i < numOfObstacles; i++) {
             int x = random.nextInt(boardWidth - screenWidth) + screenWidth;
@@ -520,7 +506,6 @@ public class GameBoard {
 
             // phone is now active!
             SnakeTreasureHuntGame.isPhoneActive = true;
-            //hasReceivedStitchoutMessage = false;
         }
     }
 
@@ -551,25 +536,6 @@ public class GameBoard {
             }
             System.out.println("MessageHandle " + DataTransferHandler.getMessageType() + " " + msg.getType());
         }
-
-        /*
-        if(DataTransferHandler.hasReceivedMessage()) {
-            // unset the flag that we received a message
-            DataTransferHandler.setReceivedMessage(false);
-            System.out.println("Has Received: " + DataTransferHandler.getMessageType());
-
-            switch (DataTransferHandler.getMessageType()) {
-                case STHMessage.GAMESTART_MESSAGE: handleGameStartMessage(); break;
-                case STHMessage.GAMERUNNING_MESSAGE: handleGameRunningMessage(); break;
-                case STHMessage.STITCHING_MESSAGE: handleStitchOutMessage(); break;
-                case STHMessage.NEWGUTTI_MESSAGE: handleNewGuttiMessage(); break;
-                case STHMessage.GAMEPAUSE_START_MESSAGE: handlePauseMessage(); break;
-                case STHMessage.GAMEPAUSE_STOP_MESSAGE: handleResumeMessage(); break;
-                case STHMessage.GAMEOVER_MESSAGE: handleGameOverMessage(); break;
-                case STHMessage.MOVEMENT_MESSAGE: handleMovementMessage(); break;
-            }
-        }
-        */
     }
 
     // stores required data for game start message and sends game start message
@@ -653,7 +619,6 @@ public class GameBoard {
 
     public void handleGameRunningMessage() {
         gameRunning = true;
-        System.out.println("GAME RUNNING RECEIVED!!!");
     }
 
     public void test() {
@@ -694,11 +659,6 @@ public class GameBoard {
     }
 
     public void handleStitchOutMessage() {
-        // if phone is already active, ignore the message
-        /*if(SnakeTreasureHuntGame.isPhoneActive) {
-            return;
-        }*/
-
         float tickTime = DataTransferHandler.getTickTime();
         float timestamp = DataTransferHandler.getTimestamp();
 
@@ -711,7 +671,6 @@ public class GameBoard {
 
         // parse snake
         snake.init(tiles);
-        //nextSnakeDirection = DataTransferHandler.getHeadDirection();
 
         hasReceivedStitchoutMessage = true;
     }
@@ -771,12 +730,8 @@ public class GameBoard {
         gameOver = true;
     }
 
-    int c = 0;
     public void handleMovementMessage() {
         System.out.println("Handle Movement");
-        c++;
-        System.out.println("Move Count: " + c);
-        //snake.move(DataTransferHandler.getMovementDirection());
         System.out.println("Head: " + snake.getHeadTile().getPosX() + ", " + snake.getHeadTile().getPosY());
         nextSnakeDirection = DataTransferHandler.getMovementDirection();
         directions.addLast(DataTransferHandler.getMovementDirection());

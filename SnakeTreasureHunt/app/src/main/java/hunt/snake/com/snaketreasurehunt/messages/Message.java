@@ -1,8 +1,5 @@
 package hunt.snake.com.snaketreasurehunt.messages;
 
-/**
- * Created by Tom on 1/23/15.
- */
 public class Message {
 
     private int type;

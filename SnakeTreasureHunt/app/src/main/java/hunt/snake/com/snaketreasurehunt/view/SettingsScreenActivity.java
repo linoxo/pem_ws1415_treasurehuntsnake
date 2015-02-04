@@ -4,7 +4,6 @@ package hunt.snake.com.snaketreasurehunt.view;
 import android.app.Activity;
 import android.app.Fragment;
 import android.media.MediaPlayer;
-import android.os.Build;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;

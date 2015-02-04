@@ -4,44 +4,21 @@ import android.content.Intent;
 
 import com.google.gson.Gson;
 
-import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 
-/**
- * Created by Tom on 1/19/15.
- */
 public class MessageHandler {
 
     private ClientService client;
-    private STHMessageParser parser;
     private STHMessageSerializer serializer;
-    private GameBoard gameBoard;
-    private Gson gson;
-
-    public MessageHandler(ClientService client, GameBoard gameBoard) {
-        this.client = client;
-        this.gameBoard = gameBoard;
-    }
 
     public MessageHandler(ClientService client) {
         this.client = client;
         serializer = new STHMessageSerializer();
-        parser = new STHMessageParser();
-    }
-
-    public void setGameBoard(GameBoard gameBoard) {
-        this.gameBoard = gameBoard;
-    }
-
-    public void setClient(ClientService client) {
-        this.client = client;
     }
 
     public void sendInitGame() {
-        //JsonObject message = serializer.serialize(gameBoard, STHMessage.GAMESTART_MESSAGE);
-        //client.sendMessage(message);
         System.out.println("Serializer: " + serializer);
         String msg = serializer.serialize(STHMessage.GAMESTART_MESSAGE);
         System.out.println("Json: " + msg);
@@ -87,13 +64,6 @@ public class MessageHandler {
     public void handleIncoming(Object obj) {
         String in = (String) obj;
         System.out.println("In incoming Handler: " + in);
-        /*
-        JsonObject message = (JsonObject) obj;
-
-        parser.deserializeSTHMessage(message);
-        */
-
-
 
         if((in.charAt(0))=='{') {
 
@@ -112,11 +82,4 @@ public class MessageHandler {
         intent.putExtra("isHost", false);
         client.getCurrentActivity().startActivity(intent);
     }
-
-    public void test() {
-        client.sendMessage("Hallo World!");
-        //serializer = new STHMessageSerializer();
-        //serializer.serialize(STHMessage.GAMESTART_MESSAGE);
-    }
-
 }

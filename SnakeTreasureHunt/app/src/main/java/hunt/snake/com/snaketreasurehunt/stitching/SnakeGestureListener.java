@@ -132,11 +132,6 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 		final float xDistance = Math.abs(e1.getX() - e2.getX());
 		final float yDistance = Math.abs(e1.getY() - e2.getY());
 
-		// Log.d("DEBUG", "E1: " + String.valueOf(e1.getY()));
-		// Log.d("DEBUG", "E2: " + String.valueOf(e1.getX()));
-		// Log.d("DEBUG","VelocityX: " + String.valueOf(velocityX));
-		// Log.d("DEBUG","VelocityY: " + String.valueOf(velocityY));
-
 		if (xDistance > this.swipe_Max_Distance
 				|| yDistance > this.swipe_Max_Distance)
 			return false;

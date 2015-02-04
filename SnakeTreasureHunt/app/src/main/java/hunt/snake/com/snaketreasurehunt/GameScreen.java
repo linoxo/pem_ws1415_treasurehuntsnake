@@ -50,7 +50,6 @@ public class GameScreen extends Screen {
     String inactivePhoneText;
     RectF DPad[] = new RectF[4];
 
-    private ClientService client;
     private MessageHandler mHandler;
 
     public GameScreen(Game game) {
@@ -60,7 +59,6 @@ public class GameScreen extends Screen {
     public void init() {
         gameBoard = new GameBoard();
         gameBoard.setMessageHandler(mHandler);
-        //mHandler.setGameBoard(gameBoard);
         gameBoard.init();
 
         state = GameState.READY;
@@ -86,12 +84,7 @@ public class GameScreen extends Screen {
     }
 
     public void setClient(ClientService client) {
-        this.client = client;
         mHandler = client.getMessageHandler();
-    }
-
-    public void shareGame() {
-        mHandler.sendInitGame();
     }
 
     @Override

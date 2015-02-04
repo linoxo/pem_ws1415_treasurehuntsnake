@@ -1,8 +1,5 @@
 package hunt.snake.com.snaketreasurehunt.stitching;
 
-
-import android.util.Log;
-
 import hunt.snake.com.snaketreasurehunt.GameBoard;
 import hunt.snake.com.snaketreasurehunt.GameScreen;
 import hunt.snake.com.snaketreasurehunt.Snake;
@@ -37,16 +34,10 @@ public class SnakeGestureMethods {
                 break;
             case SnakeGestureListener.SWIPEIN_LEFT:
                swipeInLeft();
-                if (stitch.isStitchingEnabled()) {
-                    stitch.completeStitching();
-                }
                 board.checkStitching(Snake.Direction.EAST);
                 break;
             case SnakeGestureListener.SWIPEIN_RIGHT:
                 swipeInRight();
-                if (stitch.isStitchingEnabled()) {
-                    stitch.completeStitching();
-                }
                 board.checkStitching(Snake.Direction.WEST);
                 break;
             case SnakeGestureListener.SWIPEOUT_LEFT:
@@ -56,9 +47,6 @@ public class SnakeGestureMethods {
                 break;
             case SnakeGestureListener.SWIPEIN_TOP:
                 swipeInTop();
-                if (stitch.isStitchingEnabled()) {
-                    stitch.completeStitching();
-                }
                 board.checkStitching(Snake.Direction.SOUTH);
                 break;
             case SnakeGestureListener.SWIPEOUT_TOP:
@@ -73,9 +61,6 @@ public class SnakeGestureMethods {
                 break;
             case SnakeGestureListener.SWIPEIN_BOTTOM:
                 swipeInBottom();
-                if (stitch.isStitchingEnabled()) {
-                    stitch.completeStitching();
-                }
                 board.checkStitching(Snake.Direction.NORTH);
                 break;
             case SnakeGestureListener.SWIPEOUT_RIGHT:
@@ -101,8 +86,6 @@ public class SnakeGestureMethods {
 	}
 
 	public void swipeRight() {
-        Log.d("SWIPE", "Right Swipe");
-
         // right swipe
 	}
 

@@ -1,15 +1,12 @@
 package hunt.snake.com.snaketreasurehunt.wifi;
 
 import java.io.IOException;
+
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.ArrayList;
-
-/**
- * Created by Tom on 12/11/14.
- */
 public class Server {
 
     private static final int PORT = 7652;

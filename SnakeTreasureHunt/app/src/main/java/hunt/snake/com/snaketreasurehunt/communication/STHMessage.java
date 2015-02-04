@@ -1,8 +1,5 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
-/**
- * Created by lino on 18.01.15.
- */
 public class STHMessage {
 
     public static final int GAMEOVER_MESSAGE = 10024;

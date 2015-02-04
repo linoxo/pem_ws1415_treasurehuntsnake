@@ -13,9 +13,6 @@ import java.net.Socket;
 
 import hunt.snake.com.snaketreasurehunt.communication.MessageHandler;
 
-/**
- * Created by Tom on 1/20/15.
- */
 public class ClientService extends Service {
 
     private final IBinder binder = new ClientBinder();
@@ -92,7 +89,7 @@ public class ClientService extends Service {
             initInputStream();
             while (!Thread.currentThread().isInterrupted()) {
                 try {
-                    Object obj = null;
+                    Object obj;
                     try{
                         obj = input.readObject();
                         mHandler.handleIncoming(obj);
