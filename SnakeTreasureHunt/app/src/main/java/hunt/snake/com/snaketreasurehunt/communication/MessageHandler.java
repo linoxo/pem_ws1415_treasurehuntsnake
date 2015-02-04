@@ -4,7 +4,7 @@ import android.content.Intent;
 
 import com.google.gson.Gson;
 
-import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
+import hunt.snake.com.snaketreasurehunt.gamelogic.SnakeTreasureHuntGame;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 

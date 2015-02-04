@@ -1,8 +1,8 @@
 package hunt.snake.com.snaketreasurehunt.stitching;
 
-import hunt.snake.com.snaketreasurehunt.GameBoard;
-import hunt.snake.com.snaketreasurehunt.GameScreen;
-import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.gamelogic.GameBoard;
+import hunt.snake.com.snaketreasurehunt.gamelogic.GameScreen;
+import hunt.snake.com.snaketreasurehunt.gamelogic.Snake;
 
 
 public class SnakeGestureMethods {

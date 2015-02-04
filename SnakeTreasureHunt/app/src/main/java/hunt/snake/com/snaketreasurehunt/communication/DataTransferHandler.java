@@ -2,7 +2,7 @@ package hunt.snake.com.snaketreasurehunt.communication;
 
 import java.util.LinkedList;
 
-import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.gamelogic.Snake;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 public class DataTransferHandler {

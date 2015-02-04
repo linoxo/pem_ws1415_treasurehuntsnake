@@ -1,4 +1,4 @@
-package hunt.snake.com.snaketreasurehunt;
+package hunt.snake.com.snaketreasurehunt.gamelogic;
 
 import hunt.snake.com.snaketreasurehunt.wifi.ClientService;
 import android.content.ComponentName;

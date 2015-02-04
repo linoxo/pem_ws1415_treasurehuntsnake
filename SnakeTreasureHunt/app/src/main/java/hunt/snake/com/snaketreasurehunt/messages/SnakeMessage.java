@@ -1,6 +1,6 @@
 package hunt.snake.com.snaketreasurehunt.messages;
 
-import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.gamelogic.Snake;
 
 public class SnakeMessage {
 

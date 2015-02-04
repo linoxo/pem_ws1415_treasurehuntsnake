@@ -1,6 +1,6 @@
 package hunt.snake.com.snaketreasurehunt.communication;
 
-import hunt.snake.com.snaketreasurehunt.Snake;
+import hunt.snake.com.snaketreasurehunt.gamelogic.Snake;
 import hunt.snake.com.snaketreasurehunt.messages.GameMessage;
 
 public class STHMessageParser {

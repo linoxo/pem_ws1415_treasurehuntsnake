@@ -1,4 +1,4 @@
-package hunt.snake.com.snaketreasurehunt;
+package hunt.snake.com.snaketreasurehunt.gamelogic;
 
 import java.util.ArrayList;
 import java.util.Random;

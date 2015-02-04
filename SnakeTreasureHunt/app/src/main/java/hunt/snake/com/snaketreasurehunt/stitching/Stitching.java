@@ -1,7 +1,7 @@
 package hunt.snake.com.snaketreasurehunt.stitching;
 
-import hunt.snake.com.snaketreasurehunt.GameBoard;
-import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
+import hunt.snake.com.snaketreasurehunt.gamelogic.GameBoard;
+import hunt.snake.com.snaketreasurehunt.gamelogic.SnakeTreasureHuntGame;
 
 public class Stitching {
     boolean stitchingEnabled = false;

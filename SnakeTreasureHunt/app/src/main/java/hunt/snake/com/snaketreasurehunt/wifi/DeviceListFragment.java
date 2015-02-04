@@ -31,7 +31,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import hunt.snake.com.snaketreasurehunt.R;
-import hunt.snake.com.snaketreasurehunt.SnakeTreasureHuntGame;
+import hunt.snake.com.snaketreasurehunt.gamelogic.SnakeTreasureHuntGame;
 
 /**
  * A ListFragment that displays available peers on discovery and requests the

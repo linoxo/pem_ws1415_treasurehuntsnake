@@ -1,10 +1,8 @@
-package hunt.snake.com.snaketreasurehunt;
+package hunt.snake.com.snaketreasurehunt.gamelogic;
 
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.graphics.Rect;
 import android.graphics.RectF;
-import android.os.Looper;
 
 import java.util.List;
 

@@ -1,4 +1,4 @@
-package hunt.snake.com.snaketreasurehunt;
+package hunt.snake.com.snaketreasurehunt.gamelogic;
 
 public enum Constants {
 
