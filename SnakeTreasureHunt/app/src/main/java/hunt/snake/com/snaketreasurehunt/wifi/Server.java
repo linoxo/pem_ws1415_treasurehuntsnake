@@ -106,7 +106,8 @@ public class Server {
                         try {
                             in.close();
                             out.close();
-                            serverSocket.close();
+                            if(!serverSocket.isClosed())
+                                serverSocket.close();
                             System.out.println("Socket closed...");
                             Thread.currentThread().interrupt();
                         } catch (IOException el) {
@@ -130,6 +131,16 @@ public class Server {
                         System.out.println("Send to: " + comThread.clientSocket);
                     } catch (IOException e) {
                         e.printStackTrace();
+                        try {
+                            in.close();
+                            out.close();
+                            if(!clientSocket.isClosed())
+                                serverSocket.close();
+                            System.out.println("Socket closed...");
+                            Thread.currentThread().interrupt();
+                        } catch (IOException el) {
+                            el.printStackTrace();
+                        }
                     }
                 }
             }

@@ -53,8 +53,6 @@ public class WiFiReceiver extends BroadcastReceiver {
 				manager.requestPeers(channel, fragment);
 			}
 
-            System.out.println("I just clicked");
-
 			Log.d("DEBUG", "P2P peers changed");
 
 		} else if (WifiP2pManager.WIFI_P2P_CONNECTION_CHANGED_ACTION.equals(action)) {

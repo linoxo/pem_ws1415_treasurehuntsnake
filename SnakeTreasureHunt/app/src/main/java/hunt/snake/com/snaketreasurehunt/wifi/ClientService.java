@@ -29,8 +29,10 @@ public class ClientService extends Service {
 
     public void sendMessage(Object message) {
         try {
-            out.writeObject(message);
-            out.flush();
+            if(out != null) {
+                out.writeObject(message);
+                out.flush();
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }
