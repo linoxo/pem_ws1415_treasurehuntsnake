@@ -3,7 +3,6 @@ package hunt.snake.com.snaketreasurehunt.stitching;
 import android.app.Activity;
 import android.content.Context;
 import android.graphics.Point;
-import android.util.Log;
 import android.view.Display;
 import android.view.GestureDetector;
 import android.view.GestureDetector.SimpleOnGestureListener;
@@ -50,8 +49,6 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 	private GestureDetector detector;
 	private SimpleGestureListener listener;
 
-	private String deviceDirection = "center";
-
 	public SnakeGestureListener(Activity context, SimpleGestureListener sgl) {
 
 		this.context = context;
@@ -81,48 +78,6 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 
 		}
 		// else just do nothing, it's Transparent
-	}
-
-	public void setMode(int m) {
-		this.mode = m;
-	}
-
-	public int getMode() {
-		return this.mode;
-	}
-
-	public void setEnabled(boolean status) {
-		this.running = status;
-	}
-
-	public void setSwipeMaxDistance(int distance) {
-		this.swipe_Max_Distance = distance;
-	}
-
-	public void setSwipeMinDistance(int distance) {
-		this.swipe_Min_Distance = distance;
-	}
-
-	public void setSwipeMinVelocity(int distance) {
-		this.swipe_Min_Velocity = distance;
-	}
-
-	public int getSwipeMaxDistance() {
-		return this.swipe_Max_Distance;
-	}
-
-	public int getSwipeMinDistance() {
-		return this.swipe_Min_Distance;
-	}
-
-	public int getSwipeMinVelocity() {
-		return this.swipe_Min_Velocity;
-	}
-
-	// delivers the side of the stitched device (relative to previously active
-	// device)
-	public String getDeviceDirection() {
-		return deviceDirection;
 	}
 
 	@Override
@@ -160,19 +115,15 @@ public class SnakeGestureListener extends SimpleOnGestureListener {
 				&& xDistance > this.swipe_Min_Distance) {
 
 			if (e1.getX() > e2.getX() && e1.getX() > rightEdge) { //
-
-				deviceDirection = "left";
 				this.listener.onSwipe(SWIPEIN_RIGHT);
 
 			} else if (e1.getX() > e2.getX() && e2.getX() <= leftEdge) {
-
 				this.listener.onSwipe(SWIPEOUT_LEFT);
 
 			} else if (e1.getX() > e2.getX()) {
 				this.listener.onSwipe(SWIPE_LEFT);
 
 			} else if (e1.getX() < e2.getX() && e1.getX() < leftEdge) {
-				deviceDirection = "right";
 				this.listener.onSwipe(SWIPEIN_LEFT);
 
 			} else if (e1.getX() < e2.getX() && e2.getX() >= rightEdge) {
